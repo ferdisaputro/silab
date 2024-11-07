@@ -12,6 +12,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "datatables.net-dt": "^2.1.8"
+        "autoprefixer": "^10.4.20",
+        "sweetalert2": "^11.14.5"
     }
 }

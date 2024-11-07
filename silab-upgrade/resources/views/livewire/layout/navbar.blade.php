@@ -16,7 +16,7 @@ $logout = function (Logout $logout) {
         <div class="logo-header" data-background-color="white">
             <a href="index.html" class="logo">
                 <img
-                    src="assets/img/kaiadmin/logo_light.svg"
+                    src="{{ asset("/assets/img/kaiadmin/logo_light.svg") }}"
                     alt="navbar brand"
                     class="navbar-brand"
                     height="20"
@@ -108,7 +108,7 @@ $logout = function (Logout $logout) {
                                 <div class="notif-center">
                                 <a href="#">
                                     <div class="notif-img">
-                                        <img src="assets/img/jm_denis.jpg" alt="Img Profile"/>
+                                        <img src="{{ asset("/assets/img/jm_denis.jpg") }}" alt="Img Profile"/>
                                     </div>
                                     <div class="notif-content">
                                         <span class="subject">Jimmy Denis</span>
@@ -118,7 +118,7 @@ $logout = function (Logout $logout) {
                                 </a>
                                 <a href="#">
                                     <div class="notif-img">
-                                        <img src="assets/img/chadengle.jpg" alt="Img Profile" />
+                                        <img src="{{ asset("/assets/img/chadengle.jpg") }}" alt="Img Profile" />
                                     </div>
                                     <div class="notif-content">
                                         <span class="subject">Chad</span>
@@ -129,7 +129,7 @@ $logout = function (Logout $logout) {
                                 <a href="#">
                                     <div class="notif-img">
                                     <img
-                                        src="assets/img/mlane.jpg"
+                                        src="{{ asset("/assets/img/mlane.jpg") }}"
                                         alt="Img Profile"
                                     />
                                     </div>
@@ -143,7 +143,7 @@ $logout = function (Logout $logout) {
                                 </a>
                                 <a href="#">
                                     <div class="notif-img">
-                                    <img src="assets/img/talha.jpg" alt="Img Profile" />
+                                    <img src="{{ asset("/assets/img/talha.jpg") }}" alt="Img Profile" />
                                     </div>
                                     <div class="notif-content">
                                         <span class="subject">Talha</span>
@@ -210,7 +210,7 @@ $logout = function (Logout $logout) {
                                 <a href="#">
                                     <div class="notif-img">
                                     <img
-                                        src="assets/img/profile2.jpg"
+                                        src="{{ asset("/assets/img/profile2.jpg") }}"
                                         alt="Img Profile"
                                     />
                                     </div>
@@ -328,7 +328,7 @@ $logout = function (Logout $logout) {
                     >
                         <div class="avatar-sm">
                             <img
-                                src="assets/img/profile.jpg"
+                                src="{{ asset("/assets/img/profile.jpg") }}"
                                 alt="..."
                                 class="avatar-img rounded-circle"
                             />
@@ -344,7 +344,7 @@ $logout = function (Logout $logout) {
                                 <div class="user-box">
                                 <div class="avatar-lg">
                                     <img
-                                        src="assets/img/profile.jpg"
+                                        src="{{ asset("/assets/img/profile.jpg") }}"
                                         alt="image profile"
                                         class="rounded avatar-img"
                                     />

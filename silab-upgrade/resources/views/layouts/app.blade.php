@@ -12,15 +12,19 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
 
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-    {{-- <link rel="stylesheet" href="assets/css/plugins.min.css" /> --}}
-    <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
+    {{-- <link rel="stylesheet" href="/assets/css/plugins.min.css" /> --}}
+    <link rel="stylesheet" href="{{ asset('/assets/css/kaiadmin.min.css') }}" />
 
     {{-- icons --}}
     <link href="/assets/icons/fontawesome/css/fontawesome.css" rel="stylesheet" />
     <link href="/assets/icons/fontawesome/css/brands.css" rel="stylesheet" />
     <link href="/assets/icons/fontawesome/css/solid.css" rel="stylesheet" />
 
+    {{-- DataTable --}}
+    <link href="/assets/datatable/datatables.min.css" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
   <body>
     <div class="wrapper">
@@ -38,17 +42,29 @@
         </div>
 
         <!--   Core JS Files   -->
-        <script src="assets/js/core/popper.min.js"></script>
-        <script src="assets/js/core/bootstrap.min.js"></script>
-        <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+        <script src="/assets/js/core/popper.min.js" wire:ignore></script>
+        <script src="/assets/js/core/bootstrap.min.js" wire:ignore></script>
+        <script src="/assets/js/core/jquery-3.7.1.min.js" wire:ignore></script>
 
         <!-- jQuery Scrollbar -->
-        <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+        <script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js" wire:ignore></script>
+
+        {{-- DataTable --}}
+        <script src="/assets/datatable/datatables.min.js" wire:ignore></script>
 
         <!-- Bootstrap Notify -->
-        <script src="assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+        <script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js" wire:ignore></script>
 
-        <script src="assets/js/kaiadmin.min.js"></script>
+        <script src="/assets/js/kaiadmin.min.js" wire:ignore></script>
+
+        {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
+        {{-- <script>
+            $(document).ready(function() {
+                Swal.fire({title: 'test ajah', icon: 'success'})
+            })
+        </script> --}}
+
+        @stack('scripts')
     </div>
   </body>
 </html>

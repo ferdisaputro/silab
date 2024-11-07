@@ -1,8 +1,9 @@
 <?php
 
-use App\Livewire\Pages\Pegawai\Edit as PegawaiEdit;
-use App\Livewire\Pages\Pegawai\Index as PegawaiIndex;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Pages\Pegawai\Ubah as PegawaiUbah;
+use App\Livewire\Pages\Pegawai\Index as PegawaiIndex;
+use App\Livewire\Pages\Pegawai\Tambah as PegawaiTambah;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,12 @@ Route::view('profile', 'profile')
 
 Route::get('pegawai', PegawaiIndex::class)
     ->name('pegawai');
+
+Route::get('pegawai/tambah', PegawaiTambah::class)
+    ->name('pegawai.tambah');
+
+Route::get('pegawai/{id}/ubah', PegawaiUbah::class)
+    ->name('pegawai.ubah');
 
 // Route::get('pegawai', PegawaiEdit::class)
 //     ->name('pegawai');
