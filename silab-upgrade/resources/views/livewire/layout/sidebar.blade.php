@@ -40,13 +40,13 @@ $logout = function (Logout $logout) {
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
                 <li class="nav-item active">
-                    <a href="#dashboard">
+                    <a class="nav-link" href="#dashboard">
                         <i class="fas fa-home"></i>
                         <p>Beranda</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#master">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#master">
                         <i class="fa-solid fa-cubes"></i>
                         <p>Master</p>
                         <span class="caret"></span>
@@ -92,7 +92,7 @@ $logout = function (Logout $logout) {
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#akademik">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#akademik">
                         <i class="fa-solid fa-graduation-cap"></i>
                         <p>Akademik</p>
                         <span class="caret"></span>
@@ -133,7 +133,7 @@ $logout = function (Logout $logout) {
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#inventory-management">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#inventory-management">
                         <i class="fas fa-boxes"></i>
                         <p class="text-wrap">Inventory Management</p>
                         <span class="caret"></span>
@@ -159,7 +159,7 @@ $logout = function (Logout $logout) {
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#usulan-pengajuan">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#usulan-pengajuan">
                         <i class="fas fa-envelope-open-text"></i>
                         <p class="text-wrap">Usulan / Pengajuan</p>
                         <span class="caret"></span>
@@ -185,43 +185,43 @@ $logout = function (Logout $logout) {
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-square-check"></i>
                         <p class="text-wrap">Deliver Pengajuan Alat ACC</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-list-check"></i>
                         <p class="text-wrap">Kesiapan Bahan Praktikum</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <p class="text-wrap">Bon Alat Praktikum</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-calendar-days"></i>
                         <p class="text-wrap">Penggantian Jadwal</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-newspaper"></i>
                         <p class="text-wrap">Berita Acara Kerusakan / <br> Hilang</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fa-solid fa-envelope-circle-check"></i>
                         <p class="text-wrap">Serah Terima Hasil & <br> Sisa Praktik</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#forms">
+                    <a class="nav-link" href="#forms">
                         <i class="fas fa-pen-square"></i>
                         <p class="text-wrap">Ijin Penggunaan LBS</p>
                     </a>

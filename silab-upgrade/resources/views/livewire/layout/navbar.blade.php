@@ -1,3 +1,15 @@
+<?php
+
+use App\Livewire\Actions\Logout;
+
+$logout = function (Logout $logout) {
+    $logout();
+
+    $this->redirect('/', navigate: true);
+};
+
+?>
+
 <div class="main-header">
     <div class="main-header-logo">
         <!-- Logo Header -->
@@ -346,7 +358,7 @@
                             </li>
                             <li>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Logout</a>
+                                <a class="dropdown-item" wire:click='logout'>Logout</a>
                             </li>
                         </div>
                     </ul>
