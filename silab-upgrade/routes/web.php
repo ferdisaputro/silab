@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Pages\Pegawai\Edit as PegawaiEdit;
+use App\Livewire\Pages\Pegawai\Index as PegawaiIndex;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,12 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'dashboard')
+Route::view('/', 'beranda')
     // ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('beranda');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+Route::get('pegawai', PegawaiIndex::class)
+    ->name('pegawai');
+
+// Route::get('pegawai', PegawaiEdit::class)
+//     ->name('pegawai');
 
 require __DIR__.'/auth.php';

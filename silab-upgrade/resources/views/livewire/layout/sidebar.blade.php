@@ -1,15 +1,3 @@
-<?php
-
-use App\Livewire\Actions\Logout;
-
-$logout = function (Logout $logout) {
-    $logout();
-
-    $this->redirect('/', navigate: true);
-};
-
-?>
-
 <div class="sidebar" data-background-color="white">
     <div class="sidebar-logo">
     <!-- Logo Header -->
@@ -39,8 +27,8 @@ $logout = function (Logout $logout) {
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#dashboard">
+                <li class="nav-item {{ request()->routeIs('beranda')? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('beranda') }}">
                         <i class="fas fa-home"></i>
                         <p>Beranda</p>
                     </a>
@@ -51,10 +39,16 @@ $logout = function (Logout $logout) {
                         <p>Master</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="master">
+                    <div 
+                            class="collapse 
+                            {{ 
+                                request()->routeIs('pegawai')? 
+                                'show' : '' 
+                            }}" 
+                            id="master">
                         <ul class="nav nav-collapse">
-                            <li>
-                                <a href="components/pegawai.html">
+                            <li class="{{ request()->routeIs('pegawai')? 'active' : '' }}">
+                                <a href="{{ route('pegawai') }}">
                                     <span class="sub-item text-wrap">Pegawai</span>
                                 </a>
                             </li>

@@ -1,4 +1,8 @@
 import './bootstrap';
+import DataTable from 'datatables.net-dt';
+import 'datatables.net-responsive-dt';
+
+
 // import '/assets/js/plugin/webfont/webfont.min.js'
 // WebFont.load({
 //     google: { families: ["Public Sans:300,400,500,600,700"] },
