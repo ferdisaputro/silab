@@ -1,5 +1,5 @@
 {{-- <x-container> --}}
-    <div>   
+    <div>
         <h3 class="mb-6 text-xl font-semibold">Tambah Pegawai</h3>
         <form x-data="tambahPegawai", x-on:submit.prevent="tambah">
             <div class="flex flex-col gap-7 lg:flex-row">
@@ -15,7 +15,7 @@
                             </div>
                             <input id="dropzone-file" type="file" class="hidden" />
                         </label>
-                    </div> 
+                    </div>
 
                     <div>
                         {{-- <h3 class="mb-2 font-semibold">Status</h3> --}}
@@ -61,18 +61,18 @@
                         </ul>
                     </div>
                 </div>
-                <div class="flex-1 space-y-4">   
+                <div class="flex-1 space-y-4">
                     <h5 class="text-lg font-semibold ms-4">Informasi Pribadi</h5>
 
                     <x-forms.input class="min-w-28" wire:model.live.debounce='kode' name="kode" type="text" label="NIP / NIK / NRP" key="kode"></x-forms.input>
                     <x-forms.input class="min-w-28" wire:model.live.debounce='name' name="name" type="text" label="Name" key="name"></x-forms.input>
                     <x-forms.input class="min-w-28" wire:model.live.debounce='nomor' name="nomor" type="text" label="nomor telefon" key="nomor"></x-forms.input>
-                    
+
                     <div class="pt-3">
                         <hr>
                         <h5 class="text-lg font-semibold ms-4">Informasi Akun</h5>
                     </div>
-                    
+
                     <div class="flex flex-wrap gap-3 ">
                         <x-forms.input class="flex-1 min-w-32" wire:model.live.debounce='name' name="name" type="text" label="test" key="kode"></x-forms.input>
                         <x-forms.select class="flex-1 min-w-32" name="kode1" type="text" :options="['test1' => 'test-val1', 'test2' => 'test-val2', 'test3' => 'test-val3', 'test4' => 'test-val4']" label="test" key="kode1"></x-forms.select>

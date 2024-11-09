@@ -2,8 +2,12 @@
 
 use App\Livewire\Pages\Homepage;
 use App\Livewire\Pages\Pegawai\Index;
-use App\Livewire\Pages\Pegawai\Tambah;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Pages\Pegawai\Tambah;
+use App\Livewire\Pages\Permission\Index as PermissionIndex;
+use App\Livewire\Pages\Role\Ubah as RoleUbah;
+use App\Livewire\Pages\Role\Index as RoleIndex;
+use App\Livewire\Pages\Role\Tambah as RoleTambah;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +30,24 @@ Route::get('/', Homepage::class)
 //     ->name('homepage');
 
 Route::get('/pegawai', Index::class)
-    ->name('pegawai.index');
+    ->name('pegawai');
+// Route::get('/pegawai/tambah', Tambah::class)
+//     ->name('pegawai.tambah');
 
-Route::get('/pegawai/tambah', Tambah::class)
-    ->name('pegawai.tambah');
+
+Route::prefix('role')->group(function() {
+    Route::get('/', RoleIndex::class)
+        ->name('role');
+
+    Route::get('/role/tambah', RoleTambah::class)
+        ->name('role.tambah');
+
+    Route::get('/role/{id}/ubah', RoleUbah::class)
+        ->name('role.ubah');
+});
+
+Route::get('/permission', PermissionIndex::class)
+        ->name('permission');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

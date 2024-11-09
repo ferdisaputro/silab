@@ -11,13 +11,32 @@
                </div>
             </li>
             <li>
-               <a href="{{ route('homepage') }}" wire:navigate class="flex items-center p-2 rounded-lg {{ request()->routeIs('homepage')? "text-primaryTeal" : "" }} dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <a href="{{ route('homepage') }}" wire:navigate
+                    class="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group
+                        {{
+                           request()->routeIs('homepage*')? "text-primaryTeal" : ""
+                        }}
+                    "
+                >
                   <span class="text-center w-7"><i class="fas fa-home"></i></span>
                   <span :class="!isMinimize? 'max-w-44 ms-3' : 'max-w-0'" class="flex-1 overflow-hidden transition-all whitespace-nowrap">Beranda</span>
                </a>
             </li>
-            <li x-data="{dropdownState: {{ request()->routeIs('pegawai*')? true : false }}}">
-               <button x-on:click="dropdownState = !dropdownState" type="button" class="{{ request()->routeIs('pegawai*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example">
+
+            @php
+               $master_route = request()->routeIs('pegawai*', 'role*', 'permission*');
+            @endphp
+            <li x-data="{
+                  dropdownState:
+                  {{
+                     $master_route? 'true' : 'false'
+                  }}
+				}">
+               <button x-on:click="dropdownState = !dropdownState" type="button" aria-controls="dropdown-example"
+						class="{{
+                           $master_route? "text-primaryTeal" : ""
+						}} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+					>
                   <span class="text-center w-7"><i class="fa-solid fa-cubes"></i></span>
                   <div :class="!isMinimize? 'max-w-44 ms-3' : 'max-w-0'" class="flex items-center justify-between flex-1 overflow-hidden transition-all">
                      <span class="text-left transition-all rtl:text-right whitespace-nowrap">Master</span>
@@ -27,13 +46,13 @@
                <div x-show="!isMinimize" x-transition :class="dropdownState? 'max-h-screen' : 'max-h-0'" class="overflow-hidden transition-all duration-500">
                   <ul class="py-2 space-y-2">
                      <li>
-                        <a href="{{ route('pegawai.index') }}" wire:navigate class="{{ request()->routeIs('pegawai*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Pegawai</a>
+                        <a href="{{ route('pegawai') }}" wire:navigate class="{{ request()->routeIs('pegawai*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Pegawai</a>
                      </li>
                      <li>
-                        <a href="#" wire:navigate class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Role</a>
+                        <a href="{{ route('role') }}" wire:navigate class="{{ request()->routeIs('role*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Role</a>
                      </li>
                      <li>
-                        <a href="#" wire:navigate class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Permission</a>
+                        <a href="{{ route('permission') }}" wire:navigate class="{{ request()->routeIs('permission*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Permission</a>
                      </li>
                      <li>
                         <a href="#" wire:navigate class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Jurusan</a>
