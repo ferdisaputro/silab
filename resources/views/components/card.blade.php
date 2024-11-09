@@ -8,11 +8,11 @@
    // $bg_class = "bg-gradient-to-br from-$background/40 to-$background"
 @endphp
 
-<div class="relative p-5 overflow-hidden {{ $color }} rounded-lg shadow-lg bg-gradient-to-br {{ $gradient }}">
+<div class="relative p-4 overflow-hidden {{ $color }} rounded-lg shadow-lg bg-gradient-to-br {{ $gradient }}">
 {{-- <div class="relative p-5 overflow-hidden {{ $color }} rounded-lg shadow-lg {{ $bg_class }}"> --}}
    <div class="relative z-20">
-      <div class="flex items-center justify-between mb-3.5 font-semibold">
-         <span class="text-4xl">{{ $jumlah }} <span class="text-base capitalize opacity-80">{{ $keterangan }}</span></span>
+      <div class="flex items-center justify-between mb-3 font-semibold">
+         <span class="text-3xl">{{ $jumlah }} <span class="text-base capitalize opacity-80">{{ $keterangan }}</span></span>
          <span class="inline-flex items-center gap-2 text-xl opacity-80">
             <i class="fa-solid fa-chevron-right fa-xs"></i>
             {{ $kuantitas }}

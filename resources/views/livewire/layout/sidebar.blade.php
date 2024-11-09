@@ -148,7 +148,7 @@
          </ul>
       </div>
 
-      <div class="text-center">
+      <div :class="!minimizeState? 'text-end me-3' : 'text-center'">
          <button class="p-4 pointer-events-none lg:pointer-events-auto" type="button" x-on:click="minimizeState = !minimizeState">
             <i :class="minimizeState? '' : 'rotate-180'" class="fa-solid fa-arrow-right"></i>
          </button>

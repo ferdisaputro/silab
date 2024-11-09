@@ -18,11 +18,13 @@ export default {
         colors: {
             primaryBlack: '#222831',
             primaryGrey: '#EEEEEE',
+            primaryLightTeal: '#7edce2 ',
             primaryTeal: '#00ADB5',
-            primaryDark: '#393E46'
+            primaryDark: '#393E46',
+            primaryWhite: '#f3f4f6'
         },
-        extend: {
-            fontFamily: ["Inter", "Roboto", "sans-serif"],
+        fontFamily: {
+            roboto: ["Roboto", "sans-serif"],
         },
     },
 

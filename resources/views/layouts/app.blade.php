@@ -20,8 +20,8 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-primaryDark dark:text-gray-100">
-        <div class="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+    <body class="font-sans antialiased text-primaryDark dark:text-white font-roboto">
+        <div class="flex min-h-screen bg-primaryWhite dark:bg-gray-900">
             <livewire:layout.sidebar />
 
             <div class="flex-1 overflow-auto">
