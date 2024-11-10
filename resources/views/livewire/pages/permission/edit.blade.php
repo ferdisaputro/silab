@@ -1,5 +1,5 @@
 <div>
-    <x-text.page-title class="mb-5" wire:loading.remove>Tambah Permission {{ $id }}</x-text.page-title>
+    <x-text.page-title class="mb-5" wire:loading.remove>Ubah Permission {{ $id }}</x-text.page-title>
     <x-text.page-title class="mb-5" wire:loading>Loading...</x-text.page-title>
     {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form wire:submit='submitHandle' class="space-y-4">
@@ -11,7 +11,7 @@
                 label="Nama Permission" />
         </div>
         <div class="text-center">
-            <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah Permission</x-buttons.outline>
+            <x-buttons.outline type="submit" class="w-full max-w-xs">Ubah Permission</x-buttons.outline>
         </div>
     </form>
 </div>

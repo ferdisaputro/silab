@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Livewire\Pages\Role;
+namespace App\Livewire\Pages\Unit;
 
 use Livewire\Component;
-use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
-class Ubah extends Component
+class Edit extends Component
 {
+    public $id;
     public $prev_url;
+    public $satuanData;
 
-    #[Computed(persist: true)]
-    public function permissions() {
-        return DB::table('permissions')->get();
+    public function submitHandle() {
+        dump($this->id);
     }
 
-    public function mount($id) {
+    #[On('initEditUnit')]
+    public function initEdit($id) {
         $this->prev_url = url()->previous();
         try {
             $decrypted = Crypt::decrypt($id);
-            dump($decrypted);
+            $this->id = $decrypted;
+            $this->satuanData = ['name' => "value-$this->id"];
         } catch (DecryptException $e) {
             return $this->redirect($this->prev_url, navigate: true);
         }
@@ -29,6 +31,6 @@ class Ubah extends Component
 
     public function render()
     {
-        return view('livewire.pages.role.ubah');
+        return view('livewire.pages.unit.edit');
     }
 }

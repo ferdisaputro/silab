@@ -1,7 +1,7 @@
 {{-- <x-container> --}}
     <div>
         <h3 class="mb-6 text-xl font-semibold">Tambah Pegawai</h3>
-        <form x-data="tambahPegawai", x-on:submit.prevent="tambah">
+        <form x-data="createEmployee", x-on:submit.prevent="create">
             <div class="flex flex-col gap-7 lg:flex-row">
                 <div class="flex-1 space-y-4 lg:max-w-md">
                     <div class="flex items-center justify-center w-full">
@@ -40,21 +40,21 @@
                         <ul class="flex items-center w-full overflow-hidden text-sm font-medium border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600">
                             <li class="flex-1 border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <input id="administrator" type="radio" name="status-pegawai" class="hidden peer">
+                                    <input id="administrator" type="radio" name="status-employee" class="hidden peer">
                                     <label for="administrator" class="w-full py-3 text-sm font-medium text-center cursor-pointer peer-checked:text-white peer-checked:bg-blue-500 hover:bg-blue-300">Administrator</label>
                                 </div>
                             </li>
                             <div class="border-r"></div>
                             <li class="flex-1 border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <input id="dosen" type="radio" name="status-pegawai" class="hidden peer">
+                                    <input id="dosen" type="radio" name="status-employee" class="hidden peer">
                                     <label for="dosen" class="w-full py-3 text-sm font-medium text-center cursor-pointer peer-checked:text-white peer-checked:bg-blue-500 hover:bg-blue-300">Dosen</label>
                                 </div>
                             </li>
                             <div class="border-r"></div>
                             <li class="flex-1 border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <input id="teknisi" type="radio" name="status-pegawai" class="hidden peer">
+                                    <input id="teknisi" type="radio" name="status-employee" class="hidden peer">
                                     <label for="teknisi" class="w-full py-3 text-sm font-medium text-center cursor-pointer peer-checked:text-white peer-checked:bg-blue-500 hover:bg-blue-300">Teknisi</label>
                                 </div>
                             </li>
@@ -75,7 +75,7 @@
 
                     <div class="flex flex-wrap gap-3 ">
                         <x-forms.input class="flex-1 min-w-32" wire:model.live.debounce='name' name="name" type="text" label="test" key="kode"></x-forms.input>
-                        <x-forms.select class="flex-1 min-w-32" name="kode1" type="text" :options="['test1' => 'test-val1', 'test2' => 'test-val2', 'test3' => 'test-val3', 'test4' => 'test-val4']" label="test" key="kode1"></x-forms.select>
+                        <x-forms.select class="flex-1 min-w-32" name="kode1" :options="['test1' => 'test-val1', 'test2' => 'test-val2', 'test3' => 'test-val3', 'test4' => 'test-val4']" label="test" key="kode1"></x-forms.select>
                         <x-forms.input class="flex-1 min-w-32" name="kode2" type="text" label="test" key="kode2"></x-forms.input>
                         <x-forms.input class="flex-1 min-w-32" name="kode2" type="text" label="test" key="kode2"></x-forms.input>
                     </div>
@@ -93,9 +93,9 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('tambahPegawai', () => {
+            Alpine.data('createEmployee', () => {
                 return {
-                    tambah() {
+                    create() {
                         swal.fire({
                             text: 'test',
                             icon: 'success',

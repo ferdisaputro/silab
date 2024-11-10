@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Pages\Pegawai;
+namespace App\Livewire\Pages\Employee;
 
 use Livewire\Component;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
 
-class Tambah extends Component
+class Create extends Component
 {
     #[Validate('required|min:5')]
     public $name;
@@ -17,6 +17,6 @@ class Tambah extends Component
 
     public function render()
     {
-        return view('livewire.pages.pegawai.tambah');
+        return view('livewire.pages.employee.create');
     }
 }

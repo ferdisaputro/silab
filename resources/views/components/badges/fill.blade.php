@@ -2,6 +2,7 @@
 
 @php
    $colors = [
+      'blue' => 'text-white bg-blue-400 hover:bg-blue-500 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-500 dark:focus:ring-blue-500',
       'teal' => 'text-white bg-teal-400 hover:bg-teal-500 focus:ring-teal-300 dark:bg-teal-500 dark:hover:bg-teal-500 dark:focus:ring-teal-500',
       'gray' => 'text-primaryWhite bg-gray-400 hover:bg-gray-500 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-400 dark:focus:ring-gray-500',
       'green' => 'text-white bg-green-500 hover:bg-green-600 focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800',

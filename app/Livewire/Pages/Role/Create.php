@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 
-class Tambah extends Component
+class Create extends Component
 {
     #[Computed(persist: true)]
     public function permissions() {
@@ -15,6 +15,6 @@ class Tambah extends Component
 
     public function render()
     {
-        return view('livewire.pages.role.tambah');
+        return view('livewire.pages.role.create');
     }
 }

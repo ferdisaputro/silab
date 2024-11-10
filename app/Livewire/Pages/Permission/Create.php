@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
 
-class Tambah extends Component
+class Create extends Component
 {
     public $permissions = [
         ['name' => ''],
@@ -36,6 +36,6 @@ class Tambah extends Component
     }
     public function render()
     {
-        return view('livewire.pages.permission.tambah');
+        return view('livewire.pages.permission.create');
     }
 }
