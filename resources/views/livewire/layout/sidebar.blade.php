@@ -30,7 +30,8 @@
                         'permission*',
                         'department*',
                         'study-program*',
-                        'unit*'
+                        'unit*',
+                        'item*',
                      );
             @endphp
             <li x-data="{
@@ -71,7 +72,7 @@
                         <a href="{{ route('unit') }}" wire:navigate class="{{ request()->routeIs('unit*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Satuan</a>
                      </li>
                      <li>
-                        <a href="#" wire:navigate class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Barang</a>
+                        <a href="{{ route('item') }}" wire:navigate class="{{ request()->routeIs('item*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Barang</a>
                      </li>
                      <li>
                         <a href="#" wire:navigate class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Laboratorium</a>

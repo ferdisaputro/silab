@@ -17,6 +17,9 @@
         <link href="/assets/icons/fontawesome/css/brands.css" rel="stylesheet" />
         <link href="/assets/icons/fontawesome/css/solid.css" rel="stylesheet" />
 
+        {{-- izitoast --}}
+        <link rel="stylesheet" href="/assets/iziToast/iziToast.min.css">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

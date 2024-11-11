@@ -4,11 +4,12 @@ use App\Livewire\Pages\Homepage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Role\Edit as RoleEdit;
 use App\Livewire\Pages\Role\Index as RoleIndex;
-use App\Livewire\Pages\Unit\Index as UnitIndex;
 use App\Livewire\Pages\Role\Create as RoleCreate;
+use App\Livewire\Pages\Unit\Index as UnitIndex;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
 use App\Livewire\Pages\Employee\Create as EmployeeCreate;
 use App\Livewire\Pages\Department\Index as DepartmentIndex;
+use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 
@@ -64,6 +65,9 @@ Route::get('/program-studi', StudyProgramIndex::class)
 
 Route::get('/satuan', UnitIndex::class)
         ->name('unit');
+        
+Route::get('/barang', ItemIndex::class)
+        ->name('item');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
