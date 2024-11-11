@@ -1,9 +1,17 @@
-@props(['id'])
+@props(['id' => ''])
+
+@php
+    $letters = range('a', 'z');
+    $randId = "";
+    for ($i = 0; $i < count($letters); $i++) {
+        $randId = $randId.$letters[array_rand($letters)];
+    }
+@endphp
 
 <table
-    id="{{ $id }}"
+    id="{{ $randId }}"
     x-init='
-        const dataTable = new DataTable("#{{ $id }}", {
+        const dataTable = new DataTable("#{{ $randId }}", {
             searchable: true,
             sortable: true,
         })

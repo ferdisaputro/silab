@@ -18,14 +18,14 @@
                         <td>KODE-{{ $i }}</td>
                         <td>Nama Program Studi {{ $i }}</td>
                         <td>Ketua Program Studi {{ $i }}</td>
-                        <td class="text-center">
+                        <td class="text-center text-nowrap">
                             @if (!$isSelectable)
                                 <x-badges.outline x-on:click="showEditStudyProgram('{{ Crypt::encrypt($i) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             @else
                                 <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
                                     x-on:click="
-                                        $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($i) }}'});
+                                        $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($i) }}'}); {{-- this is triggering a function from livewire/pages/department/detail --}}
                                         ({{ $identifier }})? {{ $identifier }} = false : ''
                                     "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
                             @endif

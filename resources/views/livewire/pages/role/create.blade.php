@@ -1,5 +1,5 @@
 <x-container>
-    <div class="p-5 space-y-6 bg-white rounded-xl">
+    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <form action="">
             <x-text.page-title>
                 Tambah Role Baru

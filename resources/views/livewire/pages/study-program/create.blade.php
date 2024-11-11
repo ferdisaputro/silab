@@ -5,8 +5,13 @@
     <form action="">
         <x-forms.input name="kode_program_studi" label="Kode Program Studi" />
         <x-forms.input name="nama_program_studi" label="Nama Program Studi" />
-        <x-forms.select name="ketua_program_studi" label="Pilih Ketua Program Studi" :options="['key1' => 'test1', 'key2' => 'test2', 'key3' => 'test3', 'key3' => 'test4']" />
-
+        <x-forms.select name="ketua_program_studi" label="Pilih Ketua Program Studi">
+            <option value="kaprodi-1">kaprodi-1-value</option>
+            <option value="kaprodi-2">kaprodi-2-value</option>
+            <option value="kaprodi-3">kaprodi-3-value</option>
+            <option value="kaprodi-4">kaprodi-4-value</option>
+        </x-forms.select>
+        
         <div class="text-center">
             <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah</x-buttons.outline>
         </div>

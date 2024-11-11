@@ -1,6 +1,6 @@
 <x-container>
     <form action="">
-        <div class="p-5 space-y-6 bg-white rounded-xl">
+        <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
             <x-text.page-title>
                 Ubah Role Baru
             </x-text.page-title>

@@ -1,4 +1,4 @@
-@props(['color' => 'teal', 'type' => 'button'])
+@props(['color' => 'teal', 'type' => 'button', 'height' => 'h-11'])
 
 @php
    $colors = [
@@ -12,6 +12,6 @@
    ];
 @endphp
 
-<button type="{{ $type }}" {{ $attributes->merge(["class" => "font-semibold rounded-lg px-5 py-2.5 text-center focus:ring-4 focus:outline-none $colors[$color]"]) }}>
+<button type="{{ $type }}" {{ $attributes->merge(["class" => "font-semibold rounded-lg px-5 text-center focus:ring-4 focus:outline-none $height $colors[$color]"]) }}>
    {{ $slot ?? 'Default' }}
 </button>

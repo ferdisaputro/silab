@@ -14,7 +14,7 @@
         </div>
     </x-modals.modal>
 
-    <div class="p-5 space-y-6 bg-white rounded-xl">
+    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <x-text.page-title>
                 Tabel Role

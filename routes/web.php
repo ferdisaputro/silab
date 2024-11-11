@@ -1,15 +1,17 @@
 <?php
 
 use App\Livewire\Pages\Homepage;
+use App\Livewire\Pages\Role\Edit;
+use App\Livewire\Pages\Role\Index;
+use App\Livewire\Pages\Role\Create;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Pages\Role\Edit as RoleEdit;
-use App\Livewire\Pages\Role\Index as RoleIndex;
-use App\Livewire\Pages\Role\Create as RoleCreate;
+use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Unit\Index as UnitIndex;
+use App\Livewire\Pages\Item\Create as ItemCreate;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
 use App\Livewire\Pages\Employee\Create as EmployeeCreate;
 use App\Livewire\Pages\Department\Index as DepartmentIndex;
-use App\Livewire\Pages\Item\Index as ItemIndex;
+use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 
@@ -41,13 +43,13 @@ Route::get('/pegawai/tambah', EmployeeCreate::class)
 
 
 Route::prefix('role')->group(function() {
-    Route::get('/', RoleIndex::class)
+    Route::get('/', Index::class)
         ->name('role');
 
-    Route::get('/role/tambah', RoleCreate::class)
+    Route::get('/tambah', Create::class)
         ->name('role.create');
 
-    Route::get('/role/{id}/ubah', RoleEdit::class)
+    Route::get('/{id}/ubah', Edit::class)
         ->name('role.edit');
 });
 
@@ -57,17 +59,20 @@ Route::get('/permission', PermissionIndex::class)
 Route::get('/jurusan', DepartmentIndex::class)
         ->name('department');
 
-Route::get('/jurusan', DepartmentIndex::class)
-        ->name('department');
-
 Route::get('/program-studi', StudyProgramIndex::class)
         ->name('study-program');
 
 Route::get('/satuan', UnitIndex::class)
         ->name('unit');
-        
+
 Route::get('/barang', ItemIndex::class)
-        ->name('item');
+    ->name('item');
+
+// Route::get('/tambah', ItemCreate::class)
+//     ->name('item.create');
+
+Route::get('/laboratorium', LaboratoryIndex::class)
+    ->name('laboratory');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

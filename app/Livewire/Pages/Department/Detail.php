@@ -17,7 +17,9 @@ class Detail extends Component
         // "kaprodi" => "Ketua Program Studi  $decrypted",
     ];
 
-    #[On('initDetailDepartment')]
+    public $listeners = ['addNewStudy', 'initDetailDepartment' => 'initDetail'];
+
+    // #[On('initDetailDepartment')]
     public function initDetail($id) {
         $this->prev_url = url()->previous();
         try {
@@ -30,7 +32,7 @@ class Detail extends Component
         }
     }
 
-    #[On('addNewStudy')]
+    // #[On('addNewStudy')]
     public function addNewStudy($key) {
         try {
             $decrypted = Crypt::decrypt($key);

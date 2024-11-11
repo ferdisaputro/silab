@@ -110,7 +110,7 @@
                 return {
                     listStudyState: false,
                     showListStudy() {
-                        $wire.dispatch('initTableStudy', {isSelectable: true, identifier: "listStudyState"})
+                        // $wire.dispatch('initTableStudy', {isSelectable: true, identifier: "listStudyState"})
                         this.listStudyState = true
                     }
                 }

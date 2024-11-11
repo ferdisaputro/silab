@@ -4,7 +4,7 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2'
 import iziToast from 'izitoast';
 
-document.addEventListener('livewire:navigated', () => { 
+document.addEventListener('livewire:navigated', () => {
    initFlowbite();
 })
 

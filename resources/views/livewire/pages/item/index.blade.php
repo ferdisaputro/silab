@@ -1,16 +1,19 @@
-<x-container x-data="{createItemState: false}">
+<x-container x-data="Object.assign({createItemState: false}, editItemModal())">
     <div>
         <x-modals.modal identifier="createItemState" max_width="max-w-6xl">
-            <livewire:pages.employee.create />
+            <livewire:pages.item.create lazy/>
+        </x-modals.modal>
+        <x-modals.modal identifier="editItemState" max_width="max-w-6xl">
+            <livewire:pages.item.edit/>
         </x-modals.modal>
     </div>
-    <div class="p-5 space-y-6 bg-white rounded-xl">
+    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <x-text.page-title>
                 Tabel Data Barang
             </x-text.page-title>
             <div>
-                <x-buttons.fill x-on:click="createItemState = true" color="purple">Create Pegawai</x-buttons.fill>
+                <x-buttons.fill x-on:click="createItemState = true" color="purple">Tambah Barang</x-buttons.fill>
             </div>
         </div>
 
@@ -31,7 +34,7 @@
                             <td>nama {{ $i }}</td>
                             <td>{{ mt_rand(1, 100) }}</td>
                             <td class="text-center">
-                                <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($i) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
@@ -41,3 +44,20 @@
         </div>
     </div>
 </x-container>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('editItemModal', () => {
+                return {
+                    editItemState: false,
+                    showEditItem(id) {
+                        $wire.dispatch("initEditItem", {id: id});
+                        this.editItemState = true;
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce
+

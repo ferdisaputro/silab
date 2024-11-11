@@ -1,7 +1,7 @@
 {{-- <x-container> --}}
     <div>
         <h3 class="mb-6 text-xl font-semibold">Tambah Pegawai</h3>
-        <form x-data="createEmployee", x-on:submit.prevent="create">
+        <form x-data="createEmployee" x-on:submit.prevent="create">
             <div class="flex flex-col gap-7 lg:flex-row">
                 <div class="flex-1 space-y-4 lg:max-w-md">
                     <div class="flex items-center justify-center w-full">
@@ -75,7 +75,12 @@
 
                     <div class="flex flex-wrap gap-3 ">
                         <x-forms.input class="flex-1 min-w-32" wire:model.live.debounce='name' name="name" type="text" label="test" key="kode"></x-forms.input>
-                        <x-forms.select class="flex-1 min-w-32" name="kode1" :options="['test1' => 'test-val1', 'test2' => 'test-val2', 'test3' => 'test-val3', 'test4' => 'test-val4']" label="test" key="kode1"></x-forms.select>
+                        <x-forms.select class="flex-1 min-w-32" name="kode1" label="test" key="kode1">
+                            <option value="test-val1">test1</option>
+                            <option value="test-val2">test2</option>
+                            <option value="test-val3">test3</option>
+                            <option value="test-val4">test4</option>
+                        </x-forms.select>
                         <x-forms.input class="flex-1 min-w-32" name="kode2" type="text" label="test" key="kode2"></x-forms.input>
                         <x-forms.input class="flex-1 min-w-32" name="kode2" type="text" label="test" key="kode2"></x-forms.input>
                     </div>
