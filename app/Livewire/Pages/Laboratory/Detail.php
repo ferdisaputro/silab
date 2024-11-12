@@ -9,14 +9,24 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class Detail extends Component
 {
-    public $id;
-    protected $listeners = [
+    // public $id;
+    public $newTechnicians = [
+        'id',
+    ];
+
+    public $listeners = [
         'initDetailLaboratory',
         'addNewTechnician'
     ];
 
     public function addNewTechnician($key) {
-        dump($key);
+        try {
+            $decrypted = Crypt::decrypt($key);
+            dump($key);
+            // $this->id = $decrypted;
+        } catch (DecryptException $e) {
+            return response()->json('error');
+        }
     }
 
     public function initDetailLaboratory($id) {

@@ -25,7 +25,7 @@
                         @else
                         <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
                             x-on:click="
-                                $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($i) }}'}); {{-- havent decided yet --}}
+                                $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($i) }}'}); {{-- this is dispatching function from pages/laboratory/detail --}}
                                 ({{ $identifier }})? {{ $identifier }} = false : ''">
                                 <i class="fa-regular fa-plus fa-lg"></i>
                             </x-badges.outline>

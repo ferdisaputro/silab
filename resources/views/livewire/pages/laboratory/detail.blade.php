@@ -21,7 +21,7 @@
             Alpine.data('listEmployee', () => {
                 return {
                     listEmployeeState: false,
-                    showListEmployee() {
+                    showListEmployee(key) {
                         this.listEmployeeState = true
                     }
                 }
