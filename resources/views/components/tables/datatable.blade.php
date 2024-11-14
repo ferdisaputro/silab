@@ -1,7 +1,7 @@
 @props(['id' => ''])
 
 @php
-    $letters = range('a', 'z');
+    $letters = range('a', 'j');
     $randId = "";
     for ($i = 0; $i < count($letters); $i++) {
         $randId = $randId.$letters[array_rand($letters)];

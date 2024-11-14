@@ -36,7 +36,7 @@ class Detail extends Component
     public function initDetailLaboratory($id) {
         try {
             $decrypted = Crypt::decrypt($id);
-            $this->id = $decrypted;
+            // $this->id = $decrypted;
         } catch (DecryptException $e) {
             return response()->json('error');
         }

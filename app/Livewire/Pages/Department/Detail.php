@@ -24,7 +24,7 @@ class Detail extends Component
         $this->prev_url = url()->previous();
         try {
             $decrypted = Crypt::decrypt($id);
-            $this->dispatch('initTabelDepartment', ['id' => $this->id]);
+            // $this->dispatch('initTabelDepartment', ['id' => $this->id]);
 
             $this->id = $decrypted;
         } catch (DecryptException $e) {

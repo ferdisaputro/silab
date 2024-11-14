@@ -9,10 +9,12 @@ use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Unit\Index as UnitIndex;
 use App\Livewire\Pages\Item\Create as ItemCreate;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
+use App\Livewire\Pages\Semester\Index as SemesterIndex;
 use App\Livewire\Pages\Employee\Create as EmployeeCreate;
 use App\Livewire\Pages\Department\Index as DepartmentIndex;
 use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
+use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 
@@ -77,6 +79,13 @@ Route::get('/laboratorium', LaboratoryIndex::class)
 
 Route::get('/tahun-ajaran', AcademicYearIndex::class)
     ->name('academic-year');
+
+
+Route::get('/minggu-akademik', AcademicWeekIndex::class)
+    ->name('academic-week');
+
+Route::get('/semester', SemesterIndex::class)
+    ->name('semester');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
