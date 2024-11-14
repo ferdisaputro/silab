@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Unit\Index as UnitIndex;
 use App\Livewire\Pages\Item\Create as ItemCreate;
+use App\Livewire\Pages\Subject\Index as SubjectIndex;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
 use App\Livewire\Pages\Semester\Index as SemesterIndex;
 use App\Livewire\Pages\Employee\Create as EmployeeCreate;
@@ -71,9 +72,6 @@ Route::get('/satuan', UnitIndex::class)
 Route::get('/barang', ItemIndex::class)
     ->name('item');
 
-// Route::get('/tambah', ItemCreate::class)
-//     ->name('item.create');
-
 Route::get('/laboratorium', LaboratoryIndex::class)
     ->name('laboratory');
 
@@ -86,6 +84,9 @@ Route::get('/minggu-akademik', AcademicWeekIndex::class)
 
 Route::get('/semester', SemesterIndex::class)
     ->name('semester');
+
+Route::get('/mata-kuliah', SubjectIndex::class)
+    ->name('subject');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
