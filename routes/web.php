@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\Homepage;
 use App\Livewire\Pages\Role\Edit;
 use App\Livewire\Pages\Role\Index;
@@ -73,6 +74,10 @@ Route::get('/barang', ItemIndex::class)
 
 Route::get('/laboratorium', LaboratoryIndex::class)
     ->name('laboratory');
+
+
+Route::get('/minggu-academic', AcademicWeekIndex::class)
+    ->name('academic-week');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

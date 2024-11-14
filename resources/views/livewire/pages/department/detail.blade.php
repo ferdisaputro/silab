@@ -38,7 +38,7 @@
     <div class="space-y-12">
         {{-- {{ count($newStudy) > 0? "true" : "false" }} --}}
         @if (count($newStudies) > 0)
-            <div wire:transition>
+            <div>
                 <x-alerts.outline class="mb-4" color="blue" title="NEW!" message="Tambahan data baru yang akan tersimpan." />
                 <x-tables.datatable id="new-study" wire:key="new-study">
                     <thead>
@@ -73,7 +73,7 @@
 
         <div>
             @if (count($newStudies) > 0)
-                <x-alerts.outline wire:transition class="mb-4" color="green" title="OLD!" message="Data lama yang akan tetap tersimpan." />
+                <x-alerts.outline class="mb-4" color="green" title="OLD!" message="Data lama yang akan tetap tersimpan." />
             @endif
             <x-tables.datatable id="detail-prodi-department" wire:key="detail-prodi-department">
                 <thead>
