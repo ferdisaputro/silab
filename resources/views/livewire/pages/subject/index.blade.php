@@ -21,7 +21,7 @@
         </div>
 
         <div x-data="changeDataStatus">
-            <x-tables.datatable id="tabel-role">
+            <x-tables.datatable>
                 <thead>
                     <tr>
                         <th>#<i class="fa-solid fa-sort ms-2"></i></th>

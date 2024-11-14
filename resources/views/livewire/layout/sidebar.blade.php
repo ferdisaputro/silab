@@ -86,8 +86,9 @@
                 $academic_route = request()->routeIs(
                             'academic-year*',
                             'academic-week*',
-                            'semester*',
+                            'semester',
                             'subject*',
+                            'semester-subject*',
                         );
                 @endphp
                 <li x-data="{
@@ -98,7 +99,7 @@
                 }">
                     <button x-on:click="dropdownState = !dropdownState" type="button"
                         class="{{
-                            $master_route? "text-primaryTeal" : ""
+                            $academic_route? "text-primaryTeal" : ""
                         }} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example">
                         <span class="text-center w-7"><i class="fa-solid fa-graduation-cap"></i></span>
                         <div :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex items-center justify-between flex-1 overflow-hidden transition-all">
@@ -115,13 +116,13 @@
                                 <a href="{{ route('academic-week') }}" wire:navigate class="{{ request()->routeIs('academic-week*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Minggu Akademik</a>
                             </li>
                             <li>
-                                <a href="{{ route('semester') }}" wire:navigate class="{{ request()->routeIs('semester*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Semester</a>
+                                <a href="{{ route('semester') }}" wire:navigate class="{{ request()->routeIs('semester')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Semester</a>
                             </li>
                             <li>
                                 <a href="{{ route('subject') }}" wire:navigate class="{{ request()->routeIs('subject*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah</a>
                             </li>
                             <li>
-                                <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah Semester</a>
+                                <a href="{{ route('semester-subject') }}" wire:navigate class="{{ request()->routeIs('semester-subject*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah Semester</a>
                             </li>
                             <li>
                                 <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Pengampu Matakuliah</a>
