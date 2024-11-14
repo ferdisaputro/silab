@@ -1,5 +1,5 @@
 <div>
-    <x-text.page-title class="mb-5">Tambah Minggu Akademik {{ $id }}</x-text.page-title>
+    <x-text.page-title class="mb-5">Ubah Minggu Akademik {{ $id }}</x-text.page-title>
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form wire:submit='submitHandle' class="space-y-4">
     <form action="">
@@ -24,7 +24,7 @@
         <x-forms.input name="description" label="Keterangan" />
 
         <div class="text-center">
-            <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah</x-buttons.outline>
+            <x-buttons.outline type="submit" class="w-full max-w-xs">Ubah</x-buttons.outline>
         </div>
     </form>
 </div>
