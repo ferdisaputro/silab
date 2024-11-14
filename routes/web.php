@@ -13,6 +13,7 @@ use App\Livewire\Pages\Employee\Create as EmployeeCreate;
 use App\Livewire\Pages\Department\Index as DepartmentIndex;
 use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
+use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 
 /*
@@ -73,6 +74,9 @@ Route::get('/barang', ItemIndex::class)
 
 Route::get('/laboratorium', LaboratoryIndex::class)
     ->name('laboratory');
+
+Route::get('/tahun-ajaran', AcademicYearIndex::class)
+    ->name('academic-year');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

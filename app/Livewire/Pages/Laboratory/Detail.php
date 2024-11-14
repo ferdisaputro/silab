@@ -9,9 +9,10 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class Detail extends Component
 {
-    // public $id;
+    public $id;
     public $newTechnicians = [
-        'id',
+        // 'foto' => '',
+        // 'nama' => '',
     ];
 
     public $listeners = [
@@ -22,8 +23,11 @@ class Detail extends Component
     public function addNewTechnician($key) {
         try {
             $decrypted = Crypt::decrypt($key);
-            dump($key);
-            // $this->id = $decrypted;
+            $this->newTechnicians[] = [
+                'foto' => "foto-$decrypted.png",
+                'nama' => "nama $decrypted",
+            ];
+            // dump($this->newTechnicians);
         } catch (DecryptException $e) {
             return response()->json('error');
         }

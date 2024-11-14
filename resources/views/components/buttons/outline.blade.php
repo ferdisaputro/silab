@@ -13,5 +13,5 @@
 @endphp
 
 <button type="{{ $type }}" {{ $attributes->merge(["class" => "font-semibold rounded-lg px-5 text-center border focus:ring-4 focus:outline-none $height $colors[$color]"]) }}>
-   {{ $slot ?? 'Default' }} 
+   {{ $slot ?? 'Default' }}
 </button>

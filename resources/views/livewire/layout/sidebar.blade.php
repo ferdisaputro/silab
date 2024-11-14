@@ -81,7 +81,18 @@
                   </ul>
                </div>
             </li>
-            <li x-data="{dropdownState: false}">
+
+            @php
+               $academic_route = request()->routeIs(
+                        'academic-year*'
+                     );
+            @endphp
+            <li x-data="{
+                  dropdownState:
+                  {{
+                     $academic_route? 'true' : 'false'
+                  }}
+               }">
                <button x-on:click="dropdownState = !dropdownState" type="button" class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example">
                   <span class="text-center w-7"><i class="fa-solid fa-graduation-cap"></i></span>
                   <div :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex items-center justify-between flex-1 overflow-hidden transition-all">
@@ -92,7 +103,7 @@
                <div x-show="!isMinimize" x-transition :class="dropdownState? 'max-h-screen' : 'max-h-0'" class="overflow-hidden transition-all duration-500">
                   <ul class="py-2 space-y-2">
                      <li>
-                        <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tahun Ajaran</a>
+                        <a href="{{ route('academic-year') }}" wire:navigate class="{{ request()->routeIs('academic-year*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tahun Ajaran</a>
                      </li>
                      <li>
                         <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Minggu Akademik</a>
