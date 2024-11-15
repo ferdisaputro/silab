@@ -1,14 +1,15 @@
-<x-container x-data="addSubject()">
-    <div>
+<x-container x-data="addSubject()" x-effect="subjectStateChange()">
+    <div wire:ignore>
         <x-modals.modal max_width="max-w-4xl" identifier="addSubjectState">
-            <x-tables.datatable>`~~
+            <x-tables.datatable>
+            {{-- <table> --}}
                 <thead>
                     <tr>
                         <th>#<i class="fa-solid fa-sort ms-2"></i></th>
                         <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
                         <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
                         <th data-sortable="false">
-                            <x-forms.checkbox></x-forms.checkbox>
+                            <x-forms.checkbox wire:ignore></x-forms.checkbox>
                         </th>
                     </tr>
                 </thead>
@@ -19,11 +20,12 @@
                             <td>{{ Str::random(5) }}</td>
                             <td>{{ Str::random(5) }}</td>
                             <td>
-                                <x-forms.checkbox x-on:click="$store.selectedSubject.addRemoveSubject({{ $i }}, $event.target.checked)"></x-forms.checkbox>
+                                <x-forms.checkbox wire:ignore value="{{ $i }}" x-on:click="$store.selectedSubject.addRemoveSubject({{ $i }}, $event.target.checked)"></x-forms.checkbox>
                             </td>
                         </tr>
                     @endfor
                 </tbody>
+            {{-- </table> --}}
             </x-tables.datatable>
         </x-modals.modal>
     </div>
@@ -34,7 +36,9 @@
             </x-text.page-title>
         </div>
         <div class="space-y-5">
-            <div class="flex flex-col gap-4 md:flex-row">Jurusan Peternakan</option>
+            <div class="flex flex-col gap-4 md:flex-row">
+                <x-forms.select class="flex-1" name="pilih_jurusan" label="Pilih Jurusan">
+                    <option value="bizd-4">Jurusan Peternakan</option>
                     <option value="bizd-7">Jurusan Manajemen Agribisnis</option>
                     <option value="89om-8">Jurusan Teknologi Informasi</option>
                     <option value="qrll-9">Jurusan Bahasa Komunikasi Dan Pariwisata</option>
@@ -70,44 +74,46 @@
                     <option value="d24r-13">5 ( 2022/2023 )</option>
                     <option value="w58q-15">7 ( 2022/2023 )</option>
                 </x-forms.select>
-                <x-forms.input name="jumlah_golongan" label="Jumlah Golongan" type="number" class="flex-1"></x-forms.input>
+                <x-forms.input name="jumlah_golongan" label="Jumlah Golongan" type="number" class="flex-1" />
             </div>
             <div>
                 <div class="text-right">
                     <x-buttons.fill class="mt-5 mb-5" x-on:click="addSubjectState = true">Pilih Data Mata Kuliah</x-buttons.fill>
                 </div>
-                <x-tables.datatable id="tabel-role">
-                    <thead>
-                        <tr>
-                            <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                            <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                            <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                            <th>Status<i class="fa-solid fa-sort ms-2"></i></th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for ($i = 0; $i < 1; $i++)
-                            <tr wire:key='{{ $i }}'>
-                                <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                                <td>{{ Str::random(5) }}</td>
-                                <td>{{ Str::random(5) }}</td>
-                                <td>
-                                    @if (mt_rand(0, 1))
-                                        <x-badges.fill color="blue" class="px-2.5 py-1.5"
-                                            x-on:click="changeToNonActive">Aktif</x-badges.fill>
-                                    @else
-                                        <x-badges.fill color="yellow" class="px-2.5 py-1.5"
-                                            x-on:click="changeToActive">Non Aktif</x-badges.fill>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="yellow"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                                </td>
+                <form>
+                    <x-tables.datatable>
+                        <thead>
+                            <tr>
+                                <th>#<i class="fa-solid fa-sort ms-2"></i></th>
+                                <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
+                                <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
+                                <th>Status<i class="fa-solid fa-sort ms-2"></i></th>
+                                <th class="text-center">Action</th>
                             </tr>
-                        @endfor
-                    </tbody>
-                </x-tables.datatable>
+                        </thead>
+                        <tbody>
+                            @foreach ($selectedSubjects as $index => $subject)
+                                <tr wire:key='{{ $index }}'>
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
+                                    <td>matkul-{{ $subject }}</td>
+                                    <td>nama matkul - {{ $subject }}</td>
+                                    <td>
+                                        @if (mt_rand(0, 1))
+                                            <x-badges.fill color="blue" class="px-2.5 py-1.5"
+                                                x-on:click="changeToNonActive">Aktif</x-badges.fill>
+                                        @else
+                                            <x-badges.fill color="yellow" class="px-2.5 py-1.5"
+                                                x-on:click="changeToActive">Non Aktif</x-badges.fill>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="yellow"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </x-tables.datatable>
+                </form>
             </div>
         </div>
     </div>
@@ -118,7 +124,14 @@
         <script>
             Alpine.data('addSubject', () => {
                 return {
-                    addSubjectState: false
+                    addSubjectState: false,
+                    subjectStateChange() {
+                        if (!this.addSubjectState) {
+                            $wire.dispatch('setSelectedSubjects', {
+                                subjects: $store.selectedSubject.selectedSubjects
+                            }); // this is dispatching function from this page class (pages/semester-subjects/index)
+                        }
+                    }
                 }
             })
 
@@ -132,7 +145,6 @@
                     } else {
                         this.selectedSubjects = this.selectedSubjects.filter(i => i !== id);  // Remove if unchecked
                     }
-                    console.log(this.selectedSubjects);
                 }
             })
         </script>

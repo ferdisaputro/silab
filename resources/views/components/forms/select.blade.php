@@ -6,7 +6,7 @@
     'disabled' => false,
 ])
 
-<div {{ $attributes->merge(['class' => '']) }}>
+<div {{ $attributes }}>
    <div class="relative">
       <select name="{{ $name }}" id="countries_disabled" {{ $disabled? "disabled" : '' }}
           class="{{ $height }} border disabled:bg-primaryGrey peer capitalize border-gray-200 text-sm rounded-lg focus:ring-primaryTeal focus:border-primaryTeal block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal">
