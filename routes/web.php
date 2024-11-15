@@ -19,6 +19,7 @@ use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
+use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,11 +87,14 @@ Route::get('/minggu-akademik', AcademicWeekIndex::class)
 Route::get('/semester', SemesterIndex::class)
     ->name('semester');
 
-Route::get('/mata-kuliah', SubjectIndex::class)
+Route::get('/matakuliah', SubjectIndex::class)
     ->name('subject');
 
-Route::get('/mata-kuliah-semester', SemesterSubjectIndex::class)
+Route::get('/matakuliah-semester', SemesterSubjectIndex::class)
     ->name('semester-subject');
+
+Route::get('/pengampu-matakuliah', SubjectInstructorIndex::class)
+    ->name('subject-instructor');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

@@ -87,8 +87,9 @@
                             'academic-year*',
                             'academic-week*',
                             'semester',
-                            'subject*',
+                            'subject',
                             'semester-subject*',
+                            'subject-instructor',
                         );
                 @endphp
                 <li x-data="{
@@ -119,13 +120,13 @@
                                 <a href="{{ route('semester') }}" wire:navigate class="{{ request()->routeIs('semester')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Semester</a>
                             </li>
                             <li>
-                                <a href="{{ route('subject') }}" wire:navigate class="{{ request()->routeIs('subject*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah</a>
+                                <a href="{{ route('subject') }}" wire:navigate class="{{ request()->routeIs('subject')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah</a>
                             </li>
                             <li>
                                 <a href="{{ route('semester-subject') }}" wire:navigate class="{{ request()->routeIs('semester-subject*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Matakuliah Semester</a>
                             </li>
                             <li>
-                                <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Pengampu Matakuliah</a>
+                                <a href="{{ route('subject-instructor') }}" wire:navigate class="{{ request()->routeIs('subject-instructor*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Pengampu Matakuliah</a>
                             </li>
                         </ul>
                     </div>

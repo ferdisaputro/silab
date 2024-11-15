@@ -1,32 +1,37 @@
 <x-container x-data="addSubject()" x-effect="subjectStateChange()">
     <div wire:ignore>
         <x-modals.modal max_width="max-w-4xl" identifier="addSubjectState">
-            <x-tables.datatable>
-            {{-- <table> --}}
+            {{-- <x-tables.datatable perPage="99999"> --}}
+            <table id="subject-semester-table">
                 <thead>
                     <tr>
                         <th>#<i class="fa-solid fa-sort ms-2"></i></th>
                         <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
                         <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th data-sortable="false">
-                            <x-forms.checkbox wire:ignore></x-forms.checkbox>
-                        </th>
+                        {{-- <th data-sortable="false"> --}}
+                            {{-- <x-forms.checkbox x-on:click="console.log($store.selectedSubject.selectedSubjects)"></x-forms.checkbox> --}}
+                            {{-- <x-forms.checkbox x-on:click="console.log(table.data)"></x-forms.checkbox> --}}
+                        {{-- </th> --}}
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 30; $i++)
-                        <tr wire:key='{{ $i }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>{{ Str::random(5) }}</td>
-                            <td>{{ Str::random(5) }}</td>
-                            <td>
-                                <x-forms.checkbox wire:ignore value="{{ $i }}" x-on:click="$store.selectedSubject.addRemoveSubject({{ $i }}, $event.target.checked)"></x-forms.checkbox>
-                            </td>
+                    @foreach ($subjects as $subject)
+                        <tr class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $subject['id'] }}</td>
+                            <td>{{ $subject['kode'] }}</td>
+                            <td>{{ $subject['name'] }}</td>
+                            {{-- <td>
+                                <x-forms.checkbox  class="subject-checkbox" value="{{ $i }}" x-on:click="$store.selectedSubject.addRemoveSubject({{ $i }}, $event.target.checked)"></x-forms.checkbox>
+                                <x-forms.checkbox  class="subject-checkbox" value="{{ $subject['id'] }}"
+                                    x-on:click="$store.selectedSubject.addRemoveSubject({{ $subject['id'] }}, $event.target.checked)"
+                                    x-init="$store.selectedSubject.checkIfSelected($refs['subject-{{ $subject['id'] }}'])" x-ref="subject-{{ $subject['id'] }}"/>
+                                    x-effect="$store.selectedSubject.checkIfSelected($el)"/>{{ $subject['id'] }}
+                            </td> --}}
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
-            {{-- </table> --}}
-            </x-tables.datatable>
+            </table>
+            {{-- </x-tables.datatable> --}}
         </x-modals.modal>
     </div>
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -78,7 +83,7 @@
             </div>
             <div>
                 <div class="text-right">
-                    <x-buttons.fill class="mt-5 mb-5" x-on:click="addSubjectState = true">Pilih Data Mata Kuliah</x-buttons.fill>
+                    <x-buttons.outline class="mt-5 mb-5" color="purple" x-on:click="addSubjectState = true">Pilih Data Mata Kuliah</x-buttons.outline>
                 </div>
                 <form>
                     <x-tables.datatable>
@@ -94,16 +99,14 @@
                         <tbody>
                             @foreach ($selectedSubjects as $index => $subject)
                                 <tr wire:key='{{ $index }}'>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $index }}</td>
                                     <td>matkul-{{ $subject }}</td>
                                     <td>nama matkul - {{ $subject }}</td>
                                     <td>
                                         @if (mt_rand(0, 1))
-                                            <x-badges.fill color="blue" class="px-2.5 py-1.5"
-                                                x-on:click="changeToNonActive">Aktif</x-badges.fill>
+                                            <x-badges.fill color="blue" class="px-2.5 py-1.5">Aktif</x-badges.fill>
                                         @else
-                                            <x-badges.fill color="yellow" class="px-2.5 py-1.5"
-                                                x-on:click="changeToActive">Non Aktif</x-badges.fill>
+                                            <x-badges.fill color="yellow" class="px-2.5 py-1.5">Non Aktif</x-badges.fill>
                                         @endif
                                     </td>
                                     <td class="text-center">
@@ -115,6 +118,9 @@
                     </x-tables.datatable>
                 </form>
             </div>
+            <div class="text-center">
+                <x-buttons.fill type="submit" class="w-full max-w-xs">Tambah</x-buttons.fill>
+            </div>
         </div>
     </div>
 </x-container>
@@ -122,29 +128,86 @@
 @pushOnce('scripts')
     @script
         <script>
+            if (document.getElementById("subject-semester-table") && typeof DataTable !== 'undefined') {
+                let multiSelect = true;
+                let rowNavigation = false;
+
+                const resetTable = function() {
+                    if (window.table) {
+                        window.table.destroy();
+                    }
+
+                    const options = {
+                        rowRender: (row, tr, _index) => {
+                            if (!tr.attributes) {
+                                tr.attributes = {};
+                            }
+                            if (!tr.attributes.class) {
+                                tr.attributes.class = "";
+                            }
+                            if (row.selected) {
+                                tr.attributes.class += " selected";
+                            } else {
+                                tr.attributes.class = tr.attributes.class.replace(" selected", "");
+                            }
+                            return tr;
+                        },
+                        perPage: 9999999
+                    };
+                    if (rowNavigation) {
+                        options.rowNavigation = true;
+                        options.tabIndex = 1;
+                    }
+
+                    window.table = new DataTable("#subject-semester-table", options);
+
+                    // Mark all rows as unselected
+                    window.table.data.data.forEach(data => {
+                        data.selected = false;
+                    });
+
+                    window.table.on("datatable.selectrow", (rowIndex, event) => {
+                        event.preventDefault();
+                        const row = window.table.data.data[rowIndex];
+                        if (row.selected) {
+                            row.selected = false;
+                        } else {
+                            if (!multiSelect) {
+                                window.table.data.data.forEach(data => {
+                                    data.selected = false;
+                                });
+                            }
+                            row.selected = true;
+                        }
+                        window.table.update();
+                    });
+                };
+
+                // Row navigation makes no sense on mobile, so we deactivate it and hide the checkbox.
+                const isMobile = window.matchMedia("(any-pointer:coarse)").matches;
+                if (isMobile) {
+                    rowNavigation = false;
+                }
+
+                resetTable();
+            }
+
             Alpine.data('addSubject', () => {
                 return {
                     addSubjectState: false,
                     subjectStateChange() {
                         if (!this.addSubjectState) {
+                            const selectedSubject = window.table.data.data.filter((row) => {
+                                return row.selected
+                            }).map((selectedRow) => {
+                                return selectedRow.cells[0].data[0].data //get data based on first table column
+                            })
+
                             $wire.dispatch('setSelectedSubjects', {
-                                subjects: $store.selectedSubject.selectedSubjects
+                                subjects: selectedSubject
                             }); // this is dispatching function from this page class (pages/semester-subjects/index)
                         }
-                    }
-                }
-            })
-
-            Alpine.store('selectedSubject', {
-                selectedSubjects: [],  // Store checked values here
-
-                // Method to add or remove item based on checked state
-                addRemoveSubject(id, isChecked) {
-                    if (isChecked) {
-                        this.selectedSubjects.push(id);  // Add item if checked
-                    } else {
-                        this.selectedSubjects = this.selectedSubjects.filter(i => i !== id);  // Remove if unchecked
-                    }
+                    },
                 }
             })
         </script>
