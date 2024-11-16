@@ -131,8 +131,23 @@
                         </ul>
                     </div>
                 </li>
-                <li x-data="{dropdownState: false}">
-                    <button x-on:click="dropdownState = !dropdownState" type="button" class="{{ request()->routeIs('')? "text-primaryTeal" : "" }} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example">
+
+                @php
+                $academic_route = request()->routeIs(
+                            'material-inventory*',
+                            'tool-inventory*',
+                        );
+                @endphp
+                <li x-data="{
+                    dropdownState:
+                    {{
+                        $academic_route? 'true' : 'false'
+                    }}
+                }">
+                    <button x-on:click="dropdownState = !dropdownState" type="button"
+                    class="{{
+                        $academic_route? "text-primaryTeal" : ""
+                    }} flex items-center w-full p-2 text-base transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example">
                         <span class="text-center w-7"><i class="fas fa-boxes"></i></span>
                         <div :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex items-center justify-between flex-1 overflow-hidden transition-all">
                             <span class="text-left transition-all rtl:text-right">Inventory Management</span>
@@ -145,10 +160,10 @@
                                 <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Stok-in Pengadaan</a>
                             </li>
                             <li>
-                                <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Inventaris Bahan</a>
+                                <a href="{{ route('material-inventory') }}" wire:navigate class="{{ request()->routeIs('material-inventory*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Inventaris Bahan</a>
                             </li>
                             <li>
-                                <a href="#" wire:navigate class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Inventaris Alat</a>
+                                <a href="{{ route('tool-inventory') }}" wire:navigate class="{{ request()->routeIs('tool-inventory*')? "text-primaryTeal" : "" }} flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Inventaris Alat</a>
                             </li>
                         </ul>
                     </div>

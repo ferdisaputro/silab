@@ -17,9 +17,11 @@ use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
+use App\Livewire\Pages\MaterialInventory\Index as MaterialInventoryIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
 use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
+use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +97,12 @@ Route::get('/matakuliah-semester', SemesterSubjectIndex::class)
 
 Route::get('/pengampu-matakuliah', SubjectInstructorIndex::class)
     ->name('subject-instructor');
+
+Route::get('/inventaris-bahan', MaterialInventoryIndex::class)
+    ->name('material-inventory');
+
+Route::get('/inventaris-alat', ToolInventoryIndex::class)
+    ->name('tool-inventory');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
