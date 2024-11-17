@@ -10,6 +10,11 @@
     // 'class' => '',
 ])
 
+@php
+    $datepicker = false;
+    if ($type == "datepicker") $datepicker = true;
+@endphp
+
 <div {{ $attributes->merge(['class' => '']) }}>
     <div class="relative">
         <input
@@ -18,6 +23,7 @@
             name="{{ $name }}"
             {{ $disabled? "disabled" : '' }}
             {{ $readonly? "readonly" : '' }}
+            {{ $datepicker? "datepicker" : '' }}
             @if($value) value="{{ $value }}"
             @endif placeholder="{{ $placeholder }}"
             class="{{ $height }} block px-4 pb-2.5 pt-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-0 focus:border-primaryTeal peer @error($name) bg-red-50 border-red-500 text-red-900 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror">

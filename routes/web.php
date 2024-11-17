@@ -17,11 +17,14 @@ use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
-use App\Livewire\Pages\MaterialInventory\Index as MaterialInventoryIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
-use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
-use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
 use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
+use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
+use App\Livewire\Pages\MaterialInventory\Index as MaterialInventoryIndex;
+use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialReadinessCreate;
+use App\Livewire\Pages\PracticumMaterialReadiness\Edit as PracticumMaterialReadinessEdit;
+use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
+use App\Livewire\Pages\PracticumMaterialReadiness\Index as PracticumMaterialReadinessIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +106,15 @@ Route::get('/inventaris-bahan', MaterialInventoryIndex::class)
 
 Route::get('/inventaris-alat', ToolInventoryIndex::class)
     ->name('tool-inventory');
+
+Route::prefix('kesiapan-baprak')->group(function() {
+    Route::get('/', PracticumMaterialReadinessIndex::class)
+        ->name('prac-mat-ready');
+    Route::get('/tambah', PracticumMaterialReadinessCreate::class)
+        ->name('prac-mat-ready.create');
+    Route::get('/{id}/edit', PracticumMaterialReadinessEdit::class)
+        ->name('prac-mat-ready.edit');
+});
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
