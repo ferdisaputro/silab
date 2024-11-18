@@ -17,6 +17,7 @@ use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
+use App\Livewire\Pages\DamagedLostReport\Index as DamagedLostReportIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
 use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
@@ -139,6 +140,9 @@ Route::prefix('penggantian-jadwal')->group(function() {
     Route::get('/{id}/edit', ScheduleReplacementEdit::class)
         ->name('schedule-replacement.edit');
 });
+
+Route::get('/report-kehilangan', DamagedLostReportIndex::class)
+    ->name('damaged-lost-report');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
