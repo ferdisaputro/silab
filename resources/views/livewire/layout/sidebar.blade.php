@@ -181,13 +181,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" wire:navigate class="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <a href="{{ route('prac-equipment-loan') }}" wire:navigate class="{{ request()->routeIs('prac-equipment-loan*')? "text-primaryTeal" : "" }} flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <span class="text-center w-7"><i class="fa-solid fa-clock-rotate-left"></i></span>
-                        <span :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex-1 overflow-hidden transition-all">Bon Alat Praktikum</span>
+                        <span :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex-1 overflow-hidden transition-all">Peminjaman Alat Praktikum</span>
                     </a>
                 </li>
                 <li>
-                <a href="#" wire:navigate class="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <a href="{{ route('schedule-replacement') }}" wire:navigate class="{{ request()->routeIs('schedule-replacement*')? "text-primaryTeal" : "" }} flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <span class="text-center w-7"><i class="fa-solid fa-calendar-days"></i></span>
                     <span :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex-1 overflow-hidden transition-all">Penggantian Jadwal</span>
                 </a>

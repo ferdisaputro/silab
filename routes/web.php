@@ -21,10 +21,16 @@ use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
 use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
 use App\Livewire\Pages\MaterialInventory\Index as MaterialInventoryIndex;
+use App\Livewire\Pages\PracticumEquipmentLoan\Create as PracticumEquipmentLoanCreate;
+use App\Livewire\Pages\PracticumEquipmentLoan\Edit as PracticumEquipmentLoanEdit;
+use App\Livewire\Pages\PracticumEquipmentLoan\Index as PracticumEquipmentLoanIndex;
 use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialReadinessCreate;
 use App\Livewire\Pages\PracticumMaterialReadiness\Edit as PracticumMaterialReadinessEdit;
 use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
 use App\Livewire\Pages\PracticumMaterialReadiness\Index as PracticumMaterialReadinessIndex;
+use App\Livewire\Pages\ScheduleReplacement\Create as ScheduleReplacementCreate;
+use App\Livewire\Pages\ScheduleReplacement\Edit as ScheduleReplacementEdit;
+use App\Livewire\Pages\ScheduleReplacement\Index as ScheduleReplacementIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +118,26 @@ Route::prefix('kesiapan-baprak')->group(function() {
         ->name('prac-mat-ready');
     Route::get('/tambah', PracticumMaterialReadinessCreate::class)
         ->name('prac-mat-ready.create');
-    Route::get('/{id}/edit', PracticumMaterialReadinessEdit::class)
+    Route::get('/{id}/ubah', PracticumMaterialReadinessEdit::class)
         ->name('prac-mat-ready.edit');
+});
+
+Route::prefix('peminjaman-alat-praktek')->group(function() {
+    Route::get('/', PracticumEquipmentLoanIndex::class)
+        ->name('prac-equipment-loan');
+    Route::get('/tambah', PracticumEquipmentLoanCreate::class)
+        ->name('prac-equipment-loan.create');
+    Route::get('/{id}/{type}', PracticumEquipmentLoanEdit::class)
+        ->name('prac-equipment-loan.edit');
+});
+
+Route::prefix('penggantian-jadwal')->group(function() {
+    Route::get('/', ScheduleReplacementIndex::class)
+        ->name('schedule-replacement');
+    Route::get('/tambah', ScheduleReplacementCreate::class)
+        ->name('schedule-replacement.create');
+    Route::get('/{id}/edit', ScheduleReplacementEdit::class)
+        ->name('schedule-replacement.edit');
 });
 
 Route::view('profile', 'profile')

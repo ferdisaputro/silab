@@ -46,6 +46,7 @@
                             <td>{{ $i }}(24/2/2024)</td>
                             <td>Siap dan Lanjutkan</td>
                             <td class="text-center">
+                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
                                 <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate>
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
