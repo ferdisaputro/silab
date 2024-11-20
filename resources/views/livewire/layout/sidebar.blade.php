@@ -199,7 +199,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" wire:navigate class="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <a href="{{ route('handover-practical-result') }}" wire:navigate class="{{ request()->routeIs('handover-practical-result*')? "text-primaryTeal" : "" }} flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <span class="text-center w-7"><i class="fa-solid fa-envelope-circle-check"></i></span>
                         <span :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex-1 overflow-hidden transition-all">Serah Terima Hasil & <br> Sisa Praktik</span>
                     </a>

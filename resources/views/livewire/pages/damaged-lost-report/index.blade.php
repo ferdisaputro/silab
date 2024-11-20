@@ -1,14 +1,14 @@
 <x-container x-data="Object.assign({createDamagedLostReportState: false}, confirmationDamagedLostReport(), editDamagedLostReport())">
     <div>
-        <x-modals.modal identifier="confirmationDamagedLostReportState" max_width="max-w-6xl">
+        <x-modals.modal style="display: none" identifier="confirmationDamagedLostReportState" max_width="max-w-6xl">
             <livewire:pages.damaged-lost-report.confirmation />
         </x-modals.modal>
 
-        <x-modals.modal identifier="createDamagedLostReportState" max_width="max-w-6xl">
+        <x-modals.modal style="display: none" identifier="createDamagedLostReportState" max_width="max-w-6xl">
             <livewire:pages.damaged-lost-report.create />
         </x-modals.modal>
 
-        <x-modals.modal identifier="editDamagedLostReportState" max_width="max-w-6xl">
+        <x-modals.modal style="display: none" identifier="editDamagedLostReportState" max_width="max-w-6xl">
             <livewire:pages.damaged-lost-report.edit />
         </x-modals.modal>
     </div>

@@ -59,14 +59,6 @@
 
             <div class="space-y-5">
                 <x-alerts.outline class="mb-5" color="green" message="Data Petugas" />
-                {{-- <div class="flex flex-col gap-4 md:flex-row">
-                    <x-forms.input class="flex-1 md:min-w-[25rem]" name="petugas_peminjaman" label="Petugas Peminjaman" />
-                    <x-forms.input class="flex-1 md:min-w-[25rem]" name="petugas_pengembalian" label="Petugas Pengembalian" />
-                </div>
-                <div class="flex flex-col gap-4 md:flex-row">
-                    <x-forms.input class="flex-1 md:min-w-[20rem]" name="tanggal_peminjaman" label="Tanggal Peminjaman" type="datepicker" />
-                    <x-forms.input class="flex-1 md:min-w-[20rem]" name="tanggal_pengembalian" label="Tanggal Pengembalian" type="datepicker" />
-                </div> --}}
                 <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2">
                     <div class="space-y-4">
                         <x-forms.input class="flex-1 md:min-w-[25rem]" name="petugas_peminjaman" label="Petugas Peminjaman" />
