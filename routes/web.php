@@ -21,6 +21,9 @@ use App\Livewire\Pages\DamagedLostReport\Index as DamagedLostReportIndex;
 use App\Livewire\Pages\HandoverPracticalResult\Create as HandoverPracticalResultCreate;
 use App\Livewire\Pages\HandoverPracticalResult\Edit as HandoverPracticalResultEdit;
 use App\Livewire\Pages\HandoverPracticalResult\Index as HandoverPracticalResultIndex;
+use App\Livewire\Pages\LbsUsagePermit\Create as LbsUsagePermitCreate;
+use App\Livewire\Pages\LbsUsagePermit\Edit as LbsUsagePermitEdit;
+use App\Livewire\Pages\LbsUsagePermit\Index as LbsUsagePermitIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
 use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
 use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
@@ -154,6 +157,15 @@ Route::prefix('serah-terima-praktikum')->group(function() {
         ->name('handover-practical-result.create');
     Route::get('/{id}/edit', HandoverPracticalResultEdit::class)
         ->name('handover-practical-result.edit');
+});
+
+Route::prefix('ijin-penggunaan-lbs')->group(function() {
+    Route::get('/', LbsUsagePermitIndex::class)
+        ->name('lbs-usage-permit');
+    Route::get('/tambah', LbsUsagePermitCreate::class)
+        ->name('lbs-usage-permit.create');
+    Route::get('/{id}/edit', LbsUsagePermitEdit::class)
+        ->name('lbs-usage-permit.edit');
 });
 
 Route::view('profile', 'profile')
