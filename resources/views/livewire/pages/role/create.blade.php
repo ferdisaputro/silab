@@ -23,9 +23,15 @@
 
                 <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 md:grid-cols-3">
                     @foreach ($this->permissions as $permission)
-                        <div class="flex items-center border border-gray-200 rounded-lg ps-3 dark:border-gray-700" wire:key='tr-{{ $loop->iteration }}'>
-                            <input id="{{ $permission->name }}" type="checkbox" value="{{ $permission->name }}" name="permission" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primaryTeal focus:ring-primaryLightTeal dark:focus:ring-primaryTealtext-primaryTeal dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        {{-- <div class="flex items-center border border-gray-200 rounded-lg ps-3 dark:border-gray-700 peer-checked:border-primaryTeal" wire:key='tr-{{ $loop->iteration }}'>
+                            <input id="{{ $permission->name }}" type="checkbox" value="{{ $permission->name }}" name="permission" class="peer w-4 h-4 bg-gray-100 border-gray-300 rounded text-primaryTeal focus:ring-primaryLightTeal dark:focus:ring-primaryTealtext-primaryTeal dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="{{ $permission->name }}" class="w-full py-3 text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">{{ $permission->name }}</label>
+                        </div> --}}
+                        <div>
+                            <input type="checkbox" id="{{ $permission->name }}" value="" class="hidden peer" required="">
+                            <label for="{{ $permission->name }}" class="inline-flex items-center w-full p-5 text-primaryDark bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primaryTeal peer-checked:bg-primaryTeal/10 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <div class="w-full text-sm">{{ $permission->name }}</div>
+                            </label>
                         </div>
                     @endforeach
                 </div>

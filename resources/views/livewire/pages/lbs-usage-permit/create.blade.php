@@ -13,7 +13,7 @@
                     <div class="text-center">
                         <x-buttons.outline color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
                         <x-buttons.fill color="purple" x-show="isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.fill>
-                        
+
                         <x-buttons.outline color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
                         <x-buttons.fill color="blue" x-show="isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.fill>
                     </div>
@@ -45,15 +45,16 @@
 
             <div class="space-y-5">
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
-                <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2">
-                    <div class="space-y-4">
-                        <x-forms.input class="flex-1 md:min-w-[25rem]" name="petugas_peminjaman" label="Petugas Peminjaman" />
-                        <x-forms.input class="flex-1 md:min-w-[20rem]" name="tanggal_peminjaman" label="Tanggal Peminjaman" type="datepicker" />
-                    </div>
-                    <div class="space-y-4">
-                        <x-forms.input class="flex-1 md:min-w-[25rem]" name="petugas_pengembalian" label="Petugas Pengembalian" />
-                        <x-forms.input class="flex-1 md:min-w-[20rem]" name="tanggal_pengembalian" label="Tanggal Pengembalian" type="datepicker" />
-                    </div>
+                <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5" date-rangepicker>
+                    <x-forms.input name="datepicker-range-start" label="Tanggal Mulai" class="flex-1">
+                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
+                    </x-forms.input>
+                    <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
+                        to
+                    </span>
+                    <x-forms.input name="datepicker-range-end" label="Tanggal Selesai" class="flex-1">
+                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
+                    </x-forms.input>
                 </div>
             </div>
 
@@ -75,7 +76,7 @@
                             </div>
 
 
-                            <x-forms.select class="flex-1 min-w-24 md:max-w-60" wire:model='items.{{ $index }}.tahun_ajaran' name="items.{{ $index }}.tahun_ajaran" label="Pilih Tahun Ajaran">
+                            <x-forms.select class="flex-1 min-w-40 md:max-w-60" wire:model='items.{{ $index }}.tahun_ajaran' name="items.{{ $index }}.tahun_ajaran" label="Pilih Tahun Ajaran">
                                 <option value="key1">test1</option>
                                 <option value="key2">test2</option>
                                 <option value="key3">test3</option>

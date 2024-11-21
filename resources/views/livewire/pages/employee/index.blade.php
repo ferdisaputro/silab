@@ -10,7 +10,6 @@
             <x-text.page-title>
                 Tabel Data Pegawai
             </x-text.page-title>
-            {{-- <a href="{{ route('employee.create') }}" wire:navigate> --}}
             <div>
                 <x-buttons.fill x-on:click="createEmployeeState = true" color="purple">Tambah Pegawai</x-buttons.fill>
             </div>

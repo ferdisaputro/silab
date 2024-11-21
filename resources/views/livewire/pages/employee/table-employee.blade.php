@@ -1,10 +1,10 @@
 <div>
-    <x-tables.datatable>
+    <x-tables.datatable :data="$this->users" eventTarget="employee">
         <thead>
             <tr>
-                <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                <th>Foto<i class="fa-solid fa-sort ms-2"></i></th>
-                <th>Nama<i class="fa-solid fa-sort ms-2"></i></th>
+                <th data-name="id">#<i class="fa-solid fa-sort ms-2"></i></th>
+                <th data-sort="false">Foto</th>
+                <th data-name="name">Nama<i class="fa-solid fa-sort ms-2"></i></th>
                 <th class="text-center">Action</th>
             </tr>
         </thead>
@@ -13,11 +13,19 @@
                 if ($employeeStatus == 'teknisi') $limit = 5;
                 else $limit = 70
             @endphp
-            @for($i = 0; $i < $limit; $i++)
-                <tr wire:key='{{ $i }}'>
-                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                    <td>foto-{{ $i }}.png</td>
-                    <td>pegawai - {{ $i }}</td>
+            @foreach ($this->users as $index => $user)
+                <tr wire:key='{{ $loop->iteration + ($this->users->perPage() * ($this->users->currentPage() - 1)) }}'>
+                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->users->perPage() * ($this->users->currentPage() - 1)) }}</td>
+                    <td>
+                        @if ($user->photo)
+                            <a href="{{ $user->photo }}" target="blank">
+                                <img src="{{ $user->photo }}" alt="{{ $user->photo }}" class="object-cover object-center w-20 h-20 rounded-lg">
+                            </a>
+                        @else
+                            <img src="{{ asset('/assets/images/no-profile.jpg') }}" alt="no-profile.jpg" class="w-20 rounded-lg h-2w-20">
+                        @endif
+                    </td>
+                    <td>{{ $user->name }}</td>
                     <td class="text-center">
                         @if (!$isSelectable)
                             <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
@@ -25,14 +33,15 @@
                         @else
                         <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
                             x-on:click="
-                                $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($i) }}'}); {{-- this is dispatching function from pages/laboratory/detail --}}
+                                $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($user->id) }}'}); {{-- this is dispatching function from pages/laboratory/detail --}}
                                 ({{ $identifier }})? {{ $identifier }} = false : ''">
                                 <i class="fa-regular fa-plus fa-lg"></i>
                             </x-badges.outline>
                         @endif
                     </td>
                 </tr>
-            @endfor
+            @endforeach
         </tbody>
     </x-tables.datatable>
 </div>
+

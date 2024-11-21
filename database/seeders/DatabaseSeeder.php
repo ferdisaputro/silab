@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\User;
+use App\Models\Staff;
+use App\Models\StaffStatus;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        \App\Models\User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        StaffStatus::create([
+            'staff_status' => 'Administrasi'
         ]);
+        StaffStatus::create([
+            'staff_status' => 'Dosen'
+        ]);
+        StaffStatus::create([
+            'staff_status' => 'Teknisi'
+        ]);
+
+
+        Staff::factory(50)->create()->each(function($staff) {
+            User::factory()->create([
+                'staff_id' => $staff->id,
+            ]);
+        });
     }
 }

@@ -36,7 +36,7 @@
                             <td>{{ $status == 0? "Belum Selesai" : "Sudah Selesai" }}</td>
                             <td class="flex flex-wrap justify-center gap-2 text-center">
                                 <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($i), 'type' => 'edit']) }}" wire:navigate>
+                                <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate>
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
