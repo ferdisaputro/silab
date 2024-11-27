@@ -21,22 +21,22 @@ class TableEmployee extends Component
     public $employeeOrderBy = 'id';
     public $employeeOrderByDirection = 'asc';
 
-    #[Computed()]
-    public function users() {
-        return User::where('name', 'like', "%$this->employeeFilter%")
-            ->orderBy($this->employeeOrderBy, $this->employeeOrderByDirection)
-            ->paginate($this->employeePerPage);
-    }
-
+    // template for datatable filter
     public function updatedEmployeeFilter() {
         $this->resetPage();
     }
 
-    public function updatedEmployeeOrderBy() {
-        dump($this->employeeFilter);
+    #[Computed()]
+    public function users() {
+        return User::where('name', 'like', "%$this->employeeFilter%")
+                    // ->orderBy($this->employeeOrderBy, $this->employeeOrderByDirection)
+                    ->when($this->employeeOrderBy && $this->employeeOrderByDirection, function ($query) {
+                        $query->orderBy($this->employeeOrderBy, $this->employeeOrderByDirection);
+                    })
+                    ->paginate($this->employeePerPage);
     }
 
-    // public function updatedEmployeeFilter() {
+    // public function updatedEmployeeOrderBy() {
     //     dump($this->employeeFilter);
     // }
 

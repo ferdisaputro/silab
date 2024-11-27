@@ -2,9 +2,9 @@
     <x-tables.datatable :data="$this->users" eventTarget="employee">
         <thead>
             <tr>
-                <th data-name="id">#<i class="fa-solid fa-sort ms-2"></i></th>
-                <th data-sort="false">Foto</th>
-                <th data-name="name">Nama<i class="fa-solid fa-sort ms-2"></i></th>
+                <th data-sortby="id">#</i></th> {{-- using data-sortby will automaticly make that column sortable --}}
+                <th>Foto</th>
+                <th data-sortby="name">Nama</i></th>
                 <th class="text-center">Action</th>
             </tr>
         </thead>
