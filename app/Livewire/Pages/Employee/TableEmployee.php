@@ -18,8 +18,8 @@ class TableEmployee extends Component
     // template for datatable
     public $employeePerPage = 15;
     public $employeeFilter = null;
-    public $employeeOrderBy = 'id';
-    public $employeeOrderByDirection = 'asc';
+    public $employeeOrderBy = null;
+    public $employeeOrderByDirection = null;
 
     // template for datatable filter
     public function updatedEmployeeFilter() {
@@ -34,14 +34,6 @@ class TableEmployee extends Component
                         $query->orderBy($this->employeeOrderBy, $this->employeeOrderByDirection);
                     })
                     ->paginate($this->employeePerPage);
-    }
-
-    // public function updatedEmployeeOrderBy() {
-    //     dump($this->employeeFilter);
-    // }
-
-    public function dump() {
-        dump($this->employeePerPage, $this->employeeFilter, $this->employeeOrderBy, $this->employeeOrderByDirection);
     }
 
     public function mount($identifier = "null", $employeeStatus = null, $isSelectable = false) {

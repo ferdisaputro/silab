@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Staff;
 use App\Models\StaffStatus;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {

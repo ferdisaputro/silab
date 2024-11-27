@@ -2,7 +2,7 @@
     <x-tables.datatable :data="$this->users" eventTarget="employee">
         <thead>
             <tr>
-                <th data-sortby="id">#</i></th> {{-- using data-sortby will automaticly make that column sortable --}}
+                <th data-sortby="id">#</i></th>
                 <th>Foto</th>
                 <th data-sortby="name">Nama</i></th>
                 <th class="text-center">Action</th>

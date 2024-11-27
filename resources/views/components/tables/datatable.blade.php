@@ -35,24 +35,6 @@
                 </div>
             </div>
         </div>
-        {{-- <table
-            id="{{ $randId }}"
-            x-init='
-                const dataTable = new DataTable("#{{ $randId }}", {
-                    paging: false,
-                    searchable: false,
-                    sortable: true,
-                    perPage: {{ $perPage }},
-                    perPageSelect: {!! json_encode($perPageSelect) !!},
-                })
-
-                dataTable.on("datatable.sort", (columnIndex, direction) => {
-                    const columns = Array.from(document.querySelectorAll("#{{ $randId }} th")).map(th => th.getAttribute("data-name"))
-                    console.log(direction, columns[columnIndex])
-                    $wire.{{ $eventTarget."OrderBy" }} = columns[columnIndex]
-                    $wire.{{ $eventTarget."OrderByDirection" }} = direction
-                })
-            '> --}}
         <div>
             <style>
                 .table :is(th, td) {

@@ -9,7 +9,7 @@
 <div {{ $attributes }}>
    <div class="relative">
       <select name="{{ $name }}" id="countries_disabled" {{ $disabled? "disabled" : '' }}
-          class="{{ $height }} border disabled:bg-primaryGrey peer capitalize border-gray-200 text-sm rounded-lg focus:ring-primaryTeal focus:border-primaryTeal block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal">
+          class="{{ $height }} border disabled:bg-primaryGrey peer capitalize border-gray-200 text-sm rounded-lg focus:ring-primaryTeal focus:border-primaryTeal block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal @error($name) border-red-500 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror">
           <option selected>{{ $label }}</option>
           {{ $slot }}
       </select>

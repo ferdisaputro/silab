@@ -1,4 +1,4 @@
-<x-container x-data="{createEmployeeState: false}">
+<x-container x-data="{createEmployeeState: true}">
     <div>
         <x-modals.modal identifier="createEmployeeState" max_width="max-w-6xl">
             <livewire:pages.employee.create />
