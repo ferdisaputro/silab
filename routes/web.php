@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Unit\Index as UnitIndex;
 use App\Livewire\Pages\Item\Create as ItemCreate;
-use App\Livewire\Pages\Subject\Index as SubjectIndex;
+use App\Livewire\Pages\Course\Index as CourseIndex;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
 use App\Livewire\Pages\Semester\Index as SemesterIndex;
 use App\Livewire\Pages\Employee\Create as EmployeeCreate;
@@ -17,27 +17,27 @@ use App\Livewire\Pages\Laboratory\Index as LaboratoryIndex;
 use App\Livewire\Pages\Permission\Index as PermissionIndex;
 use App\Livewire\Pages\AcademicWeek\Index as AcademicWeekIndex;
 use App\Livewire\Pages\AcademicYear\Index as AcademicYearIndex;
-use App\Livewire\Pages\DamagedLostReport\Index as DamagedLostReportIndex;
-use App\Livewire\Pages\HandoverPracticalResult\Create as HandoverPracticalResultCreate;
-use App\Livewire\Pages\HandoverPracticalResult\Edit as HandoverPracticalResultEdit;
-use App\Livewire\Pages\HandoverPracticalResult\Index as HandoverPracticalResultIndex;
-use App\Livewire\Pages\LbsUsagePermit\Create as LbsUsagePermitCreate;
-use App\Livewire\Pages\LbsUsagePermit\Edit as LbsUsagePermitEdit;
-use App\Livewire\Pages\LbsUsagePermit\Index as LbsUsagePermitIndex;
 use App\Livewire\Pages\StudyProgram\Index as StudyProgramIndex;
+use App\Livewire\Pages\LbsUsagePermit\Edit as LbsUsagePermitEdit;
 use App\Livewire\Pages\ToolInventory\Index as ToolInventoryIndex;
-use App\Livewire\Pages\SemesterSubject\Index as SemesterSubjectIndex;
+use App\Livewire\Pages\LbsUsagePermit\Index as LbsUsagePermitIndex;
+use App\Livewire\Pages\SemesterCourse\Index as SemesterCourseIndex;
+use App\Livewire\Pages\LbsUsagePermit\Create as LbsUsagePermitCreate;
+use App\Livewire\Pages\CourseInstructor\Index as CourseInstructorIndex;
+use App\Livewire\Pages\DamagedLostReport\Index as DamagedLostReportIndex;
 use App\Livewire\Pages\MaterialInventory\Index as MaterialInventoryIndex;
-use App\Livewire\Pages\PracticumEquipmentLoan\Create as PracticumEquipmentLoanCreate;
-use App\Livewire\Pages\PracticumEquipmentLoan\Edit as PracticumEquipmentLoanEdit;
-use App\Livewire\Pages\PracticumEquipmentLoan\Index as PracticumEquipmentLoanIndex;
-use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialReadinessCreate;
-use App\Livewire\Pages\PracticumMaterialReadiness\Edit as PracticumMaterialReadinessEdit;
-use App\Livewire\Pages\SubjectInstructor\Index as SubjectInstructorIndex;
-use App\Livewire\Pages\PracticumMaterialReadiness\Index as PracticumMaterialReadinessIndex;
-use App\Livewire\Pages\ScheduleReplacement\Create as ScheduleReplacementCreate;
 use App\Livewire\Pages\ScheduleReplacement\Edit as ScheduleReplacementEdit;
 use App\Livewire\Pages\ScheduleReplacement\Index as ScheduleReplacementIndex;
+use App\Livewire\Pages\ScheduleReplacement\Create as ScheduleReplacementCreate;
+use App\Livewire\Pages\PracticumEquipmentLoan\Edit as PracticumEquipmentLoanEdit;
+use App\Livewire\Pages\HandoverPracticalResult\Edit as HandoverPracticalResultEdit;
+use App\Livewire\Pages\PracticumEquipmentLoan\Index as PracticumEquipmentLoanIndex;
+use App\Livewire\Pages\HandoverPracticalResult\Index as HandoverPracticalResultIndex;
+use App\Livewire\Pages\PracticumEquipmentLoan\Create as PracticumEquipmentLoanCreate;
+use App\Livewire\Pages\HandoverPracticalResult\Create as HandoverPracticalResultCreate;
+use App\Livewire\Pages\PracticumMaterialReadiness\Edit as PracticumMaterialReadinessEdit;
+use App\Livewire\Pages\PracticumMaterialReadiness\Index as PracticumMaterialReadinessIndex;
+use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialReadinessCreate;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,14 +105,14 @@ Route::get('/minggu-akademik', AcademicWeekIndex::class)
 Route::get('/semester', SemesterIndex::class)
     ->name('semester');
 
-Route::get('/matakuliah', SubjectIndex::class)
-    ->name('subject');
+Route::get('/matakuliah', CourseIndex::class)
+    ->name('course');
 
-Route::get('/matakuliah-semester', SemesterSubjectIndex::class)
-    ->name('semester-subject');
+Route::get('/matakuliah-semester', SemesterCourseIndex::class)
+    ->name('semester-course');
 
-Route::get('/pengampu-matakuliah', SubjectInstructorIndex::class)
-    ->name('subject-instructor');
+Route::get('/pengampu-matakuliah', CourseInstructorIndex::class)
+    ->name('course-instructor');
 
 Route::get('/inventaris-bahan', MaterialInventoryIndex::class)
     ->name('material-inventory');
