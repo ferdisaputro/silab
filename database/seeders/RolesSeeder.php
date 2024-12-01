@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RolesSeeder extends Seeder
@@ -13,7 +14,9 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('roles')->insert([
+        Role::truncate();
+
+        Role::insert([
             ['name' => 'Administrator', 'guard_name' => 'web', 'created_at' => '2022-04-17 23:05:58', 'updated_at' => '2022-04-17 23:05:58'],
             ['name' => 'Koordinator Matakuliah', 'guard_name' => 'web', 'created_at' => '2022-05-13 09:35:01', 'updated_at' => '2022-05-13 09:35:01'],
             ['name' => 'Tim Pengadaan', 'guard_name' => 'web', 'created_at' => '2022-08-11 22:16:27', 'updated_at' => '2022-08-11 22:16:27'],

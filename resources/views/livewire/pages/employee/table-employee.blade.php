@@ -18,8 +18,8 @@
                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->users->perPage() * ($this->users->currentPage() - 1)) }}</td>
                     <td>
                         @if ($user->photo)
-                            <a href="{{ $user->photo }}" target="blank">
-                                <img src="{{ $user->photo }}" alt="{{ $user->photo }}" class="object-cover object-center w-20 h-20 rounded-lg">
+                            <a href="{{ Storage::url($user->photo) }}" target="blank">
+                                <img src="{{ Storage::url($user->photo) }}" alt="{{ $user->photo }}" class="object-cover object-center w-20 h-20 rounded-lg">
                             </a>
                         @else
                             <img src="{{ asset('/assets/images/no-profile.jpg') }}" alt="no-profile.jpg" class="w-20 rounded-lg h-2w-20">

@@ -33,5 +33,6 @@ export default {
         require('flowbite/plugin')({
             datatables: true,
         }),
+        require('@tailwindcss/aspect-ratio'),
     ],
 };

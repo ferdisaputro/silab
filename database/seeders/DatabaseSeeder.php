@@ -9,6 +9,7 @@ use App\Models\Staff;
 use App\Models\StaffStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,21 +18,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        StaffStatus::create([
-            'staff_status' => 'Administrasi'
-        ]);
-        StaffStatus::create([
-            'staff_status' => 'Dosen'
-        ]);
-        StaffStatus::create([
-            'staff_status' => 'Teknisi'
-        ]);
+        // DB::table('staff')->delete();
+        // DB::table('users')->delete();
 
-
-        Staff::factory(50)->create()->each(function($staff) {
-            User::factory()->create([
-                'staff_id' => $staff->id,
-            ]);
-        });
+        $this->call([
+            // StaffStatusesSeeder::class,
+            // PermissionSeeder::class,
+            // RolesSeeder::class,
+            StaffSeeder::class,
+        ]);
     }
 }

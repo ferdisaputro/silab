@@ -18,8 +18,8 @@ class TableEmployee extends Component
     // template for datatable
     public $employeePerPage = 15;
     public $employeeFilter = null;
-    public $employeeOrderBy = null;
-    public $employeeOrderByDirection = null;
+    public $employeeOrderBy = 'id';
+    public $employeeOrderByDirection = 'desc';
 
     // template for datatable filter
     public function updatedEmployeeFilter() {

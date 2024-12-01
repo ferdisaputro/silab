@@ -9,6 +9,8 @@ class StaffStatus extends Model
 {
     use HasFactory;
 
+    
+
     public function staffStatus()
     {
         return $this->hasMany(StaffStatus::class);
