@@ -11,6 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('staff_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('staff_status', 32);
+            $table->timestamps();
+        });
+
+        Schema::create('staff', function (Blueprint $table) {
+            $table->id();
+            $table->boolean('status');
+            $table->foreignId('staff_statuses_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -31,6 +44,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('staff_statuses');
+        Schema::dropIfExists('staff');
         Schema::dropIfExists('users');
     }
 };

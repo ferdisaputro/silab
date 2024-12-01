@@ -19,6 +19,25 @@ return new class extends Migration
             $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
+
+        Schema::create('study_programs', function (Blueprint $table) {
+            $table->id();
+            $table->string('code', 12)->nullable();
+            $table->string('study_program', 64);
+
+            $table->foreignId('departments_id')->onDelete('CASCADE');
+            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('courses', function (Blueprint $table) {
+            $table->id();
+            $table->string('code', 12)->nullable();
+            $table->string('course', 64);
+            $table->boolean('is_active');
+            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -27,5 +46,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('departments');
+        Schema::dropIfExists('study_programs');
+        Schema::dropIfExists('courses');
     }
 };
