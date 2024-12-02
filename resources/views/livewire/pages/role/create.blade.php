@@ -7,7 +7,7 @@
 
             <div class="flex flex-col gap-3 mb-8 md:flex-row">
                 <div class="relative flex-[1.2]">
-                    <x-forms.input wire:model='role' name="role" label="Nama Role" />
+                    <x-forms.input wire:model.live.debounce='role' name="role" label="Nama Role" />
                     {{-- <div class="absolute top-0 bottom-0 right-0 flex items-center justify-end pr-3 w-28 opacity-60">
                         <span class="font-semibold text-right"><span class="text-xl" x-text="selectCounter"></span> Selected</span>
                     </div> --}}
@@ -22,7 +22,7 @@
                     <p class="mt-1 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> {{ $message }}</p>
                 @enderror
                 <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 md:grid-cols-3">
-                    @foreach ($permissions as $index => $permission)
+                    @foreach ($permissions as $permission)
                         {{-- <div class="flex items-center border border-gray-200 rounded-lg ps-3 dark:border-gray-700 peer-checked:border-primaryTeal" wire:key='tr-{{ $loop->iteration }}'>
                             <input id="{{ $permission->name }}" type="checkbox" value="{{ $permission->name }}" name="permission" class="w-4 h-4 bg-gray-100 border-gray-300 rounded peer text-primaryTeal focus:ring-primaryLightTeal dark:focus:ring-primaryTealtext-primaryTeal dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="{{ $permission->name }}" class="w-full py-3 text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">{{ $permission->name }}</label>
@@ -59,7 +59,6 @@
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', 'Data Role Berhasil Ditambahkan', 'success')
                                     this.$el.closest('form').reset() // reset form
-                                    $wire.$parent.$refresh() //refresh component from the parent of this component wich is index
                                 } else
                                     swal.fire('Gagal', 'Data Role Gagal Ditambahkan :'+ result.original.message, 'error')
                             }

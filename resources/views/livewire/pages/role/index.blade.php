@@ -35,7 +35,7 @@
                             <td>{{ $role->name }}</td>
                             <td class="text-center">
                                 <x-badges.outline class="px-2.5 py-1.5" x-on:click="showDetailRole('{{ Crypt::encrypt($role->id) }}')" title="Detail" color="green"><i class="fa-regular fa-eye fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('role.edit', ['id' => Crypt::encrypt($role->id)]) }}" wire:navigate>
+                                <a href="{{ route('role.edit', ['key' => Crypt::encrypt($role->id)]) }}" wire:navigate>
                                     <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
                                 <x-badges.outline x-on:click="deleteRole('{{ Crypt::encrypt($role->id) }}', '{{ $role->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>

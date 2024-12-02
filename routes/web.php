@@ -73,7 +73,7 @@ Route::prefix('role')->group(function() {
     Route::get('/tambah', Create::class)
         ->name('role.create');
 
-    Route::get('/{id}/ubah', Edit::class)
+    Route::get('/{key}/ubah', Edit::class)
         ->name('role.edit');
 });
 
