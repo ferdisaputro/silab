@@ -7,6 +7,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class Create extends Component
 {
@@ -15,10 +16,10 @@ class Create extends Component
     #[Validate('required')]
     public $role;
 
-    #[Computed(persist: true)]
-    public function permissions() {
-        return DB::table('permissions')->get();
-    }
+    // #[Computed(persist: true)]
+    // public function permissions() {
+    //     return Permission::get();
+    // }
 
     public function create() {
         $this->validate();
@@ -34,11 +35,10 @@ class Create extends Component
             $this->reset();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Employee created successfully',
+                'message' => 'Role created successfully',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -48,6 +48,8 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.pages.role.create');
+        return view('livewire.pages.role.create', [
+            'permissions' => Permission::get()
+        ]);
     }
 }

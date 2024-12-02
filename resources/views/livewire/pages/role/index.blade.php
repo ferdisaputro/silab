@@ -1,17 +1,7 @@
-<x-container x-data="DetailRole">
+<x-container x-data="role">
     {{-- modal untuk menampilkan detail role --}}
     <x-modals.modal identifier="detailRoleState" max_width="max-w-3xl">
-        <x-text.page-title class="mb-3">Detail Permission Role</x-text.page-title>
-        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 md:grid-cols-3">
-            {{-- @foreach ($selectedPermissions as $permission) --}}
-                @for ($i = 0; $i < 8; $i++)
-                    <div class="px-3 py-2 border border-gray-200 rounded-lg dark:border-gray-700">
-                        test
-                        {{-- {{ $permission->name }} --}}
-                    </div>
-                @endfor
-            {{-- @endforeach --}}
-        </div>
+        <livewire:pages.role.detail></livewire:pages.role.detail>
     </x-modals.modal>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -44,11 +34,11 @@
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->roles->perPage() * ($this->roles->currentPage() - 1)) }}</td>
                             <td>{{ $role->name }}</td>
                             <td class="text-center">
-                                <x-badges.outline class="px-2.5 py-1.5" x-on:click="showDetailModal" title="Detail" color="green"><i class="fa-regular fa-eye fa-lg"></i></x-badges.outline>
+                                <x-badges.outline class="px-2.5 py-1.5" x-on:click="showDetailRole('{{ Crypt::encrypt($role->id) }}')" title="Detail" color="green"><i class="fa-regular fa-eye fa-lg"></i></x-badges.outline>
                                 <a href="{{ route('role.edit', ['id' => Crypt::encrypt($role->id)]) }}" wire:navigate>
                                     <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteRole('{{ Crypt::encrypt($role->id) }}', '{{ $role->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -61,12 +51,32 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('DetailRole', () => {
+            Alpine.data('role', () => {
                 return {
                     detailRoleState: false,
-                    showDetailModal($id) {
+                    showDetailRole(key) {
                         this.detailRoleState = true;
-                        // show Modal and get the data
+                        $wire.dispatch('initDetailRole', {key: key})
+                    },
+
+                    deleteRole(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus role ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Role Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

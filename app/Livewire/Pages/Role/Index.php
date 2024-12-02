@@ -4,10 +4,15 @@ namespace App\Livewire\Pages\Role;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
+    public $id;
+
     // template for datatable
     public $rolePerPage = 15;
     public $roleFilter = null;
@@ -25,6 +30,36 @@ class Index extends Component
                         $query->orderBy($this->roleOrderBy, $this->roleOrderByDirection);
                     })
                     ->paginate($this->rolePerPage);
+    }
+
+    public function delete($key) {
+        $id = null;
+        try {
+            $id = Crypt::decrypt($key);
+        } catch (DecryptException $e) {
+            return $this->redirect($this->prev_url, navigate: true);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $role = Role::find($id);
+            // $role->permissions()->detach();
+            $role->delete();
+
+            DB::commit();
+            $this->reset();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Role created successfully',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function render()
