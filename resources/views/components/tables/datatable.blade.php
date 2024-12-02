@@ -79,7 +79,7 @@
                     th.setAttribute('data-sort-direction', '')
                     th.setAttribute('wire:ignore', '')
                     const sortIcon = '<i class="fa-solid fa-sort ms-3">'
-                    th.insertAdjacentHTML('beforeend', sortIcon)
+                    th.innerHTML = th.innerText + sortIcon
 
                     th.addEventListener('click', () => {
                         const currentDirection = th.getAttribute('data-sort-direction')

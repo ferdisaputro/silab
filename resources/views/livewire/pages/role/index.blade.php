@@ -30,28 +30,28 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-role">
+            <x-tables.datatable :data="$this->roles" eventTarget="role">
                 <thead>
                     <tr>
-                        <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Nama<i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="id">#</i></th>
+                        <th data-sortby="name">Nama</i></th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 50; $i++)
-                        <tr wire:key='{{ $i }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i +1 }}</td>
-                            <td>Nama - {{ $i + 1 }}</td>
+                    @foreach ($this->roles as $role)
+                        <tr wire:key='{{ $loop->iteration + ($this->roles->perPage() * ($this->roles->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->roles->perPage() * ($this->roles->currentPage() - 1)) }}</td>
+                            <td>{{ $role->name }}</td>
                             <td class="text-center">
                                 <x-badges.outline class="px-2.5 py-1.5" x-on:click="showDetailModal" title="Detail" color="green"><i class="fa-regular fa-eye fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('role.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate>
+                                <a href="{{ route('role.edit', ['id' => Crypt::encrypt($role->id)]) }}" wire:navigate>
                                     <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
                                 <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>

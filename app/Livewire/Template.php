@@ -20,7 +20,7 @@ class Template extends Component
     }
 
     #[Computed()]
-    public function users() {
+    public function models() {
         return Model::where('columnName', 'like', "%$this->folderNameFilter%")
                     // ->orderBy($this->folderNameOrderBy, $this->folderNameOrderByDirection)
                     ->when($this->folderNameOrderBy && $this->folderNameOrderByDirection, function ($query) {

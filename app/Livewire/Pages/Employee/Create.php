@@ -85,24 +85,12 @@ class Create extends Component
 
             $user->assignRole(Role::find($this->role));
 
-            $this->resetForm();
             DB::commit();
+            $this->resetForm();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Employee created successfully',
             ]);
-            // dump([
-            //     'Photo' => $this->photo,
-            //     'Code' => $this->code,
-            //     'Name' => $this->name,
-            //     'Phone' => $this->phone,
-            //     'Status' => $this->status,
-            //     'Staff Status' => $this->staff_statuses_id,
-            //     'Role' => $this->role,
-            //     'Email' => $this->email,
-            //     'Password' => $this->password,
-            //     'Password Confirmation' => $this->password_confirmation,
-            // ]);
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);

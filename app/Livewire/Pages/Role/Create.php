@@ -4,13 +4,46 @@ namespace App\Livewire\Pages\Role;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class Create extends Component
 {
+    #[Validate('min:1', message: 'Please select at least one permission')]
+    public $selectedPermissions = [];
+    #[Validate('required')]
+    public $role;
+
     #[Computed(persist: true)]
     public function permissions() {
         return DB::table('permissions')->get();
+    }
+
+    public function create() {
+        $this->validate();
+        try {
+            DB::beginTransaction();
+
+            $role = Role::create([
+                'name' => $this->role,
+            ]);
+
+            $role->syncPermissions($this->selectedPermissions);
+            DB::commit();
+            $this->reset();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Employee created successfully',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function render()
