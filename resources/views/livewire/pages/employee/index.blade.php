@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createEmployeeState: false}, editEmployee())">
+<x-container x-data="Object.assign({createEmployeeState: false}, employee())">
     <div>
         <x-modals.modal identifier="createEmployeeState" max_width="max-w-6xl">
             <livewire:pages.employee.create wire:key='createEmployee' />
@@ -45,7 +45,7 @@
                             <td>{{ $user->name }}</td>
                             <td class="text-center">
                                 <x-badges.outline x-on:click="showEditEmployee('{{ Crypt::encrypt($user->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteEmployee('{{ Crypt::encrypt($user->id) }}', '{{ addslashes($user->name) }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -59,12 +59,35 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editEmployee', () => {
+            Alpine.data('employee', () => {
                 return {
                     editEmployeeState: false,
                     showEditEmployee(key) {
                         $wire.dispatch('initEditEmployee', {key: key});
                         this.editEmployeeState = true;
+                    },
+
+                    deleteEmployee(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus data ${name} dari pegawai?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire({
+                                        text: result.original.message,
+                                        icon: 'success'
+                                    })
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

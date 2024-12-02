@@ -13,7 +13,7 @@ class StaffStatusesSeeder extends Seeder
      */
     public function run(): void
     {
-        StaffStatus::truncate();
+        // StaffStatus::truncate();
 
         StaffStatus::create([
             'staff_status' => 'Dosen'

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Staff;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StaffSeeder extends Seeder
@@ -14,12 +15,15 @@ class StaffSeeder extends Seeder
      */
     public function run(): void
     {
-        Staff::truncate();
-        User::truncate();
+        // User::truncate();
+        // Staff::truncate();
 
-        Staff::factory(50)->create()->each(function($staff) {
-            User::factory()->create([
-                'staff_id' => $staff->id,
+        DB::table('users')->delete();
+        DB::table('staff')->delete();
+
+        User::factory(50)->create()->each(function($user) {
+            Staff::factory()->create([
+                'users_id' => $user->id
             ]);
         });
     }

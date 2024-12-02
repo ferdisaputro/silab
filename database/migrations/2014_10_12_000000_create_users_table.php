@@ -17,13 +17,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('staff', function (Blueprint $table) {
-            $table->id();
-            $table->boolean('status');
-            $table->foreignId('staff_statuses_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamps();
-        });
-
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -33,8 +26,15 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('staff_id')->constrained()->cascadeOnDelete();
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('staff', function (Blueprint $table) {
+            $table->id();
+            $table->boolean('status');
+            $table->foreignId('staff_statuses_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('users_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -45,7 +45,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('staff_statuses');
-        Schema::dropIfExists('staff');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('staff');
     }
 };

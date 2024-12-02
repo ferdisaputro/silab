@@ -14,7 +14,7 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::truncate();
+        // Role::truncate();
 
         Role::insert([
             ['name' => 'Administrator', 'guard_name' => 'web', 'created_at' => '2022-04-17 23:05:58', 'updated_at' => '2022-04-17 23:05:58'],

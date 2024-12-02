@@ -75,7 +75,7 @@
                     <h5 class="text-lg font-semibold ms-4">Informasi Pribadi</h5>
 
                     <x-forms.input wire:model.live.debounce='editCode' class="min-w-28" name="editCode" type="text" label="NIP / NIK / NRP" key="kode"></x-forms.input>
-                    <x-forms.input wire:model.live.debounce='editName' class="min-w-28" name="editName" type="text" label="Name" key="name"></x-forms.input>
+                    <x-forms.input wire:model.live.debounce='editName' required class="min-w-28" name="editName" type="text" label="Name" key="name"></x-forms.input>
                     <x-forms.input wire:model.live.debounce='editPhone' class="min-w-28" name="editPhone" type="text" label="nomor telefon" key="phone"></x-forms.input>
 
                     <div class="pt-3">
@@ -84,8 +84,8 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <x-forms.input wire:model.live.debounce='editEmail' name="editEmail" type="email" label="email" key="email"></x-forms.input>
-                        <x-forms.select wire:model.live.debounce='editRole' name="editRole" label="Role" key="role">
+                        <x-forms.input wire:model.live.debounce='editEmail' required name="editEmail" type="email" label="email" key="email"></x-forms.input>
+                        <x-forms.select wire:model.live.debounce='editRole' required name="editRole" label="Role" key="role">
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}">{{ $role->name }}</option>
                             @endforeach
@@ -95,10 +95,13 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center mt-7">
-                <x-buttons.fill type="submit" class="w-full max-w-xs">
-                    Ubah
+            <div class="flex items-center justify-center gap-4 text-center mt-7">
+                <x-buttons.fill wire:loading.remove type="submit" class="w-full max-w-xs">
+                    ubah
                 </x-buttons.fill>
+                <x-buttons.outline wire:loading type="button" class="w-full max-w-xs">
+                    <x-loading.circle></x-loading.circle>
+                </x-buttons.outline>
                 {{-- <x-buttons.outline type="button" color='red' x-on:click="$wire.resetForm()">
                     Reset
                 </x-buttons.outline> --}}

@@ -75,13 +75,14 @@ class Create extends Component
 
         try {
             DB::beginTransaction();
-            $staff = Staff::create([
+            $user = User::create($data);
+
+            Staff::create([
                 'status' => $this->status,
-                'staff_statuses_id' => $this->staff_statuses_id
+                'staff_statuses_id' => $this->staff_statuses_id,
+                'users_id' => $user->id
             ]);
 
-            $data['staff_id'] = $staff->id;
-            $user = User::create($data);
             $user->assignRole(Role::find($this->role));
 
             $this->resetForm();

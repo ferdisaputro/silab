@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('permissions')->truncate();
+        // DB::table('permissions')->truncate();
 
         $permissions = [
             ['name' => 'staff-list','guard_name' => 'web','created_at' => '2022-04-18 12:21:55','updated_at' => '2022-04-18 12:51:25'],

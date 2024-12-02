@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'photo' => fake()->optional()->imageUrl(), // Optional, can be null
             'email_verified_at' => fake()->optional()->dateTime(), // Optional, can be null
             'password' => bcrypt('password'), // Use bcrypt for password hashing
-            'staff_id' => fake()->numberBetween(1, 100), // Assuming staff_id is a foreign key
+            // 'staff_id' => fake()->numberBetween(1, 100), // Assuming staff_id is a foreign key
             'remember_token' => Str::random(10), // Generate a random string for remember token
             'created_at' => now(),
             'updated_at' => now(),

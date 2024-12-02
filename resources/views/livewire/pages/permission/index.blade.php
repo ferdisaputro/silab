@@ -37,7 +37,7 @@
                                 <a x-on:click='showEditModal("{{ Crypt::encrypt($i) }}")'>
                                     <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click='deleteEmployee("{{ Crypt::encrypt($i) }}")' class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endfor

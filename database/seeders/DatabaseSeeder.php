@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
         // DB::table('users')->delete();
 
         $this->call([
-            // StaffStatusesSeeder::class,
-            // PermissionSeeder::class,
-            // RolesSeeder::class,
+            StaffStatusesSeeder::class,
+            PermissionSeeder::class,
+            RolesSeeder::class,
             StaffSeeder::class,
         ]);
     }
