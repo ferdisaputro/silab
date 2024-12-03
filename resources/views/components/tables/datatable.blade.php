@@ -61,7 +61,8 @@
                 {{ $slot }}
             </table>
         </div>
-        <div>
+        <div class="pb-2">
+            {{-- {{ $data? $data->links('vendor.livewire.tailwind') : "" }} --}}
             {{ $data? $data->links() : "" }}
         </div>
     </div>
