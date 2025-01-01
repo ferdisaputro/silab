@@ -57,7 +57,19 @@
                             if (res.isConfirmed) {
                                 result = await $wire.create()
                                 if (result.original.status == 'success') {
-                                    swal.fire('Berhasil', 'Data Role Berhasil Ditambahkan', 'success')
+                                    swal.fire({
+                                        title: 'Berhasil', 
+                                        text: 'Data Role Berhasil Ditambahkan. Kembali ke halaman utama?', 
+                                        icon: 'success',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Kembali',
+                                        cancelButtonText: 'Stay',
+                                    }).then(returnConfirmation => {
+                                        if (returnConfirmation.isConfirmed) {
+                                            Livewire.navigate(`{{ route("role") }}`)
+                                        }
+                                    })
+                                    
                                     this.$el.closest('form').reset() // reset form
                                 } else
                                     swal.fire('Gagal', 'Data Role Gagal Ditambahkan :'+ result.original.message, 'error')

@@ -1,6 +1,6 @@
-<x-container x-data="Object.assign({ createPermissionState: false }, editModal())">
+<x-container x-data="Object.assign({ createPermissionState: false }, permission())">
     <div>
-        <x-modals.modal identifier="editModalState">
+        <x-modals.modal identifier="editPermissionState">
             <livewire:pages.permission.edit />
         </x-modals.modal>
 
@@ -20,27 +20,25 @@
             </div>
         </div>
         <div>
-            <x-tables.datatable id="tabel-permission">
+            <x-tables.datatable id="tabel-permission" :data="$this->permissions" eventTarget="permission">
                 <thead>
                     <tr>
-                        <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Nama<i class="fa-solid fa-sort ms-2"></i></th>
+                        <th>#</th>
+                        <th data-sortby="name">Nama</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for($i = 0; $i < 80; $i++)
-                        <tr wire:key='{{ $i }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>Nama - {{ $i }}</td>
+                    @foreach ($this->permissions as $index => $permission)
+                        <tr wire:key='{{ $loop->iteration + ($this->permissions->perPage() * ($this->permissions->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->permissions->perPage() * ($this->permissions->currentPage() - 1)) }}</td>
+                            <td>{{ $permission->name }}</td>
                             <td class="text-center">
-                                <a x-on:click='showEditModal("{{ Crypt::encrypt($i) }}")'>
-                                    <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                </a>
-                                <x-badges.outline x-on:click='deleteEmployee("{{ Crypt::encrypt($i) }}")' class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline wire:key='{{ $index }}' x-on:click="showEditPermission('{{ Crypt::encrypt($permission->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deletePermission('{{ Crypt::encrypt($permission->id) }}', '{{ $permission->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
@@ -50,12 +48,32 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editModal', () => {
+            Alpine.data('permission', () => {
                 return {
-                    editModalState: false,
-                    showEditModal(id) {
-                        $wire.dispatch("initEditPermission", {id: id});
-                        this.editModalState = true;
+                    editPermissionState: false,
+                    showEditPermission(key) {
+                        $wire.dispatch("initEditPermission", {key: key});
+                        this.editPermissionState = true;
+                    },
+
+                    deletePermission(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus permission ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Permission Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

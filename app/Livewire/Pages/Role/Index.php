@@ -26,7 +26,8 @@ class Index extends Component
 
     #[Computed()]
     public function roles() {
-        return Role::when($this->roleOrderBy && $this->roleOrderByDirection, function ($query) {
+        return Role::where('name', 'like', "%$this->roleFilter%")
+                    ->when($this->roleOrderBy && $this->roleOrderByDirection, function ($query) {
                         $query->orderBy($this->roleOrderBy, $this->roleOrderByDirection);
                     })
                     ->paginate($this->rolePerPage);
