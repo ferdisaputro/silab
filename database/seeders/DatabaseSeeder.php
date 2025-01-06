@@ -7,6 +7,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\StaffStatus;
+use Illuminate\Support\Str;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;

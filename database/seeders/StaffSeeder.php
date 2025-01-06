@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use Illuminate;
 use App\Models\User;
 use App\Models\Staff;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -20,6 +22,20 @@ class StaffSeeder extends Seeder
 
         DB::table('users')->delete();
         DB::table('staff')->delete();
+
+        $defaultUser = User::create([
+            'name' => 'Admin',
+            'code' => Str::random(4),
+            'phone' => fake()->phoneNumber, // Optional, can be null
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('password'),
+            'remember_token' => Str::random(10),
+        ]);
+
+        Staff::create([
+            'user_id' => $defaultUser->id,
+            'staff_status_id' => fake()->optional()->numberBetween(1, 3),
+        ]);
 
         User::factory(50)->create()->each(function($user) {
             Staff::factory()->create([
