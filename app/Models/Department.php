@@ -9,6 +9,12 @@ class Department extends Model
 {
     use HasFactory;
 
+    public $fillable = [
+        'code',
+        'department',
+        'user_id'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

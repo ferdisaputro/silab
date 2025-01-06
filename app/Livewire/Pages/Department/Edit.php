@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Pages\Department;
 
+use App\Models\Staff;
 use Livewire\Component;
+use App\Models\Department;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
@@ -12,27 +14,39 @@ class Edit extends Component
 {
     public $id;
     #[Validate('required|min:3')]
-    public $kode;
+    public $code;
     #[Validate('required|min:3')]
-    public $nama;
-    #[Validate('required')]
-    public $kajur;
+    public $department;
+    #[Validate("required|integer")]
+    public $headOfDepartmentEdit;
 
     #[On('initEditDepartment')]
-    public function initEditDepartment($id) {
+    public function initEditDepartment($key) {
         try {
-            $decrypted = Crypt::decrypt($id);
+            $decrypted = Crypt::decrypt($key);
             $this->id = $decrypted;
-            $this->kode = "kode-".$this->id;
-            $this->nama = "nama ".$this->id;
-            $this->kajur = "kajur-".$this->id;
         } catch (DecryptException $e) {
-            $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
+            echo "<script>alert('Failed to decrypt key');</script>";
+        }
+
+        try {
+            $department = Department::findOrFail($this->id);
+            $this->code = $department->code;
+            $this->department = $department->department;
+            $this->headOfDepartmentEdit = $department->user_id;
+            // dump($this->code, $this->department, $this->headOfDepartmentEdit);
+
+            // this function is dispatching a script from x-forms.select
+            $this->dispatch('setFormSelectedItem');
+        } catch (\Exception $e) {
+            echo "<script>alert('Failed to receive data');</script>";
         }
     }
-    
+
     public function render()
     {
-        return view('livewire.pages.department.edit');
+        return view('livewire.pages.department.edit', [
+            'lecturers' => Staff::where("staff_status_id", 1)->with('user')->get()
+        ]);
     }
 }

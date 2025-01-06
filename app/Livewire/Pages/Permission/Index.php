@@ -40,7 +40,7 @@ class Index extends Component
             $id = Crypt::decrypt($key);
         } catch (DecryptException $e) {
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Kode Enkripsi Tidak Valid'
             ]);
         }

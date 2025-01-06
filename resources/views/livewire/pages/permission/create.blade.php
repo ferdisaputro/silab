@@ -52,7 +52,7 @@
                                 result = await $wire.create()
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', 'Data Permission Berhasil Ditambahkan', 'success')
-                                    // this.$el.closest('form').reset() // reset form
+                                    this.$el.closest('form').reset() // reset form
                                     $wire.$parent.$refresh()
                                 } else
                                     swal.fire('Gagal', 'Data Permission Gagal Ditambahkan :'+ result.original.message, 'error')
