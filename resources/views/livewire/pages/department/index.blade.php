@@ -24,30 +24,31 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-department">
+            <x-tables.datatable id="tabel-department" :data="$this->departments" eventTarget="department">
                 <thead>
                     <tr>
-                        <th># <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Kode Jurusan <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Jurusan <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Ketua Jurusan <i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="id">#</i></th>
+                        <th data-sortby="code">Kode Jurusan</i></th>
+                        <th data-sortby="department">Jurusan</i></th>
+                        <th>Ketua Jurusan</i></th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 50; $i++)
-                        <tr>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>KODE-{{ $i }}</td>
-                            <td>Nama jurusan {{ $i }}</td>
-                            <td>Ketua jurusan {{ $i }}</td>
+                    @foreach ($this->departments as $index => $department)
+                        @dump($department->user)
+                        <tr wire:key='{{ $loop->iteration + ($this->departments->perPage() * ($this->departments->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->departments->perPage() * ($this->departments->currentPage() - 1)) }}</td>
+                            <td>{{ $department->code }}</td>
+                            <td>{{ $department->department }}</td>
+                            <td>{{ $department->user->name?? '' }}</td>
                             <td class="text-center">
-                                <x-badges.outline x-on:click="showDetailDepartment('{{ Crypt::encrypt($i) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
-                                <x-badges.outline x-on:click="showEditDepartment('{{ Crypt::encrypt($i) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showDetailDepartment('{{ Crypt::encrypt($department->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditDepartment('{{ Crypt::encrypt($department->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>

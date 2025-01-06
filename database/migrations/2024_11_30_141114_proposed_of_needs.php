@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('description', 255);
             $table->tinyInteger('status')->comment('1 => submit, 2 => review, 3 => print, 4 => accepted'); //1 => pengajuan, 2 =>review, 3 => cetak, 4 => acc
 
-            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('academic_weeks_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('course_instructors_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('laboratories_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('academic_week_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('course_instructor_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('laboratory_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->integer('accepted_needs');
             $table->string('description');
             $table->tinyInteger('status')->comment('1 => pending, 2 => accepted, 3 => rejected');
-            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -46,9 +46,9 @@ return new class extends Migration
             $table->boolean('is_stock_in');
             $table->string('description');
             $table->string('system_description');
-            $table->foreignId('lab_items_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('lab_members_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('proposed_need_details_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('lab_item_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('lab_member_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('proposed_need_detail_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

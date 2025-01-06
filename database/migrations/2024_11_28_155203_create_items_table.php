@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('satuan');
-            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -30,9 +30,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('specification');
             $table->string('description');
-            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('units_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('item_types_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('item_type_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -40,9 +40,9 @@ return new class extends Migration
             $table->id();
             $table->integer('qty')->nullable();
 
-            $table->foreignId('units_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('items_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('users_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('item_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
             $table->timestamps();
         });

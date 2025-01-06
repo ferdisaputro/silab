@@ -30,9 +30,9 @@ return new class extends Migration
 
             $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
 
-            $table->foreignId('laboratories_id')->nullable()->constrained()->onDelete('SET NULL');
-            $table->foreignId('lab_members_id_borrow')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
-            $table->foreignId('lab_members_id_return')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
+            $table->foreignId('laboratory_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('lab_member_id_borrow')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
+            $table->foreignId('lab_member_id_return')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
             $table->foreignId('staff_id_mentor')->nullable()->constrained(table: 'staff', column: 'id')->onDelete('SET NULL');
             $table->timestamps();
         });
@@ -44,9 +44,9 @@ return new class extends Migration
             $table->integer('return_qty');
             $table->string('description');
             $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
-            $table->foreignId('equipment_loans_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('lab_items_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('stock_cards_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('equipment_loan_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('lab_item_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('stock_card_id')->nullable()->constrained()->onDelete('SET NULL');
             $table->timestamps();
         });
     }

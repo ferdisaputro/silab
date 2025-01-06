@@ -52,124 +52,126 @@ use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialRea
 
 // Route::view('/', 'welcome');
 
-Route::get('/', Homepage::class)
+Route::middleware(["auth"])->group(function() {
+    Route::get('/', Homepage::class)
     ->name('homepage');
 
-// Route::view('/', 'homepage')
-//     ->middleware(['auth', 'verified'])
-//     ->name('homepage');
+    // Route::view('/', 'homepage')
+    //     ->middleware(['auth', 'verified'])
+    //     ->name('homepage');
 
-Route::get('/pegawai', EmployeeIndex::class)
-    ->name('employee');
+    Route::get('/pegawai', EmployeeIndex::class)
+        ->name('employee');
 
-Route::get('/pegawai/tambah', EmployeeCreate::class)
-    ->name('pegawai.tambah');
+    Route::get('/pegawai/tambah', EmployeeCreate::class)
+        ->name('pegawai.tambah');
 
 
-Route::prefix('role')->group(function() {
-    Route::get('/', Index::class)
-        ->name('role');
+    Route::prefix('role')->group(function() {
+        Route::get('/', Index::class)
+            ->name('role');
 
-    Route::get('/tambah', Create::class)
-        ->name('role.create');
+        Route::get('/tambah', Create::class)
+            ->name('role.create');
 
-    Route::get('/{key}/ubah', Edit::class)
-        ->name('role.edit');
+        Route::get('/{key}/ubah', Edit::class)
+            ->name('role.edit');
+    });
+
+    Route::get('/permission', PermissionIndex::class)
+            ->name('permission');
+
+    Route::get('/jurusan', DepartmentIndex::class)
+            ->name('department');
+
+    Route::get('/program-studi', StudyProgramIndex::class)
+            ->name('study-program');
+
+    Route::get('/satuan', UnitIndex::class)
+            ->name('unit');
+
+    Route::get('/barang', ItemIndex::class)
+        ->name('item');
+
+    Route::get('/laboratorium', LaboratoryIndex::class)
+        ->name('laboratory');
+
+    Route::get('/tahun-ajaran', AcademicYearIndex::class)
+        ->name('academic-year');
+
+
+    Route::get('/minggu-akademik', AcademicWeekIndex::class)
+        ->name('academic-week');
+
+    Route::get('/semester', SemesterIndex::class)
+        ->name('semester');
+
+    Route::get('/matakuliah', CourseIndex::class)
+        ->name('course');
+
+    Route::get('/matakuliah-semester', SemesterCourseIndex::class)
+        ->name('semester-course');
+
+    Route::get('/pengampu-matakuliah', CourseInstructorIndex::class)
+        ->name('course-instructor');
+
+    Route::get('/inventaris-bahan', MaterialInventoryIndex::class)
+        ->name('material-inventory');
+
+    Route::get('/inventaris-alat', ToolInventoryIndex::class)
+        ->name('tool-inventory');
+
+    Route::prefix('kesiapan-baprak')->group(function() {
+        Route::get('/', PracticumMaterialReadinessIndex::class)
+            ->name('prac-mat-ready');
+        Route::get('/tambah', PracticumMaterialReadinessCreate::class)
+            ->name('prac-mat-ready.create');
+        Route::get('/{id}/ubah', PracticumMaterialReadinessEdit::class)
+            ->name('prac-mat-ready.edit');
+    });
+
+    Route::prefix('peminjaman-alat-praktek')->group(function() {
+        Route::get('/', PracticumEquipmentLoanIndex::class)
+            ->name('prac-equipment-loan');
+        Route::get('/tambah', PracticumEquipmentLoanCreate::class)
+            ->name('prac-equipment-loan.create');
+        Route::get('/{id}/{type}', PracticumEquipmentLoanEdit::class)
+            ->name('prac-equipment-loan.edit');
+    });
+
+    Route::prefix('penggantian-jadwal')->group(function() {
+        Route::get('/', ScheduleReplacementIndex::class)
+            ->name('schedule-replacement');
+        Route::get('/tambah', ScheduleReplacementCreate::class)
+            ->name('schedule-replacement.create');
+        Route::get('/{id}/edit', ScheduleReplacementEdit::class)
+            ->name('schedule-replacement.edit');
+    });
+
+    Route::get('/report-kehilangan', DamagedLostReportIndex::class)
+        ->name('damaged-lost-report');
+
+    Route::prefix('serah-terima-praktikum')->group(function() {
+        Route::get('/', HandoverPracticalResultIndex::class)
+            ->name('handover-practical-result');
+        Route::get('/tambah', HandoverPracticalResultCreate::class)
+            ->name('handover-practical-result.create');
+        Route::get('/{id}/edit', HandoverPracticalResultEdit::class)
+            ->name('handover-practical-result.edit');
+    });
+
+    Route::prefix('ijin-penggunaan-lbs')->group(function() {
+        Route::get('/', LbsUsagePermitIndex::class)
+            ->name('lbs-usage-permit');
+        Route::get('/tambah', LbsUsagePermitCreate::class)
+            ->name('lbs-usage-permit.create');
+        Route::get('/{id}/edit', LbsUsagePermitEdit::class)
+            ->name('lbs-usage-permit.edit');
+    });
+
+    Route::view('profile', 'profile')
+        ->middleware(['auth'])
+        ->name('profile');
 });
-
-Route::get('/permission', PermissionIndex::class)
-        ->name('permission');
-
-Route::get('/jurusan', DepartmentIndex::class)
-        ->name('department');
-
-Route::get('/program-studi', StudyProgramIndex::class)
-        ->name('study-program');
-
-Route::get('/satuan', UnitIndex::class)
-        ->name('unit');
-
-Route::get('/barang', ItemIndex::class)
-    ->name('item');
-
-Route::get('/laboratorium', LaboratoryIndex::class)
-    ->name('laboratory');
-
-Route::get('/tahun-ajaran', AcademicYearIndex::class)
-    ->name('academic-year');
-
-
-Route::get('/minggu-akademik', AcademicWeekIndex::class)
-    ->name('academic-week');
-
-Route::get('/semester', SemesterIndex::class)
-    ->name('semester');
-
-Route::get('/matakuliah', CourseIndex::class)
-    ->name('course');
-
-Route::get('/matakuliah-semester', SemesterCourseIndex::class)
-    ->name('semester-course');
-
-Route::get('/pengampu-matakuliah', CourseInstructorIndex::class)
-    ->name('course-instructor');
-
-Route::get('/inventaris-bahan', MaterialInventoryIndex::class)
-    ->name('material-inventory');
-
-Route::get('/inventaris-alat', ToolInventoryIndex::class)
-    ->name('tool-inventory');
-
-Route::prefix('kesiapan-baprak')->group(function() {
-    Route::get('/', PracticumMaterialReadinessIndex::class)
-        ->name('prac-mat-ready');
-    Route::get('/tambah', PracticumMaterialReadinessCreate::class)
-        ->name('prac-mat-ready.create');
-    Route::get('/{id}/ubah', PracticumMaterialReadinessEdit::class)
-        ->name('prac-mat-ready.edit');
-});
-
-Route::prefix('peminjaman-alat-praktek')->group(function() {
-    Route::get('/', PracticumEquipmentLoanIndex::class)
-        ->name('prac-equipment-loan');
-    Route::get('/tambah', PracticumEquipmentLoanCreate::class)
-        ->name('prac-equipment-loan.create');
-    Route::get('/{id}/{type}', PracticumEquipmentLoanEdit::class)
-        ->name('prac-equipment-loan.edit');
-});
-
-Route::prefix('penggantian-jadwal')->group(function() {
-    Route::get('/', ScheduleReplacementIndex::class)
-        ->name('schedule-replacement');
-    Route::get('/tambah', ScheduleReplacementCreate::class)
-        ->name('schedule-replacement.create');
-    Route::get('/{id}/edit', ScheduleReplacementEdit::class)
-        ->name('schedule-replacement.edit');
-});
-
-Route::get('/report-kehilangan', DamagedLostReportIndex::class)
-    ->name('damaged-lost-report');
-
-Route::prefix('serah-terima-praktikum')->group(function() {
-    Route::get('/', HandoverPracticalResultIndex::class)
-        ->name('handover-practical-result');
-    Route::get('/tambah', HandoverPracticalResultCreate::class)
-        ->name('handover-practical-result.create');
-    Route::get('/{id}/edit', HandoverPracticalResultEdit::class)
-        ->name('handover-practical-result.edit');
-});
-
-Route::prefix('ijin-penggunaan-lbs')->group(function() {
-    Route::get('/', LbsUsagePermitIndex::class)
-        ->name('lbs-usage-permit');
-    Route::get('/tambah', LbsUsagePermitCreate::class)
-        ->name('lbs-usage-permit.create');
-    Route::get('/{id}/edit', LbsUsagePermitEdit::class)
-        ->name('lbs-usage-permit.edit');
-});
-
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
 
 require __DIR__.'/auth.php';

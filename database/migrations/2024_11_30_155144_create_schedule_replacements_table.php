@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('practicum_event');
             $table->dateTime('real_schedule');
             $table->dateTime('replacement_schedule');
-            $table->foreignId('head_of_study_programs_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('lab_members_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('courses_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('head_of_study_program_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('lab_member_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('course_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('staff_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
         });

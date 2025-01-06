@@ -22,10 +22,10 @@ return new class extends Migration
 
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('staff_id_mentor')->nullable()->constrained()->nullOnDelete();
-            
-            $table->foreignId('study_programs_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('laboratories_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('lab_members_id')->nullable()->constrained()->nullOnDelete();
+
+            $table->foreignId('study_program_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('laboratory_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('lab_member_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -34,10 +34,10 @@ return new class extends Migration
             $table->string('code',12);
             $table->integer('qty');
 
-            $table->foreignId('lbs_usage_permits_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('lab_items_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('units_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('stock_cards_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('lbs_usage_permit_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('lab_item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('stock_card_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

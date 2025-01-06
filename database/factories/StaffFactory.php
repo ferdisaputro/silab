@@ -18,7 +18,7 @@ class StaffFactory extends Factory
     {
         return [
             'status' => fake()->boolean(), // Generates a random boolean value (true or false)
-            'staff_statuses_id' => fake()->optional()->numberBetween(1, 3), // Generates a random number for foreign key, can be null
+            'staff_status_id' => fake()->optional()->numberBetween(1, 3), // Generates a random number for foreign key, can be null
             'created_at' => now(), // Current timestamp for created_at
             'updated_at' => now(), // Current timestamp for updated_at
         ];

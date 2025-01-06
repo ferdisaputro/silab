@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_active');
             $table->string('acronym');
             $table->string('color', 15);
-            $table->foreignId('departments_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('department_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('code', 12);
             $table->boolean('is_lab_leader');
             $table->boolean('is_active');
-            $table->foreignId('laboratories_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('laboratory_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('staff_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -37,8 +37,8 @@ return new class extends Migration
             $table->string('code', 12);
             $table->string('description');
             $table->integer('stock');
-            $table->foreignId('laboratories_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('items_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('laboratory_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('item_id')->nullable()->constrained()->cascadeOnDelete();
             $table->boolean('is_active');
             $table->timestamps();
         });
@@ -48,8 +48,8 @@ return new class extends Migration
         //     $table->string('code', 12);
         //     $table->integer('qty');
         //     $table->string('description');
-        //     $table->foreignId('practicum_readinesses_id')->nullable()->constrained()->cascadeOnDelete();
-        //     $table->foreignId('lab_items_id')->nullable()->constrained()->cascadeOnDelete();
+        //     $table->foreignId('practicum_readinesse_id')->nullable()->constrained()->cascadeOnDelete();
+        //     $table->foreignId('lab_item_id')->nullable()->constrained()->cascadeOnDelete();
         //     $table->timestamps();
         // });
     }

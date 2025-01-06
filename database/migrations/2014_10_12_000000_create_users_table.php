@@ -33,8 +33,8 @@ return new class extends Migration
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
             $table->boolean('status');
-            $table->foreignId('staff_statuses_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('users_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('staff_status_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

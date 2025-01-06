@@ -15,9 +15,9 @@ class Template extends Component
     public $folderNameOrderByDirection = 'asc';
 
     // template for datatable filter
-    public function updatedFolderNameFilter() {
-        $this->resetPage();
-    }
+    // public function updatedFolderNameFilter() {
+    //     $this->resetPage();
+    // }
 
     #[Computed()]
     public function models() {

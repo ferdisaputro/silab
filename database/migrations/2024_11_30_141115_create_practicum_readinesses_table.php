@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->integer('recomendation')->comment("1 => Siapkan dan Lanjutkan, 2 => Dimodifikasi, 3 => Diganti Acara Praktek yang Lain, 4 => Ditunda");
             $table->date('date');
-            $table->foreignId('course_instructors_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('semester_courses_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('course_instructor_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('semester_course_id')->constrained()->cascadeOnDelete();
             $table->foreignId('staff_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('lab_members_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('laboratories_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('academic_weeks_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('lab_member_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('laboratory_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('academic_week_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -29,10 +29,10 @@ return new class extends Migration
             $table->string('code', 12);
             $table->integer('qty');
             $table->string('description');
-            $table->foreignId('practicum_readinesses_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('lab_items_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('stock_cards_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('units_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('practicum_readiness_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('lab_item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('stock_card_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

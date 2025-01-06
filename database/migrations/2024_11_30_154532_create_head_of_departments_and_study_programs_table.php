@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('head_of_departments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('departments_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
@@ -21,7 +21,7 @@ return new class extends Migration
 
         Schema::create('head_of_study_programs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('study_programs_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('study_program_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_active')->default(1);
             $table->timestamps();

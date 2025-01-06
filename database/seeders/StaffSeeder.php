@@ -23,7 +23,7 @@ class StaffSeeder extends Seeder
 
         User::factory(50)->create()->each(function($user) {
             Staff::factory()->create([
-                'users_id' => $user->id
+                'user_id' => $user->id
             ]);
         });
     }
