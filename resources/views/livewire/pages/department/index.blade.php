@@ -1,16 +1,16 @@
 <x-container x-data="Object.assign({createDepartmentState: false}, department())">
     <div>
         <x-modals.modal identifier="createDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.create />
+            <livewire:pages.department.create lazy />
         </x-modals.modal>
 
         <x-modals.modal identifier="editDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.edit wire:key='{{ now() }}' />
+            <livewire:pages.department.edit lazy />
         </x-modals.modal>
 
-        {{-- <x-modals.modal identifier="detailDepartmentState" max_width="max-w-4xl">
-            <livewire:pages.department.detail />
-        </x-modals.modal> --}}
+        <x-modals.modal identifier="detailDepartmentState" max_width="max-w-4xl">
+            <livewire:pages.department.detail lazy />
+        </x-modals.modal>
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -19,7 +19,7 @@
                 Tabel Jurusan
             </x-text.page-title>
             <div>
-                <x-buttons.fill x-on:click="createDepartmentState = true" title="" color="purple">Tambah Department</x-buttons.fill>
+                <x-buttons.fill x-on:click="createDepartmentState = true" title="" color="purple">Tambah Jurusan</x-buttons.fill>
             </div>
         </div>
 
@@ -60,8 +60,8 @@
             Alpine.data('department', () => {
                 return {
                     detailDepartmentState: false,
-                    showDetailDepartment (id) {
-                        $wire.dispatch('initDetailDepartment', {id: id});
+                    showDetailDepartment (key) {
+                        $wire.dispatch('initDetailDepartment', {key: key});
                         this.detailDepartmentState = true;
                     },
 

@@ -23,6 +23,7 @@ class Index extends Component
                     ->when($this->departmentOrderBy && $this->departmentOrderByDirection, function ($query) {
                         $query->orderBy($this->departmentOrderBy, $this->departmentOrderByDirection);
                     })
+                    ->with('user')
                     ->paginate($this->departmentPerPage);
     }
 

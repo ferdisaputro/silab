@@ -16,25 +16,27 @@
 
 <div class="overflow-x-auto">
     <div class="space-y-5 w-full min-w-[32rem]">
-        <div class="flex gap-3">
-            <div class="flex-1 max-w-20">
-                <select wire:model.live="{{ $eventTarget."PerPage" }}" class="border h-12 disabled:bg-primaryGrey peer capitalize border-gray-200 text-sm rounded-lg focus:ring-primaryTeal focus:border-primaryTeal block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal">
-                    <option value="15">15</option>
-                    <option value="20" default>20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
-            <div class="flex justify-end flex-1 gap-3">
-                <div class="flex items-center">
-                    <x-loading.circle wire:loading></x-loading.circle>
+        @if ($eventTarget)    
+            <div class="flex gap-3">
+                <div class="flex-1 max-w-20">
+                    <select wire:model.live="{{ $eventTarget."PerPage" }}" class="border h-12 disabled:bg-primaryGrey peer capitalize border-gray-200 text-sm rounded-lg focus:ring-primaryTeal focus:border-primaryTeal block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal">
+                        <option value="15">15</option>
+                        <option value="20" default>20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
                 </div>
-                <div class="flex-1 max-w-xs">
-                    <input wire:model.live.debounce.200ms="{{ $eventTarget."Filter" }}" placeholder="Cari Data..." class="block w-full h-12 px-4 text-sm bg-transparent border border-gray-200 rounded-lg appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-0 focus:border-primaryTeal peer">
+                <div class="flex justify-end flex-1 gap-3">
+                    <div class="flex items-center">
+                        <x-loading.circle wire:loading></x-loading.circle>
+                    </div>
+                    <div class="flex-1 max-w-xs">
+                        <input wire:model.live.debounce.200ms="{{ $eventTarget."Filter" }}" placeholder="Cari Data..." class="block w-full h-12 px-4 text-sm bg-transparent border border-gray-200 rounded-lg appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-0 focus:border-primaryTeal peer">
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
         <div>
             <style>
                 .table :is(th, td) {

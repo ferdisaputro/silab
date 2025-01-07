@@ -19,4 +19,9 @@ class Department extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function studyPrograms()
+    {
+        return $this->hasMany(StudyProgram::class);
+    }
 }

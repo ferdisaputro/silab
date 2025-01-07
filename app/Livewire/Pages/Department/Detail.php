@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Pages\Department;
 
+use App\Models\Department;
+use App\Models\StudyProgram;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Livewire\Attributes\Computed;
 
 class Detail extends Component
 {
@@ -19,11 +22,17 @@ class Detail extends Component
 
     public $listeners = ['addNewStudy', 'initDetailDepartment' => 'initDetail'];
 
+    #[Computed()]
+    public function department() {
+        $department = Department::find($this->id);
+        return $department ? $department->load('studyPrograms') : null;
+    }
+
     // #[On('initDetailDepartment')]
-    public function initDetail($id) {
+    public function initDetail($key) {
         $this->prev_url = url()->previous();
         try {
-            $decrypted = Crypt::decrypt($id);
+            $decrypted = Crypt::decrypt($key);
             // $this->dispatch('initTabelDepartment', ['id' => $this->id]);
 
             $this->id = $decrypted;

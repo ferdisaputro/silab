@@ -20,8 +20,8 @@ class StaffSeeder extends Seeder
         // User::truncate();
         // Staff::truncate();
 
-        DB::table('users')->delete();
-        DB::table('staff')->delete();
+        // DB::table('users')->delete();
+        // DB::table('staff')->delete();
 
         $defaultUser = User::create([
             'name' => 'Admin',
@@ -34,11 +34,12 @@ class StaffSeeder extends Seeder
 
         Staff::create([
             'user_id' => $defaultUser->id,
-            'staff_status_id' => fake()->optional()->numberBetween(1, 3),
+            'status' => 1,
+            'staff_status_id' => fake()->numberBetween(1, 3),
         ]);
 
         User::factory(50)->create()->each(function($user) {
-            Staff::factory()->create([
+            Staff::factory(1)->create([
                 'user_id' => $user->id
             ]);
         });

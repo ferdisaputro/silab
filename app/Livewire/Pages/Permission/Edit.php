@@ -24,7 +24,7 @@ class Edit extends Component
         try {     
             $this->id = Crypt::decrypt($key);
         } catch (DecryptException $de) {
-            return response()->json(['status' => 'error', 'message' => 'Invalid decryption key']);
+            echo "<script>alert('Failed to decrypt key');</script>";
         }
 
         try {     
@@ -33,7 +33,7 @@ class Edit extends Component
                 $this->editPermissionName = $permission->name;
             }
         } catch (DecryptException $de) {
-            return response()->json(['status' => 'error', 'message' => 'Invalid decryption key']);
+            echo "<script>alert('Failed to receive data');</script>";
         }
     }
 

@@ -1,5 +1,4 @@
 <div>
-    @dump($errors->all())
     <x-text.page-title class="mb-5">Tambah Jurusan</x-text.page-title>
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form x-data="createDepartment" x-on:submit.prevent='submitHandler' class="space-y-4">
@@ -7,10 +6,9 @@
         <x-forms.input wire:model.live.debounce='department' name="department" label="Nama Jurusan" />
         <x-forms.select-advanced model="headOfDepartment" name="headOfDepartment" label="Pilih Ketua Jurusan">
             @foreach ($lecturers as $lecturer)
-                <x-forms.option value="{{ $lecturer->user->id }}">{{ $lecturer->user->name }}</x-forms.option>
+                <option value="{{ $lecturer->user->id }}">{{ $lecturer->user->name }}</option>
             @endforeach
         </x-forms.select-advanced>
-
         <div class="text-center">
             <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah</x-buttons.outline>
         </div>
