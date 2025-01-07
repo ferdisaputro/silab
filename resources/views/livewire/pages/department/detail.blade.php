@@ -78,7 +78,7 @@
                         <th>Kode Program Study</th>
                         <th>Program Study</th>
                         <th>Ka. program Study</th>
-                        {{-- <th class="text-center">Action</th> --}}
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,10 +89,10 @@
                                 <td>{{ $studyProgram->code }}</td>
                                 <td>{{ $studyProgram->study_program }}</td>
                                 <td>{{ $studyProgram->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}</td>
-                                {{-- <td class="text-center">
-                                    <x-badges.outline x-on:click="showEditstudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                    <x-badges.outline x-on:click="deletestudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->studyProgram }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                                </td> --}}
+                                <td class="text-center">
+                                    {{-- <x-badges.outline x-on:click="showEditstudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline> --}}
+                                    <x-badges.outline x-on:click="removeStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->study_program }}', '{{ $this->department->department }}')" title="Hapus" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                </td>
                             </tr>
                         @endforeach
                     @else
@@ -127,6 +127,25 @@
                         }).then(async res => {
                             if (res.isConfirmed) {
                                 result = await $wire.edit()
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', result.original.message, result.original.status)
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', 'Data Prodi Gagal Ditambahkan :'+ result.original.message, 'error')
+                            }
+                        })
+                    },
+                    removeStudyProgram(key, studyProgram, department) {
+                        swal.fire({
+                            title: 'Hapus Prodi?',
+                            text: `Hapus Prodi (${studyProgram}) Dari Jurusan (${department})`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.removeStudyProgram(key)
                                 if (result.original.status !== 'error') {
                                     swal.fire('Berhasil', result.original.message, result.original.status)
                                     $wire.$parent.$refresh()

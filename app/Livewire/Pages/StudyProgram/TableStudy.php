@@ -30,15 +30,18 @@ class TableStudy extends Component
     // }
 
     #[Computed()]
-    public function studyPrograms() {
+    public function studyPrograms()
+    {
         return StudyProgram::where('study_program', 'like', "%$this->studyProgramFilter%")
-                    ->orWhere('code', 'like', "%$this->studyProgramFilter%")
-                    // ->orderBy($this->studyProgramOrderBy, $this->studyProgramOrderByDirection)
-                    ->when($this->studyProgramOrderBy && $this->studyProgramOrderByDirection, function ($query) {
-                        $query->orderBy($this->studyProgramOrderBy, $this->studyProgramOrderByDirection);
-                    })
-                    ->with('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user')
-                    ->paginate($this->studyProgramPerPage);
+            ->orWhere('code', 'like', "%$this->studyProgramFilter%")
+            ->when($this->isSelectable, function ($query) {
+                $query->orderByRaw('department_id IS NULL DESC, department_id ASC');
+            })
+            ->when($this->studyProgramOrderBy && $this->studyProgramOrderByDirection, function ($query) {
+                $query->orderBy($this->studyProgramOrderBy, $this->studyProgramOrderByDirection);
+            })
+            ->with('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user')
+            ->paginate($this->studyProgramPerPage);
     }
 
     #[On('initTableStudy')]

@@ -62,6 +62,18 @@ class Detail extends Component
         unset($this->newStudies[$index]);
     }
 
+    public function removeStudyProgram($key) {
+        try {
+            $decrypted = Crypt::decrypt($key);
+            StudyProgram::find($decrypted)->update([
+                'department_id' => null
+            ]);
+            return response()->json(['status' => 'success', 'message' => 'Program Studi Berhasil Dihapus.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus prodi. Error: '.$th->getMessage()]);
+        }
+    }
+
     public function edit() {
         try {
             $department = Department::find($this->id);
