@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('code', 12)->nullable();
             $table->string('study_program', 64);
 
-            $table->foreignId('department_id')->onDelete('CASCADE');
+            $table->foreignId('department_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });

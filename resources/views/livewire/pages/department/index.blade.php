@@ -1,23 +1,21 @@
 <x-container x-data="Object.assign({createDepartmentState: false}, department())">
     <div>
         <x-modals.modal identifier="createDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.create lazy />
+            <livewire:pages.department.create />
         </x-modals.modal>
 
         <x-modals.modal identifier="editDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.edit lazy />
+            <livewire:pages.department.edit />
         </x-modals.modal>
 
         <x-modals.modal identifier="detailDepartmentState" max_width="max-w-4xl">
-            <livewire:pages.department.detail lazy />
+            <livewire:pages.department.detail />
         </x-modals.modal>
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title>
-                Tabel Jurusan
-            </x-text.page-title>
+            <x-text.page-title class="mb-5 flex items-center gap-4">Tabel Jurusan</x-text.page-title> 
             <div>
                 <x-buttons.fill x-on:click="createDepartmentState = true" title="" color="purple">Tambah Jurusan</x-buttons.fill>
             </div>
@@ -40,7 +38,9 @@
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->departments->perPage() * ($this->departments->currentPage() - 1)) }}</td>
                             <td>{{ $department->code }}</td>
                             <td>{{ $department->department }}</td>
-                            <td>{{ $department->user->name?? "" }}</td>
+                            <td>
+                                {{ $department->headOfDepartments->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}
+                            </td>
                             <td class="text-center">
                                 <x-badges.outline x-on:click="showDetailDepartment('{{ Crypt::encrypt($department->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
                                 <x-badges.outline x-on:click="showEditDepartment('{{ Crypt::encrypt($department->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>

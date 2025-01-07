@@ -22,14 +22,20 @@ class Detail extends Component
 
     public $listeners = ['addNewStudy', 'initDetailDepartment' => 'initDetail'];
 
+    // #[Computed()]
+    // public function studyPrograms() {
+    //     $department = Department::find($this->id);
+    //     return $department? $department->studyPrograms : null;
+    // }
+
     #[Computed()]
     public function department() {
-        $department = Department::find($this->id);
-        return $department ? $department->load('studyPrograms') : null;
+        return Department::find($this->id);
     }
 
     // #[On('initDetailDepartment')]
     public function initDetail($key) {
+        $this->reset();
         $this->prev_url = url()->previous();
         try {
             $decrypted = Crypt::decrypt($key);
@@ -45,12 +51,8 @@ class Detail extends Component
     public function addNewStudy($key) {
         try {
             $decrypted = Crypt::decrypt($key);
-
-            $this->newStudies[] = [
-                "kode" => "KODE $decrypted",
-                "nama" => "Nama Program Studi  $decrypted",
-                "kaprodi" => "Ketua Program Studi  $decrypted",
-            ];
+            $studyProgram = StudyProgram::find($decrypted)->load('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user'); 
+            $this->newStudies[] = $studyProgram;
         } catch (DecryptException $e) {
             return response()->json('error');
         }
@@ -58,6 +60,25 @@ class Detail extends Component
 
     public function removeNewStudy($index) {
         unset($this->newStudies[$index]);
+    }
+
+    public function edit() {
+        try {
+            $department = Department::find($this->id);
+            if ($department) {
+                foreach ($this->newStudies as $newStudy) {
+                    $newStudy->update([
+                        'department_id' => $department->id
+                    ]);
+                }
+                $this->newStudies = [];
+                return response()->json(['status' => 'success', 'message' => 'Program Studi Berhasil Ditambahkan.']);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Error dalam mengambil data, refresh dan coba lagi.']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal menambahkan prodi. Error: '.$th->getMessage()]);
+        }
     }
 
 

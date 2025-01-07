@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
+use App\Models\HeadOfDepartment;
+use App\Models\HeadOfStudyProgram;
+use App\Models\StudyProgram;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -24,5 +28,23 @@ class DepartmentSeeder extends Seeder
         ];
 
         DB::table('departments')->insert($departments);
+
+        Department::factory(4)->create()->each(function($department) {
+            HeadOfDepartment::factory(mt_rand(1, 3))->create([
+                'department_id' => $department->id,
+                'staff_id' => mt_rand(1, 10),
+                'is_active' => fake()->boolean
+            ]);
+            StudyProgram::factory(mt_rand(3, 9))->create([
+                'department_id' => $department->id,
+                'user_id' => mt_rand(1, 10),
+            ])->each(function($studyProgram) {
+                HeadOfStudyProgram::factory(mt_rand(1, 3))->create([
+                    'study_program_id' => $studyProgram->id,
+                    'staff_id' => mt_rand(1, 10),
+                    'is_active' => fake()->boolean,
+                ]);
+            });
+        });
     }
 }

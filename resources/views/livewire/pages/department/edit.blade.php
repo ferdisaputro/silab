@@ -1,5 +1,5 @@
 <div>
-    <x-text.page-title class="mb-5">Ubah Jurusan</x-text.page-title>
+    <x-text.page-title class="mb-5 flex items-center gap-4">Ubah Jurusan</x-text.page-title> 
 {{-- x-data="ubahPegawai" x-on:submit.prevent="ubah" --}}
     <form x-data="editDepartment()" x-on:submit.prevent='submitHandler' class="space-y-4">
         <x-forms.input wire:model.live.debounce="editCode" name="editCode" label="Kode Jurusan" value="{{ $code?? '' }}" />
@@ -7,7 +7,7 @@
 
         <x-forms.select-advanced model="editHeadOfDepartment" name="editHeadOfDepartment" label="Pilih Ketua Jurusan" wire:key='{{ now() }}'>
             @foreach ($lecturers as $lecturer)
-                <option value="{{ $lecturer->user->id }}" {{ $lecturer->user->id == $editHeadOfDepartment ? 'selected' : '' }}>{{ $lecturer->user->name }}</option>
+                <option value="{{ $lecturer->id }}" {{ $lecturer->id == $editHeadOfDepartment ? 'selected' : '' }}>{{ $lecturer->user->name }}</option>
             @endforeach
         </x-forms.select-advanced>
 

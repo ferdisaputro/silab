@@ -1,38 +1,58 @@
 <div>
-    <x-tables.datatable id="tabel-study-program">
+    <x-tables.datatable :data="$this->studyPrograms" eventTarget="studyProgram">
         <thead>
             <tr>
-                <th># <i class="fa-solid fa-sort ms-2"></i></th>
-                <th>Kode Program Study <i class="fa-solid fa-sort ms-2"></i></th>
-                <th>Program Study <i class="fa-solid fa-sort ms-2"></i></th>
-                <th>Kaprogram Study <i class="fa-solid fa-sort ms-2"></i></th>
+                <th data-sortby="id">#</th>
+                <th data-sortby="code">Kode Program Studi</th>
+                <th data-sortby="study-program">Program Studi</th>
+                <th>Jurusan</th>
+                <th>Ka.program Studi</th>
                 <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>
-            {{-- only for simulation of loading data --}}
-            {{-- @if ($dataCount > 0) --}}
-                @for ($i = 0; $i < 50; $i++)
-                    <tr>
-                        <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                        <td>KODE-{{ $i }}</td>
-                        <td>Nama Program Studi {{ $i }}</td>
-                        <td>Ketua Program Studi {{ $i }}</td>
-                        <td class="text-center text-nowrap">
-                            @if (!$isSelectable)
-                                <x-badges.outline x-on:click="showEditStudyProgram('{{ Crypt::encrypt($i) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+            @foreach ($this->studyPrograms as $studyProgram)
+                <tr wire:key='{{ $loop->iteration + ($this->studyPrograms->perPage() * ($this->studyPrograms->currentPage() - 1)) }}'>
+                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->studyPrograms->perPage() * ($this->studyPrograms->currentPage() - 1)) }}</td>
+                    <td>{{ $studyProgram->code }}</td>
+                    <td>{{ $studyProgram->study_program }}</td>
+                    <td>{{ Str::limit($studyProgram->department->department?? "N/A", 30) }}</td>
+                    {{-- <td>@dump($studyProgram->headOfStudyPrograms)</td> --}}
+                    <td>{{ $studyProgram->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}</td>
+                    <td class="text-center text-nowrap">
+                        @if (!$isSelectable)
+                            <x-badges.outline x-on:click="showEditStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                            {{-- <x-badges.outline x-on:click="$dispatch('dispatchShowEditStudyProgram', '{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline> --}}
+                            <x-badges.outline x-data="deleteStudyProgram()" x-on:click="deleteStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->study_program }}')" title="Hapus" x class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                        @else
+                            @if ($studyProgram->department_id)
+                            <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
+                                x-on:click="
+                                    swal.fire({
+                                        title: 'Konfirmasi',
+                                        text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ya',
+                                        cancelButtonText: 'Batal',
+                                    }).then(async res => {
+                                        if (res.isConfirmed) {
+                                            $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
+                                            ({{ $identifier }})? {{ $identifier }} = false : ''
+                                        }
+                                    })
+                                "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
                             @else
                                 <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
-                                    x-on:click="
-                                        $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($i) }}'}); {{-- this is triggering a function from livewire/pages/department/detail --}}
-                                        ({{ $identifier }})? {{ $identifier }} = false : ''
-                                    "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                                x-on:click="
+                                    $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'}); {{-- this is triggering a function from livewire/pages/department/detail --}}
+                                    ({{ $identifier }})? {{ $identifier }} = false : ''
+                                "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
                             @endif
-                        </td>
-                    </tr>
-                @endfor
-            {{-- @endif --}}
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </x-tables.datatable>
 </div>
@@ -40,11 +60,26 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('studyProgram', () => {
+            Alpine.data('deleteStudyProgram', () => {
                 return {
-                    // this will add new study into department.detail
-                    addNewStudy(key) {
-
+                    deleteStudyProgram(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus program studi ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Program Studi Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

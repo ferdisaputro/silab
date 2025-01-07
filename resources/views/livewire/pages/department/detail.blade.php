@@ -1,33 +1,29 @@
 <div x-data="Object.assign(listStudyProgram(), {createStudyProgramState: false})">
-    @dump($this->department->studyPrograms ?? null)
     <div>
-        {{-- <x-modals.modal identifier="listStudyState" max_width="max-w-4xl">
+        <x-modals.modal identifier="listStudyState" max_width="max-w-4xl">
             <div class="flex items-center justify-between mb-7">
-                <x-text.page-title wire:loading.remove>
+                <x-text.page-title>
                     Tabel Program Studi
-                </x-text.page-title>
-                <x-text.page-title wire:loading>
-                    Loading...
                 </x-text.page-title>
 
                 <div>
                     <x-buttons.fill x-on:click="createStudyProgramState = true" title="" color="purple">Tambah Program Studi</x-buttons.fill>
                 </div>
             </div>
-            <livewire:pages.study-program.table-study isSelectable="true" identifier="listStudyState"/>
-        </x-modals.modal> --}}
+            <livewire:pages.study-program.table-study isSelectable="true" identifier="listStudyState" wire:key='{{ now() }}'/>
+        </x-modals.modal>
 
-        {{-- <div>
+        <div>
             <x-modals.modal identifier="createStudyProgramState" max_width="max-w-xl">
                 <livewire:pages.study-program.create />
             </x-modals.modal>
-        </div> --}}
+        </div>
     </div>
 
     <div class="flex items-center justify-between mb-7">
-        <x-text.page-title>
-            Detail Jurusan {{ $id }}
-        </x-text.page-title>
+        <x-text.page-title class="mb-5 flex items-center gap-4 capitalize">
+            Detail Jurusan ({{ $this->department->department?? "" }})
+        </x-text.page-title> 
         <div>
             <x-buttons.fill x-on:click="showListStudy" title="" color="purple">
                 Tambah List Prodi
@@ -54,9 +50,9 @@
                         @foreach($newStudies as $index => $newStudy)
                             <tr>
                                 <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration }}</td>
-                                <td>{{ $newStudy['kode'] }}</td>
-                                <td>{{ $newStudy['nama'] }}</td>
-                                <td>{{ $newStudy['kaprodi'] }}</td>
+                                <td>{{ $newStudy->code }}</td>
+                                <td>{{ $newStudy->study_program }}</td>
+                                <td>{{ $newStudy->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}</td>
                                 <td class="text-center text-nowrap">
                                     <x-badges.outline wire:click="removeNewStudy({{ $index }})" title="Hapus dari daftar penambahan prodi" class="px-2.5 py-1.5" color="green"><i class="fa-regular fa-minus fa-lg"></i></x-badges.outline>
                                 </td>
@@ -66,7 +62,7 @@
                 </x-tables.datatable>
 
                 <div class="text-center">
-                    <x-buttons.outline color="teal" class="w-full max-w-xs">Simpan Perubahan</x-buttons.outline>
+                    <x-buttons.outline color="teal" class="w-full max-w-xs" x-on:click="submitHandler">Tambah Prodi Baru</x-buttons.outline>
                 </div>
             </div>
         @endif
@@ -82,22 +78,21 @@
                         <th>Kode Program Study</th>
                         <th>Program Study</th>
                         <th>Ka. program Study</th>
-                        <th class="text-center">Action</th>
+                        {{-- <th class="text-center">Action</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     @if ($this->department && count($this->department->studyPrograms) > 0)
                         @foreach ($this->department->studyPrograms as $index => $studyProgram)
-                            <tr wire:key='{{ $loop->iteration + ($this->studyPrograms->perPage() * ($this->studyPrograms->currentPage() - 1)) }}'>
-                                <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->studyPrograms->perPage() * ($this->studyPrograms->currentPage() - 1)) }}</td>
+                            <tr wire:key='{{ $loop->iteration }}'>
+                                <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration }}</td>
                                 <td>{{ $studyProgram->code }}</td>
                                 <td>{{ $studyProgram->study_program }}</td>
-                                <td>{{ $studyProgram->user->name?? "" }}</td>
-                                <td class="text-center">
-                                    <x-badges.outline x-on:click="showDetailstudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
+                                <td>{{ $studyProgram->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}</td>
+                                {{-- <td class="text-center">
                                     <x-badges.outline x-on:click="showEditstudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                     <x-badges.outline x-on:click="deletestudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->studyProgram }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     @else
@@ -120,6 +115,25 @@
                     showListStudy() {
                         // $wire.dispatch('initTableStudy', {isSelectable: true, identifier: "listStudyState"})
                         this.listStudyState = true
+                    },
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Tambahkan Prodi Baru?',
+                            text: 'Pastikan Data Prodi Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.edit()
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', result.original.message, result.original.status)
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', 'Data Prodi Gagal Ditambahkan :'+ result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

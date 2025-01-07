@@ -17,7 +17,8 @@ class StudyProgramFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => $this->faker->regexify('[A-Z]{3}[0-9]{3}'),
+            'study_program' => $this->faker->sentence(3),
         ];
     }
 }

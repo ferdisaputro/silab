@@ -1,12 +1,12 @@
 <div>
-    <x-text.page-title class="mb-5">Tambah Jurusan</x-text.page-title>
+    <x-text.page-title class="mb-5 flex items-center gap-4">Tambah Jurusan</x-text.page-title> 
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form x-data="createDepartment" x-on:submit.prevent='submitHandler' class="space-y-4">
         <x-forms.input wire:model.live.debounce='code' name="code" label="Kode Jurusan" />
         <x-forms.input wire:model.live.debounce='department' name="department" label="Nama Jurusan" />
         <x-forms.select-advanced model="headOfDepartment" name="headOfDepartment" label="Pilih Ketua Jurusan">
             @foreach ($lecturers as $lecturer)
-                <option value="{{ $lecturer->user->id }}">{{ $lecturer->user->name }}</option>
+                <option value="{{ $lecturer->id {{-- this is staff id --}} }}">{{ $lecturer->user->name }}</option>
             @endforeach
         </x-forms.select-advanced>
         <div class="text-center">

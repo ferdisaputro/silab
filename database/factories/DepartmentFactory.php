@@ -17,7 +17,9 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => $this->faker->regexify('[A-Z]{2}[0-9]{2}\.[0-9]{1}\.[0-9]{1}'), 
+            'department' => $this->faker->sentence(5), 
+            'user_id' => $this->faker->numberBetween(1, 10)
         ];
     }
 }

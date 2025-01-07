@@ -1,26 +1,24 @@
-<x-container x-data="Object.assign({createStudyProgramState: false}, editStudyProgram())">
+<x-container x-data="Object.assign({createStudyProgramState: false}, showEditStudyProgram())">    
     <div>
         <x-modals.modal identifier="createStudyProgramState" max_width="max-w-xl">
             <livewire:pages.study-program.create />
         </x-modals.modal>
 
-        <x-modals.modal identifier="editStudyProgramState" max_width="max-w-xl">
+        <x-modals.modal identifier="showEditStudyProgramState" max_width="max-w-xl">
             <livewire:pages.study-program.edit />
         </x-modals.modal>
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title>
-                Tabel Program Studi
-            </x-text.page-title>
+            <x-text.page-title class="mb-5 flex items-center gap-4">Tabel Program Studi</x-text.page-title> 
             <div>
                 <x-buttons.fill x-on:click="createStudyProgramState = true" title="" color="purple">Tambah Program Studi</x-buttons.fill>
             </div>
         </div>
 
         <div>
-            <livewire:pages.study-program.table-study>
+            <livewire:pages.study-program.table-study wire:key='{{ now() }}'>
         </div>
     </div>
 </x-container>
@@ -28,12 +26,12 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editStudyProgram', () => {
+            Alpine.data('showEditStudyProgram', () => {
                 return {
-                    editStudyProgramState: false,
-                    showEditStudyProgram (id) {
-                        $wire.dispatch('initEditStudyProgram', {id: id});
-                        this.editStudyProgramState = true;
+                    showEditStudyProgramState: false,
+                    showEditStudyProgram (key) {
+                        $wire.dispatch('initEditStudyProgram', {key: key});
+                        this.showEditStudyProgramState = true;
                     }
                 }
             })

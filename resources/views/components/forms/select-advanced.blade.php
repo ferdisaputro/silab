@@ -11,7 +11,7 @@
 <!-- component -->
 <div>
     <div {{ $attributes }}
-        x-data="selectComponent($el)"
+        x-data="selectComponent($el, '{{ $label }}')"
         wire:ignore.self
     >
         <div class="relative group select-form-container">
@@ -59,11 +59,12 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('selectComponent', (el) => {
+            Alpine.data('selectComponent', (el, label) => {
                 return {
                     isOpen: false,
                     search: '',
                     selectedItem: null,
+                    label: label,
 
                     options: null, // default option element
 
@@ -83,7 +84,7 @@
                     convertOption() {
                         const selectFormMenu = this.selectContainer.querySelector('.select-form-menu');
 
-                        this.options = [{value: "", text: "{{ $label }}", selected: false}]
+                        this.options = [{value: "", text: this.label, selected: false}]
                             .concat(Array.from(selectFormMenu.querySelectorAll('option')).map(option => {
                                 return {value: option.value, text: option.textContent, selected: option.selected}
                             }));                                                        

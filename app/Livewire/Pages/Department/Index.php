@@ -8,9 +8,12 @@ use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
     public $departmentPerPage = 15;
     public $departmentFilter = null;
     public $departmentOrderBy = 'id';
@@ -23,7 +26,7 @@ class Index extends Component
                     ->when($this->departmentOrderBy && $this->departmentOrderByDirection, function ($query) {
                         $query->orderBy($this->departmentOrderBy, $this->departmentOrderByDirection);
                     })
-                    ->with('user')
+                    ->with('headOfDepartments', 'headOfDepartments.staff', 'headOfDepartments.staff.user')
                     ->paginate($this->departmentPerPage);
     }
 

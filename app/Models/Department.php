@@ -24,4 +24,21 @@ class Department extends Model
     {
         return $this->hasMany(StudyProgram::class);
     }
+
+    public function headOfDepartments()
+    {
+        return $this->hasMany(HeadOfDepartment::class);
+    }
+
+    // public function headOfDepartments()
+    // {
+    //     return $this->hasManyThrough(
+    //         Staff::class, 
+    //         HeadOfDepartment::class, 
+    //         'department_id', 
+    //         'id',
+    //         'id',
+    //         'staff_id'
+    //     );
+    // }
 }

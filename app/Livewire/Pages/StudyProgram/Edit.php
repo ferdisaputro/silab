@@ -2,36 +2,95 @@
 
 namespace App\Livewire\Pages\StudyProgram;
 
+use App\Models\Department;
+use App\Models\Staff;
+use App\Models\StudyProgram;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 
 class Edit extends Component
 {
     public $id;
     #[Validate('required|min:3')]
-    public $kode;
+    public $editCode;
     #[Validate('required|min:3')]
-    public $nama;
-    #[Validate('required')]
-    public $kaprodi;
+    public $editStudyProgram;
+    public $editDepartment; // id of department
+    public $editHeadOfStudyProgram; // id of staff
 
     #[On('initEditStudyProgram')]
-    public function initEditStudyProgram($id) {
+    public function initEditStudyProgram($key) {
         try {
-            $decrypted = Crypt::decrypt($id);
+            $decrypted = Crypt::decrypt($key);
             $this->id = $decrypted;
-            $this->kode = "kode-".$this->id;
-            $this->nama = "nama ".$this->id;
-            $this->kaprodi = "kaprodi-".$this->id;
         } catch (DecryptException $e) {
-            $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
+            dump("Failed to decrypt key ".$e);
+        }
+
+        try {
+            if ($this->id) {
+                # code...
+                $studyProgram = StudyProgram::findOrFail($this->id);
+                $this->editCode = $studyProgram->code;
+                $this->editStudyProgram = $studyProgram->study_program;
+                $this->editDepartment = $studyProgram->department->id?? null;
+                $this->editHeadOfStudyProgram = $studyProgram->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->id?? null;
+            }
+        } catch (\Exception $e) {
+            dump("Failed to receive data ".$e);
         }
     }
+
+    public function edit() {
+        $this->validate();
+        try {
+            $studyProgram = StudyProgram::findOrFail($this->id);
+            $studyProgram->code = $this->editCode;
+            $studyProgram->study_program = $this->editStudyProgram;
+            $studyProgram->department_id = $this->editDepartment;
+            $studyProgram->user_id = Auth::user()->id;
+
+            $headOfStudyProgram = $studyProgram->headOfStudyPrograms()->where('staff_id', $this->editHeadOfStudyProgram)->first();
+
+            $studyProgram->headOfStudyPrograms()->update([
+                'is_active' => 0
+            ]);
+
+            if ($headOfStudyProgram) {
+                $studyProgram->headOfStudyPrograms()->updateOrCreate([
+                    'staff_id' => $this->editHeadOfStudyProgram,
+                    'study_program_id' => $studyProgram->id,
+                ], [
+                    'is_active' => 1,
+                ]);
+            } else {
+                $studyProgram->headOfStudyPrograms()->create([
+                    'staff_id' => $this->editHeadOfStudyProgram,
+                    'study_program_id' => $studyProgram->id,
+                    'is_active' => 1,
+                ]);
+            }
+
+            // if ($studyProgram->isDirty(['code', 'studyProgram', 'user_id'])) {
+            $studyProgram->save();
+            return response()->json(['status' => 'success', 'message' => 'Data Program Studi Berhasil Diubah']);
+            // }
+
+            // return response()->json(['status' => 'info', 'message' => 'Tidak Ada Perubahan Data']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
     public function render()
     {
-        return view('livewire.pages.study-program.edit');
+        return view('livewire.pages.study-program.edit', [
+            'lecturers' => Staff::where("staff_status_id", 1)->with('user')->get(),
+            'departments' => Department::get(),
+        ]);
     }
 }

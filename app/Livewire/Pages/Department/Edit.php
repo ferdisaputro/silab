@@ -9,6 +9,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 
 class Edit extends Component
 {
@@ -17,7 +18,6 @@ class Edit extends Component
     public $editCode;
     #[Validate('required|min:3')]
     public $editDepartment;
-    #[Validate("required|integer")]
     public $editHeadOfDepartment;
 
     #[On('initEditDepartment')]
@@ -26,7 +26,7 @@ class Edit extends Component
             $decrypted = Crypt::decrypt($key);
             $this->id = $decrypted;
         } catch (DecryptException $e) {
-            echo "<script>alert('Failed to decrypt key');</script>";
+            dump("Failed to decrypt key ".$e);
         }
 
         try {
@@ -35,10 +35,10 @@ class Edit extends Component
                 $department = Department::findOrFail($this->id);
                 $this->editCode = $department->code;
                 $this->editDepartment = $department->department;
-                $this->editHeadOfDepartment = $department->user_id;
+                $this->editHeadOfDepartment = $department->headOfDepartments->firstWhere('is_active', 1)->staff->user->id?? null;
             }
         } catch (\Exception $e) {
-            echo "<script>alert('Failed to receive data');</script>";
+            dump("Failed to receive data ".$e);
         }
     }
 
@@ -48,12 +48,35 @@ class Edit extends Component
             $department = Department::findOrFail($this->id);
             $department->code = $this->editCode;
             $department->department = $this->editDepartment;
-            $department->user_id = $this->editHeadOfDepartment;
-            if ($department->isDirty(['code', 'department', 'user_id'])) {
-                $department->update();
-                return response()->json(['status' => 'success', 'message' => 'Data Jurusan Berhasil Diubah']);
+            $department->user_id = Auth::user()->id;
+
+            $headOfDepartment = $department->headOfDepartments()->where('staff_id', $this->editHeadOfDepartment)->first();
+
+            $department->headOfDepartments()->update([
+                'is_active' => 0
+            ]);
+
+            if ($headOfDepartment) {
+                $department->headOfDepartments()->updateOrCreate([
+                    'staff_id' => $this->editHeadOfDepartment,
+                    'department_id' => $department->id,
+                ], [
+                    'is_active' => 1,
+                ]);
+            } else {
+                $department->headOfDepartments()->create([
+                    'staff_id' => $this->editHeadOfDepartment,
+                    'department_id' => $department->id,
+                    'is_active' => 1,
+                ]);
             }
-            return response()->json(['status' => 'info', 'message' => 'Tidak Ada Perubahan Data']);
+
+            // if ($department->isDirty(['code', 'department', 'user_id'])) {
+            $department->save();
+            return response()->json(['status' => 'success', 'message' => 'Data Jurusan Berhasil Diubah']);
+            // }
+
+            // return response()->json(['status' => 'info', 'message' => 'Tidak Ada Perubahan Data']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
