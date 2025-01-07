@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     use HasFactory;
+
+    protected $table = 'units';
+
+    protected $fillable = ['satuan','user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

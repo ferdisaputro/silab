@@ -21,13 +21,13 @@ class Edit extends Component
 
     #[On('initEditPermission')]
     public function initEditPermission($key) {
-        try {     
+        try {
             $this->id = Crypt::decrypt($key);
         } catch (DecryptException $de) {
             return response()->json(['status' => 'error', 'message' => 'Invalid decryption key']);
         }
 
-        try {     
+        try {
             if ($this->id) {
                 $permission = Permission::findOrFail($this->id);
                 $this->editPermissionName = $permission->name;

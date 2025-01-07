@@ -27,7 +27,9 @@ return new class extends Migration
 
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('item_name');
+            $table->string('item_code',32);
+            $table->integer('quantity');
             $table->string('specification');
             $table->string('description');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
