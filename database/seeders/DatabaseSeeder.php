@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             StaffSeeder::class,
             DepartmentSeeder::class,
+            AcademicYearSeeder::class,
         ]);
     }
 }

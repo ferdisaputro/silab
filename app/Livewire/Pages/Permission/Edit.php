@@ -44,7 +44,7 @@ class Edit extends Component
             $permission->name = $this->editPermissionName;
             if ($permission->isDirty('name')) {
                 $permission->update();
-                return response()->json(['status' => 'success', 'message' => 'Data Permission Berhasil Diubahkan']);
+                return response()->json(['status' => 'success', 'message' => 'Data Permission Berhasil Diubah']);
             }
             return response()->json(['status' => 'info', 'message' => 'Tidak Ada Perubahan Data']);
         } catch (\Exception $e) {
