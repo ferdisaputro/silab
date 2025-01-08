@@ -24,7 +24,7 @@ class Detail extends Component
 
     #[Computed()]
     public function laboratory() {
-        return Laboratory::find($this->id)->load('members', 'members.staff', 'members.staff.user');
+        return Laboratory::find($this->id)->load('members', 'members.staff', 'members.staff.user', 'members.staff.staffStatus');
     }
 
 

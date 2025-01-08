@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createCourseState: false}, editCourse())">
+<x-container x-data="Object.assign({createCourseState: true}, showEditCourse())">
     <div>
         <x-modals.modal identifier="createCourseState" max_width="max-w-3xl">
             <livewire:pages.course.create />
@@ -21,37 +21,32 @@
         </div>
 
         <div x-data="changeDataStatus">
-            <x-tables.datatable>
+            <x-tables.datatable :data="$this->courses" eventTarget="course">
                 <thead>
                     <tr>
-                        <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Status<i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="id">#</th>
+                        <th data-sortby="code">Kode Matkul</th>
+                        <th data-sortby="course">Nama Matkul</th>
+                        <th>Status</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 30; $i++)
-                        <tr wire:key='{{ $i }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>{{ Str::random(5) }}</td>
-                            <td>{{ Str::random(5) }}</td>
+                    @foreach ($this->courses as $course)
+                        <tr wire:key='{{ $loop->iteration + ($this->courses->perPage() * ($this->courses->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->courses->perPage() * ($this->courses->currentPage() - 1)) }}</td>
+                            <td>{{ $course->code }}</td>
+                            <td>{{ $course->course }}</td>
                             <td>
-                                @if (mt_rand(0, 1))
-                                    <x-badges.fill color="blue" class="px-2.5 py-1.5"
-                                        x-on:click="changeToNonActive">Aktif</x-badges.fill>
-                                @else
-                                    <x-badges.fill color="yellow" class="px-2.5 py-1.5"
-                                        x-on:click="changeToActive">Non Aktif</x-badges.fill>
-                                @endif
+                                <x-badges.fill :color="$course->is_active? 'blue' : 'yellow'" class="px-2.5 py-1.5"
+                                    x-on:click="changeStatus('{{ Crypt::encrypt($course->id) }}', {{ $course->is_active }})">{{ $course->is_active? "Aktif" : "Non Aktif" }}</x-badges.fill>
                             </td>
                             <td class="text-center">
-                                <x-badges.outline x-on:click="showEditCourse('{{ Crypt::encrypt($i) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditCourse('{{ Crypt::encrypt($course->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
@@ -61,11 +56,11 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editCourse', () => {
+            Alpine.data('showEditCourse', () => {
                 return {
                     editCourseState: false,
-                    showEditCourse(id) {
-                        $wire.dispatch('initEditCourse', {id: id});
+                    showEditCourse(key) {
+                        $wire.dispatch('initEditCourse', {key: key});
                         this.editCourseState = true;
                     }
                 }
@@ -73,28 +68,26 @@
 
             Alpine.data('changeDataStatus', () => {
 				return {
-					changeToNonActive() {
-						swal.fire({
-							title: 'Ubah Status',
-							text: 'Ubah status ke non aktif',
-							icon: 'warning',
-							confirmButtonText: 'Ya',
-							cancelButtonText: 'Tidak',
-							showCloseButton: true,
-							showCancelButton: true
-						})
-					},
-					changeToActive() {
-						swal.fire({
-							title: 'Ubah Status',
-							text: 'Ubah status ke aktif',
-							icon: 'warning',
-							confirmButtonText: 'Ya',
-							cancelButtonText: 'Tidak',
-							showCloseButton: true,
-							showCancelButton: true
-						})
-					}
+					changeStatus(key, status) {
+                        let title = status || status == 1 ? 'Ubah Status ke Non Aktif' : 'Ubah Status ke Aktif';
+                        let text = status || status == 1 ? 'Ubah status ke non aktif' : 'Ubah status ke aktif';
+                        let confirmButtonText = status ? 'Non Aktif' : 'Aktif';
+                        let cancelButtonText = status ? 'Aktif' : 'Non Aktif';
+
+                        swal.fire({
+                            title: title,
+                            text: text,
+                            icon: 'warning',
+                            confirmButtonText: "Ya",
+                            cancelButtonText: "Tidak",
+                            showCloseButton: true,
+                            showCancelButton: true
+                        }).then(response => {
+                            if (response.isConfirmed) {
+                                $wire.updateStatus(key, !status)
+                            }
+                        })
+                    }
 				}
             })
         </script>

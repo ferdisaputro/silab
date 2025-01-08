@@ -23,13 +23,13 @@
         </div>
 
         <div>
-            <x-tables.datatable id="laboratory-table">
+            <x-tables.datatable :data="$this->laboratories" eventTarget="laboratory">
                 <thead>
                     <tr>
-                        <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Kode Lab<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Laboratorium<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Ka. Laboratorium<i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="id">#</th>
+                        <th data-sortby="code">Kode Lab</th>
+                        <th data-sortby="laboratory">Laboratorium</th>
+                        <th>Ka. Laboratorium</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>

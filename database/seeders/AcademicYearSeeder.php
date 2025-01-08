@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\AcademicWeek;
+use App\Models\Semester;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +15,41 @@ class AcademicYearSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('academic_years')->insert([
+        $academicYears = [
             ['start_year' => 2020, 'end_year' => 2021, 'is_even' => 1, 'is_active' => 1, 'created_at' => '2022-07-03 07:39:03', 'updated_at' => '2022-10-04 06:03:37'],
             ['start_year' => 2020, 'end_year' => 2021, 'is_even' => 0, 'is_active' => 0, 'created_at' => '2022-05-31 04:33:26', 'updated_at' => '2022-10-04 06:11:43'],
             ['start_year' => 2022, 'end_year' => 2023, 'is_even' => 1, 'is_active' => 1, 'created_at' => '2022-05-31 04:33:38', 'updated_at' => '2022-10-04 06:12:24'],
             ['start_year' => 2022, 'end_year' => 2023, 'is_even' => 0, 'is_active' => 0, 'created_at' => '2022-07-03 07:42:45', 'updated_at' => '2024-06-13 02:27:15'],
             ['start_year' => 2024, 'end_year' => 2025, 'is_even' => 1, 'is_active' => 1, 'created_at' => '2024-06-13 06:14:16', 'updated_at' => '2024-06-13 06:14:18'],
-        ]);
+        ];
+
+        DB::table('academic_years')->insert($academicYears);
+
+        foreach ($academicYears as $academicYear) {
+            $academicYearId = DB::table('academic_years')
+                ->where('start_year', $academicYear['start_year'])
+                ->where('end_year', $academicYear['end_year'])
+                ->where('is_even', $academicYear['is_even'])
+                ->where('is_active', $academicYear['is_active'])
+                ->value('id');
+
+            for ($weekNumber = 1; $weekNumber <= 16; $weekNumber++) {
+                $semester = 0;
+                AcademicWeek::factory()->create([
+                    'academic_year_id' => $academicYearId,
+                    'week_number' => $weekNumber,
+                ]);
+            }
+            $is_even = false;
+            for ($i=1; $i <= 8; $i++) { 
+                Semester::create([
+                    'semester' => $i,
+                    'is_even' => $is_even? 1 : 0,
+                    'user_id' => 1,
+                    'academic_year_id' => $academicYearId
+                ]);
+                $is_even = !$is_even;
+            }
+        }
     }
 }

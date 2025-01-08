@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createAcademicWeekState: false}, editAcademicWeek())">
+<x-container x-data="Object.assign({createAcademicWeekState: false}, showEditAcademicWeek())">
     <div>
         <x-modals.modal identifier="createAcademicWeekState" max_width="max-w-xl">
             <livewire:pages.academic-week.create />
@@ -20,33 +20,33 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-academicWeek">
+            <x-tables.datatable :data="$this->academicWeeks" eventTarget="academicWeek">
                 <thead>
                     <tr>
-                        <th># <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Minggu Ke - (Tahun Ajaran) <i class="fa-solid fa-sort ms-2"></i></th>
-                        {{-- <th>Tahun Ajaran <i class="fa-solid fa-sort ms-2"></i></th> --}}
-                        <th>Awal Minggu <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Awal Minggu <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Keterangan <i class="fa-solid fa-sort ms-2"></i></th>
+                        <th>#</th>
+                        <th>Minggu Ke</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Awal Minggu</th>
+                        <th>Akhir Minggu</th>
+                        <th>Keterangan</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 50; $i++)
-                        <tr>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>{{ rand(1, 52)." ".rand(date('Y') - 5, date('Y') + 5) . '/' . (rand(date('Y') - 5, date('Y') + 5) + 1) }}</td>
-                            {{-- <td>{{ rand(date('Y') - 5, date('Y') + 5) . '/' . (rand(date('Y') - 5, date('Y') + 5) + 1) }}</td> --}}
-                            <td>{{ date('Y-m-d', strtotime('+' . rand(1, 365) . ' days')) }}</td>
-                            <td>{{ date('Y-m-d', strtotime('+' . rand(1, 365) . ' days')) }}</td>
-                            <td>{{ implode(' ', array_map(function($i) { return Str::random(rand(3, 10)); }, range(1, rand(1, 10)))) }}</td>
+                    @foreach ($this->academicWeeks as $week)
+                        <tr wire:key='{{ $loop->iteration + ($this->academicWeeks->perPage() * ($this->academicWeeks->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->academicWeeks->perPage() * ($this->academicWeeks->currentPage() - 1)) }}</td>
+                            <td>{{ $week->week_number }}</td>
+                            <td>{{ $week->academicYear->start_year }} / {{ $week->academicYear->end_year }} ({{ $week->academicYear->is_even? "Genap" : "Ganjil" }})</td>
+                            <td>{{ $week->start_date }}</td>
+                            <td>{{ $week->end_date }}</td>
+                            <td>{{ $week->description }}</td>
                             <td class="text-center flex flex-wrap gap-1.5">
-                                <x-badges.outline x-on:click="showEditAcademicWeek('{{ Crypt::encrypt($i) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditAcademicWeek('{{ Crypt::encrypt($week->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteAcademicWeek('{{ Crypt::encrypt($week->id) }}', '{{ $week->week_number.' tahun ajaran '. $week->academicYear->start_year.' / '.$week->academicYear->end_year.' '.($week->academicYear->is_even? 'Genap' : 'Ganjil') }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
@@ -56,12 +56,31 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editAcademicWeek', () => {
+            Alpine.data('showEditAcademicWeek', () => {
                 return {
                     editAcademicWeekState: false,
-                    showEditAcademicWeek (id) {
-                        $wire.dispatch('initEditAcademicWeek', {id: id});
+                    showEditAcademicWeek (key) {
+                        $wire.dispatch('initEditAcademicWeek', {key: key});
                         this.editAcademicWeekState = true;
+                    },
+                    deleteAcademicWeek(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus minggu ke ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Minggu Ajaran Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

@@ -1,16 +1,14 @@
 <div>
-    <x-text.page-title class="mb-5">Ubah Semester {{ $id }}</x-text.page-title>
+    <x-text.page-title class="mb-5">Ubah Semester</x-text.page-title>
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
-    <form wire:submit='submitHandle' class="space-y-4">
-    <form action="">
-        <x-forms.select name="academic_year" label="Pilih Tahun Ajaran">
-            <option value="2021/2022">2021/2022</option>
-            <option value="2022/2023">2022/2023</option>
-            <option value="2023/2024">2023/2024</option>
-            <option value="2024/2025">2024/2025</option>
+    <form x-on:submit.prevent='submitHandler' x-data="editSemester()" class="space-y-4">
+        <x-forms.select wire:model.live='academic_year' name="academic_year" label="Pilih Tahun Ajaran">
+            @foreach ($academic_years as $year)
+                <option value="{{ $year->id }}">{{ $year->start_year }}/{{ $year->end_year }} - {{ $year->is_even? "genap" : "ganjil" }}</option>
+            @endforeach
         </x-forms.select>
 
-        <x-forms.select name="semester" label="Semester">
+        <x-forms.select wire:model.live='semester' name="semester" label="Semester">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -26,3 +24,35 @@
         </div>
     </form>
 </div>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('editSemester', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Ubah Data Semester?',
+                            text: 'Pastikan Data Semester Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.edit()
+                                console.log(result);
+                                
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', result.original.message, result.original.status)
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce

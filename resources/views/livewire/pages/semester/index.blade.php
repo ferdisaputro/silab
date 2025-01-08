@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createSemesterState: false}, editSemester())">
+<x-container x-data="Object.assign({createSemesterState: false}, showEditSemester())">
     <div>
         <x-modals.modal identifier="createSemesterState" max_width="max-w-xl">
             <livewire:pages.semester.create />
@@ -20,27 +20,27 @@
         </div>
 
         <div>
-            <x-tables.datatable>
+            <x-tables.datatable :data="$this->semesters" eventTarget="semester">
                 <thead>
                     <tr>
-                        <th># <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Tahun Ajaran <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Semester <i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="id">#</th>
+                        <th>Tahun Ajaran</th>
+                        <th data-sortby="semester">Semester</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 50; $i++)
-                        <tr>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>{{ mt_rand(2020, 2025) }}/{{ mt_rand(2021, 2026) }} {{ mt_rand(0, 1) == 0 ? '(Ganjil)' : '(Genap)' }}</td>
-                            <td>{{ mt_rand(1, 10) }}</td>
+                    @foreach ($this->semesters as $semester)
+                        <tr wire:key='{{ $loop->iteration + ($this->semesters->perPage() * ($this->semesters->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->semesters->perPage() * ($this->semesters->currentPage() - 1)) }}</td>
+                            <td>{{ $semester->academicYear->start_year }}/{{ $semester->academicYear->end_year }} ({{ $semester->academicYear->is_even? "Genap" : "Ganjil" }})</td>
+                            <td>{{ $semester->semester }}</td>
                             <td class="text-center flex flex-wrap gap-1.5">
-                                <x-badges.outline x-on:click="showEditSemester('{{ Crypt::encrypt($i) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditSemester('{{ Crypt::encrypt($semester->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
@@ -50,11 +50,11 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editSemester', () => {
+            Alpine.data('showEditSemester', () => {
                 return {
                     editSemesterState: false,
-                    showEditSemester (id) {
-                        $wire.dispatch('initEditSemester', {id: id});
+                    showEditSemester (key) {
+                        $wire.dispatch('initEditSemester', {key: key});
                         this.editSemesterState = true;
                     }
                 }

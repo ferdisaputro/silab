@@ -31,7 +31,7 @@
                             <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                             <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                         @else
-                            @dump($user->labMembers)
+                            {{-- @dump($user->labMembers) --}}
                             {{-- @if ($user->->department_id)
                                 <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
                                     x-on:click="

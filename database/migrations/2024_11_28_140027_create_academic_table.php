@@ -23,10 +23,11 @@ return new class extends Migration
 
         Schema::create('academic_weeks', function (Blueprint $table) {
             $table->id();
+            $table->integer('week_number');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('description');
-            $table->foreignId('academic_year_id')->nullable()->constrained()->nullOnDelete();
+            $table->text('description')->nullable();
+            $table->foreignId('academic_year_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -36,6 +37,15 @@ return new class extends Migration
             $table->boolean('is_even'); // menentukan apakah semester ini genap
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('academic_year_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('courses', function (Blueprint $table) {
+            $table->id();
+            $table->string('code', 30)->nullable();
+            $table->string('course');
+            $table->boolean('is_active');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 
@@ -66,6 +76,7 @@ return new class extends Migration
         Schema::dropIfExists('academic_years');
         Schema::dropIfExists('academic_weeks');
         Schema::dropIfExists('semesters');
+        Schema::dropIfExists('courses');
         Schema::dropIfExists('semester_courses');
         Schema::dropIfExists('course_instructors');
     }

@@ -71,7 +71,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($this->laboratory->members()->where('is_active', 1)->orderBy('updated_at', 'asc')->get() as $member)
+                    @foreach ($this->laboratory->members->where('is_active', 1)->sortBy('updated_at') as $member)
                         <tr wire:key='members-{{ $loop->iteration }}'>
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration }}</td>
                             <td>

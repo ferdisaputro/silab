@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             StaffSeeder::class,
             DepartmentSeeder::class,
             AcademicYearSeeder::class,
+            CourseSeeder::class,
         ]);
     }
 }

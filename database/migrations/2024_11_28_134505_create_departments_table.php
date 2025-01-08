@@ -29,15 +29,6 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
-
-        Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 12)->nullable();
-            $table->string('course', 64);
-            $table->boolean('is_active');
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamps();
-        });
     }
 
     /**
@@ -47,6 +38,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('departments');
         Schema::dropIfExists('study_programs');
-        Schema::dropIfExists('courses');
     }
 };

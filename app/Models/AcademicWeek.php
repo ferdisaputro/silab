@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class AcademicWeek extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
 }
