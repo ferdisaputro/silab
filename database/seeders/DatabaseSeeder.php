@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             AcademicYearSeeder::class,
             CourseSeeder::class,
+            LaboratoriumSeeder::class,
         ]);
     }
 }

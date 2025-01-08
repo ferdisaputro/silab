@@ -51,9 +51,9 @@ class Create extends Component
     // Submit form
     public function create()
     {
+        $this->validate();
         try
         {
-            $this->validate();
         $data = [
             'item_name' => $this->item_name,
             'item_code' => $this->item_code,

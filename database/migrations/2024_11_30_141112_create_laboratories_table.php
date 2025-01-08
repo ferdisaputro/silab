@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('code', 12)->nullable();
             $table->string('name');
-            $table->boolean('is_active');
-            $table->string('acronym');
+            // $table->boolean('is_active');
+            $table->string('acronym')->nullable();
             $table->string('color', 15)->nullable();
-            $table->foreignId('department_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
 

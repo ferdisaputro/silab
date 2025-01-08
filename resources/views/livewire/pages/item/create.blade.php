@@ -13,7 +13,7 @@
                         wire:model.live.debounce="item_code"/>
                     <x-forms.input
                         name="item_name"
-                        label="Barang"
+                        label="Nama Barang"
                         key="item_name"
                         type="text"
                         wire:model.live.debounce="item_name" />
