@@ -1,5 +1,5 @@
 <div>
-    <x-text.page-title class="mb-5" wire:loading.remove>Ubah Permission {{ $editUnitName }}</x-text.page-title>
+    <x-text.page-title class="mb-5" wire:loading.remove>Ubah Satuan</x-text.page-title>
     <x-text.page-title class="mb-5" wire:loading>Loading...</x-text.page-title>
     {{-- x-data="ubahPegawai" x-on:submit.prevent="ubah" --}}
     <form class="space-y-4" x-data="editUnit" x-on:submit.prevent="submitHandler">
