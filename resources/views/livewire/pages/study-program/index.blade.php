@@ -1,11 +1,11 @@
 <x-container x-data="Object.assign({createStudyProgramState: false}, showEditStudyProgram())">    
     <div>
         <x-modals.modal identifier="createStudyProgramState" max_width="max-w-xl">
-            <livewire:pages.study-program.create />
+            <livewire:pages.study-program.create lazy/>
         </x-modals.modal>
 
         <x-modals.modal identifier="showEditStudyProgramState" max_width="max-w-xl">
-            <livewire:pages.study-program.edit />
+            <livewire:pages.study-program.edit lazy/>
         </x-modals.modal>
     </div>
 
@@ -18,7 +18,7 @@
         </div>
 
         <div>
-            <livewire:pages.study-program.table-study wire:key='{{ now() }}'>
+            <livewire:pages.study-program.table-study lazy wire:key='{{ now() }}'>
         </div>
     </div>
 </x-container>

@@ -10,12 +10,12 @@
                     <x-buttons.fill x-on:click="createStudyProgramState = true" title="" color="purple">Tambah Program Studi</x-buttons.fill>
                 </div>
             </div>
-            <livewire:pages.study-program.table-study isSelectable="true" identifier="listStudyState" wire:key='{{ now() }}'/>
+            <livewire:pages.study-program.table-study isSelectable="true" identifier="listStudyState" wire:key='{{ now() }}' lazy/>
         </x-modals.modal>
 
         <div>
             <x-modals.modal identifier="createStudyProgramState" max_width="max-w-xl">
-                <livewire:pages.study-program.create />
+                <livewire:pages.study-program.create lazy/>
             </x-modals.modal>
         </div>
     </div>
@@ -83,7 +83,7 @@
                 </thead>
                 <tbody>
                     @if ($this->department && count($this->department->studyPrograms) > 0)
-                        @foreach ($this->department->studyPrograms as $index => $studyProgram)
+                        @foreach ($this->department->studyPrograms()->with('headOfStudyPrograms.staff.user')->orderBy('updated_at', 'asc')->get() as $index => $studyProgram)
                             <tr wire:key='{{ $loop->iteration }}'>
                                 <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration }}</td>
                                 <td>{{ $studyProgram->code }}</td>

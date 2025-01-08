@@ -2,17 +2,19 @@
 
 namespace App\Livewire\Pages\Laboratory;
 
+use App\Models\LabMember;
+use App\Models\Laboratory;
+use App\Models\Staff;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Livewire\Attributes\Computed;
 
 class Detail extends Component
 {
     public $id;
     public $newTechnicians = [
-        // 'foto' => '',
-        // 'nama' => '',
     ];
 
     public $listeners = [
@@ -20,25 +22,70 @@ class Detail extends Component
         'addNewTechnician'
     ];
 
+    #[Computed()]
+    public function laboratory() {
+        return Laboratory::find($this->id)->load('members', 'members.staff', 'members.staff.user');
+    }
+
+
     public function addNewTechnician($key) {
         try {
             $decrypted = Crypt::decrypt($key);
-            $this->newTechnicians[] = [
-                'foto' => "foto-$decrypted.png",
-                'nama' => "nama $decrypted",
-            ];
-            // dump($this->newTechnicians);
+            $this->newTechnicians[] = Staff::find($decrypted);
         } catch (DecryptException $e) {
             return response()->json('error');
         }
     }
 
-    public function initDetailLaboratory($id) {
+    public function removeNewTechnician($index) {
+        unset($this->newStudies[$index]);
+    }
+
+    public function edit() {
         try {
-            $decrypted = Crypt::decrypt($id);
-            // $this->id = $decrypted;
+            $laboratory = Laboratory::find($this->id);
+            if ($laboratory) {
+                foreach ($this->newTechnicians as $newTechnician) {
+                    LabMember::updateOrCreate([
+                        'staff_id' => $newTechnician->id, // newTechnician is a data from staff table,
+                        'laboratory_id' => $laboratory->id
+                    ], [
+                        'is_active' => 1,
+                        'staff_id' => $newTechnician->id,
+                        'laboratory_id' => $laboratory->id,
+                        'is_lab_leader' => 0
+                    ]);
+                }
+                $this->newTechnicians = [];
+                return response()->json(['status' => 'success', 'message' => 'Member Baru Berhasil Ditambahkan.']);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Error dalam menambahkan data, refresh dan coba lagi.']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal menambahkan prodi. Error: '.$th->getMessage()]);
+        }
+    }
+
+    public function initDetailLaboratory($key) {
+        $this->reset();
+        try {
+            $decrypted = Crypt::decrypt($key);
+            $this->id = $decrypted;
         } catch (DecryptException $e) {
             return response()->json('error');
+        }
+    }
+
+    public function removeMember($key) {
+        try {
+            $decrypted = Crypt::decrypt($key);
+            LabMember::where('staff_id', $decrypted)->update([
+                'is_active' => 0,
+                'is_lab_leader' => 0
+            ]);
+            return response()->json(['status' => 'success', 'message' => 'Program Studi Berhasil Dihapus.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus prodi. Error: '.$th->getMessage()]);
         }
     }
 

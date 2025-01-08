@@ -33,6 +33,12 @@ class TableEmployee extends Component
                     ->when($this->employeeOrderBy && $this->employeeOrderByDirection, function ($query) {
                         $query->orderBy($this->employeeOrderBy, $this->employeeOrderByDirection);
                     })
+                    ->when($this->employeeStatus == 'technician', function ($query) {
+                        $query->whereHas('staff', function ($query) {
+                            $query->where('staff_status_id', 3);
+                        });
+                    })
+                    ->with('staff')
                     ->paginate($this->employeePerPage);
     }
 

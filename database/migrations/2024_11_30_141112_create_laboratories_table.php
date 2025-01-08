@@ -17,16 +17,16 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('is_active');
             $table->string('acronym');
-            $table->string('color', 15);
+            $table->string('color', 15)->nullable();
             $table->foreignId('department_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
         Schema::create('lab_members', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 12);
+            // $table->string('code', 12);
             $table->boolean('is_lab_leader');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(1);
             $table->foreignId('laboratory_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('staff_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();

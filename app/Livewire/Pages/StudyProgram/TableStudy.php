@@ -40,7 +40,7 @@ class TableStudy extends Component
             ->when($this->studyProgramOrderBy && $this->studyProgramOrderByDirection, function ($query) {
                 $query->orderBy($this->studyProgramOrderBy, $this->studyProgramOrderByDirection);
             })
-            ->with('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user')
+            ->with('department', 'headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user')
             ->paginate($this->studyProgramPerPage);
     }
 

@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Laboratory extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+    public function members()
+    {
+        return $this->hasMany(LabMember::class);
+    }
 }

@@ -9,5 +9,10 @@ class LabMember extends Model
 {
     use HasFactory;
 
-    protected $table = 'lab_members';
+    protected $guarded = ['id'];
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 }

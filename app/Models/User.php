@@ -44,13 +44,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function staffStatus()
+    {
+        return $this->hasOneThrough(StaffStatus::class, Staff::class);
+    }
+
     public function staff()
     {
-        return $this->hasOne(Staff::class, 'users_id', 'id');
+        return $this->hasOne(Staff::class);
     }
 
     public function role()
     {
         return $this->belongsTo(Staff::class);
+    }
+
+    public function labMembers()
+    {
+        return $this->hasManyThrough(LabMember::class, Staff::class);
     }
 }

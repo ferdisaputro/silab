@@ -30,13 +30,12 @@ class Detail extends Component
 
     #[Computed()]
     public function department() {
-        return Department::find($this->id);
+        return Department::find($this->id)->load('studyPrograms');
     }
 
     // #[On('initDetailDepartment')]
     public function initDetail($key) {
         $this->reset();
-        $this->prev_url = url()->previous();
         try {
             $decrypted = Crypt::decrypt($key);
             // $this->dispatch('initTabelDepartment', ['id' => $this->id]);
@@ -51,7 +50,8 @@ class Detail extends Component
     public function addNewStudy($key) {
         try {
             $decrypted = Crypt::decrypt($key);
-            $studyProgram = StudyProgram::find($decrypted)->load('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user'); 
+            $studyProgram = StudyProgram::find($decrypted); 
+            // $studyProgram = StudyProgram::find($decrypted)->load('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user'); 
             $this->newStudies[] = $studyProgram;
         } catch (DecryptException $e) {
             return response()->json('error');

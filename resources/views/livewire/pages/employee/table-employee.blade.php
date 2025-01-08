@@ -31,12 +31,32 @@
                             <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                             <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                         @else
-                        <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
-                            x-on:click="
-                                $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($user->id) }}'}); {{-- this is dispatching function from pages/laboratory/detail --}}
-                                ({{ $identifier }})? {{ $identifier }} = false : ''">
-                                <i class="fa-regular fa-plus fa-lg"></i>
-                            </x-badges.outline>
+                            @dump($user->labMembers)
+                            {{-- @if ($user->->department_id)
+                                <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
+                                    x-on:click="
+                                        swal.fire({
+                                            title: 'Konfirmasi',
+                                            text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya',
+                                            cancelButtonText: 'Batal',
+                                        }).then(async res => {
+                                            if (res.isConfirmed) {
+                                                $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
+                                                ({{ $identifier }})? {{ $identifier }} = false : ''
+                                            }
+                                        })
+                                    "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                            @else --}}
+                                <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
+                                    x-on:click="
+                                        $wire.dispatch('addNewTechnician', {key: '{{ Crypt::encrypt($user->staff->id) }}'}); {{-- this is dispatching function from pages/laboratory/detail --}}
+                                        ({{ $identifier }})? {{ $identifier }} = false : ''">
+                                        <i class="fa-regular fa-plus fa-lg"></i>
+                                    </x-badges.outline>
+                            {{-- @endif --}}
                         @endif
                     </td>
                 </tr>

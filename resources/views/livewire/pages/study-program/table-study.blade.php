@@ -26,22 +26,22 @@
                             <x-badges.outline x-data="deleteStudyProgram()" x-on:click="deleteStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->study_program }}')" title="Hapus" x class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                         @else
                             @if ($studyProgram->department_id)
-                            <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
-                                x-on:click="
-                                    swal.fire({
-                                        title: 'Konfirmasi',
-                                        text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Ya',
-                                        cancelButtonText: 'Batal',
-                                    }).then(async res => {
-                                        if (res.isConfirmed) {
-                                            $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
-                                            ({{ $identifier }})? {{ $identifier }} = false : ''
-                                        }
-                                    })
-                                "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                                <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
+                                    x-on:click="
+                                        swal.fire({
+                                            title: 'Konfirmasi',
+                                            text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya',
+                                            cancelButtonText: 'Batal',
+                                        }).then(async res => {
+                                            if (res.isConfirmed) {
+                                                $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
+                                                ({{ $identifier }})? {{ $identifier }} = false : ''
+                                            }
+                                        })
+                                    "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
                             @else
                                 <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
                                 x-on:click="

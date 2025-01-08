@@ -1,15 +1,15 @@
 <x-container x-data="Object.assign({createDepartmentState: false}, department())">
     <div>
         <x-modals.modal identifier="createDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.create />
+            <livewire:pages.department.create lazy/>
         </x-modals.modal>
 
         <x-modals.modal identifier="editDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.edit />
+            <livewire:pages.department.edit lazy/>
         </x-modals.modal>
 
         <x-modals.modal identifier="detailDepartmentState" max_width="max-w-4xl">
-            <livewire:pages.department.detail />
+            <livewire:pages.department.detail lazy/>
         </x-modals.modal>
     </div>
 
