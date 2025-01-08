@@ -1,73 +1,115 @@
 <div>
-    <form action="" x-ref='form'>
-        <x-text.page-title class="mb-6">
-            Ubah Barang
-        </x-text.page-title>
+    <form x-data="editItem" x-on:submit.prevent="submitHandler">
+        <x-text.page-title class="mb-5" wire:loading.remove>Edit Barang {{ $editItemName}}</x-text.page-title>
+        <x-text.page-title class="mb-5" wire:loading>Loading...</x-text.page-title>
         <div class="flex flex-col gap-8 mb-6 md:gap-6 md:flex-row">
             <div class="flex flex-col flex-1 space-y-5">
-                <x-alerts.outline message="Data barang yang akan diubah" icon="fa-caret-right"/>
+                <x-alerts.outline message="Data barang yang akan ditambahkan" icon="fa-caret-right" />
                 <div class="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
-                    <x-forms.input name="kode_barang" label="Kode Barang"></x-forms.input>
-                    <x-forms.input name="barang" label="Barang"></x-forms.input>
-                    <x-forms.select name="jenis_barang" label="Jenis barang">
-                        <option value="alat">Alat</option>
-                        <option value="bahan">Bahan</option>
-                        <option value="hasil-praktek">Hasil Praktek</option>
+                    <x-forms.input
+                        name="editItemCode"
+                        label="Kode Barang"
+                        key="editItemCode"
+                        type="text"
+                        wire:model.live.debounce="editItemCode"/>
+                    <x-forms.input
+                        name="editItemName"
+                        label="Barang"
+                        key="editItemName"
+                        type="text"
+                        wire:model.live.debounce="editItemName" />
+                    <x-forms.select
+                        name="editType"
+                        label="Jenis Barang"
+                        key="editType"
+                        wire:model.live.debounce="editType">
+                        @foreach ($itemTypes as $itemType)
+                            <option value="{{ $itemType->id }}">{{ ucfirst($itemType->item_type) }}</option>
+                        @endforeach
                     </x-forms.select>
-                    <x-forms.select name="satuan_default" label="Satuan Default">
-                        <option value="rim">Rim</option>
-                        <option value="pcs">Pcs</option>
-                        <option value="pack">Pack</option>
+
+                    <x-forms.select
+                        name="editUnit"
+                        label="Satuan Default"
+                        key="editUnit"
+                        wire:model.live.debounce="editUnit">
+                        @foreach ($unitItems as $unitItem)
+                            <option value="{{ $unitItem->id }}" {{ $unitItem->id == $satuanText ? 'selected' : '' }}>
+                                {{ ucfirst($unitItem->satuan) }}
+                            </option>
+                        @endforeach
                     </x-forms.select>
-                    <x-forms.textarea class="min-h-32" placeholder="spesifikasi" name="spesifikasi" label="Spesifikasi" />
-                    <x-forms.textarea class="min-h-32" placeholder="keterangan" name="keterangan" label="Keterangan" />
+
+                    <x-forms.textarea
+                        name="editSpec"
+                        label="Spesifikasi"
+                        key="editSpec"
+                        wire:model.live.debounce="editSpec"></x-forms.textarea>
+                    <x-forms.textarea
+                        name="editDesc"
+                        label="Keterangan"
+                        key="editDesc"
+                        wire:model.live.debounce="editDesc"></x-forms.textarea>
                 </div>
-                <x-buttons.fill type="submit" class="hidden w-full md:inline-block">
-                    Simpan Perubahan
+
+                <x-buttons.fill
+                    type="submit"
+                    class="hidden w-full md:inline-block">
+                    Tambah Barang
                 </x-buttons.fill>
             </div>
 
             <div class="flex flex-col flex-1 space-y-5 md:max-w-72 lg:max-w-80">
-                <x-alerts.outline message="Satuan barang" icon="fa-caret-right" color="yellow"/>
+                <x-alerts.outline message="Satuan barang" icon="fa-caret-right" color="yellow" />
                 <div class="flex-1 space-y-3">
-                    @foreach ($unitItems as $index => $unitItem)
-                        <div class="flex gap-4" wire:key='{{ $index }}'>
-                            <x-forms.select height="h-10" class="flex-1" name="satuan - {{ $index }}" label="Satuan - {{ $index }}">
-                                <option {{ $unitItem['satuan'] == "rim" ? "selected" : "" }} value="rim">Rim</option>
-                                <option {{ $unitItem['satuan'] == "pcs" ? "selected" : "" }} value="pcs">Pcs</option>
-                                <option {{ $unitItem['satuan'] == "pack" ? "selected" : "" }} value="pack">Pack</option>
-                            </x-forms.select>
-                            <x-forms.input height="h-10" value="{{ $unitItem['quantity'] }}" type="number" class="max-w-24" name="qty - {{ $index }}" label="Qty - {{ $index }}"></x-forms.input>
-                            @if (count($unitItems) > 1)
-                                <x-badges.outline wire:click='removeUnitItem({{ $index }})' color="yellow" title="Remove" class="px-4">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </x-badges.outline>
-                            @endif
-                        </div>
-                    @endforeach
-
-                    <div class="text-center">
-                        <x-buttons.outline wire:loading.remove wire:click='addUnitItem' color="blue" class="w-full max-w-56" height="h-10">
-                            <i class="fa-solid fa-plus"></i>
-                        </x-buttons.outline>
-                        <x-buttons.outline wire:loading wire:target='addUnitItem' color="blue" class="w-full max-w-56" height="h-10">
-                            <x-loading.circle height="h-6" width="w-6"></x-loading.circle>
-                        </x-buttons.outline>
+                    <div class="flex gap-4">
+                        <x-forms.input
+                            name="satuan_barang"
+                            label="Satuan"
+                            key="satuan_barang"
+                            wire:model.live.debounce="satuan_barang"
+                            readonly />
+                        <x-forms.input
+                            name="editQty"
+                            label="Qty"
+                            key="editQty"
+                            type="number"
+                            wire:model.live.debounce="editQty" />
                     </div>
                 </div>
-                {{-- <x-buttons.outline color='red' wire:click="resetForm; $refs.form.reset()" class="hidden w-full md:inline-block">
-                    Reset
-                </x-buttons.outline> --}}
-            </div>
-
-            <div class="flex gap-4">
-                {{-- <x-buttons.outline color='red' wire:click="resetForm; $refs.form.reset()" class="inline-block w-full md:hidden max-w-40">
-                    Reset
-                </x-buttons.outline> --}}
-                <x-buttons.fill type="submit" class="inline-block w-full md:hidden">
-                    Simpan Perubahan
-                </x-buttons.fill>
+                <x-buttons.outline wire:click="resetForm" class="hidden w-full md:inline-block">Reset</x-buttons.outline>
             </div>
         </div>
     </form>
 </div>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('editItem', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Edit Item ?',
+                            text: 'Pastikan Data Item Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.edit   ()
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', 'Data item Berhasil di Edit', 'success')
+                                    // this.$el.closest('form').reset() // reset form
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', 'Data Item Gagal di Edit:'+ result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce

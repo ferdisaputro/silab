@@ -1,21 +1,26 @@
 <div>
     <x-text.page-title class="mb-5">Tambah Satuan</x-text.page-title>
     {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
-    <form wire:submit='submitHandle' class="space-y-4">
+    <form class="space-y-4" x-data="createUnit" x-on:submit.prevent="submitHandler">
         {{-- @dump($errors->all()) --}}
-        @foreach ($satuan as $index => $satuanData)
-            <div class="relative" wire:key='{{ $index }}'>
+        @foreach ($units as $index => $unit)
+            <div class="relative flex gap-3" wire:key='{{ $index }}'>
                 <x-forms.input
-                    wire:model.live.debounce="satuan.{{ $index }}.name"
-                    name="satuan.{{ $index }}.name"
-                    key="satuan.{{ $index }}.name"
-                    label="Nama Satuan">
-                    @if (count($satuan) > 1)
-                        <x-badges.fill wire:click='removeUnit({{ $index }})' color='red' class="absolute px-3 top-2 right-2 bottom-2" title="Hapus">
+                    wire:model.live.debounce="units.{{ $index }}.satuan"
+                    name="units.{{ $index }}.satuan"
+                    key="units.{{ $index }}.satuan"
+                    label="Nama Satuan"
+                    class="flex-1">
+                </x-forms.input>
+                    @if (count($units) > 1)
+                        <x-badges.fill
+                            wire:click='removeUnit({{ $index }})'
+                            color='red'
+                            class="w-10 h-10 mt-0.5"
+                            title="Hapus">
                             <i class="fa-regular fa-trash-can"></i>
                         </x-badges.fill>
                     @endif
-                </x-forms.input>
             </div>
         @endforeach
         <div wire:click='addUnit' class="relative cursor-pointer">
@@ -27,13 +32,39 @@
                 <i class="fa-solid fa-plus fa-lg"></i>
             </span>
         </div>
-        {{-- <div class="text-center">
-            <x-badges.outline color="green" class="w-full max-w-[15rem] h-10">
-                <i class="fa-solid fa-plus"></i>
-            </x-badges.outline>
-        </div> --}}
         <div class="text-center">
             <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah Satuan</x-buttons.outline>
         </div>
     </form>
 </div>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('createUnit', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Tambah Unit Baru?',
+                            text: 'Pastikan Data Unit Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.create()
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', 'Data Unit Berhasil Ditambahkan', 'success')
+                                    // this.$el.closest('form').reset() // reset form
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', 'Data Unit Gagal Ditambahkan :'+ result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce

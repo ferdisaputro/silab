@@ -27,7 +27,9 @@ return new class extends Migration
 
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('item_name');
+            $table->string('item_code',32);
+            $table->integer('quantity');
             $table->string('specification');
             $table->string('description');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
@@ -36,16 +38,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('detail_items', function (Blueprint $table) {
-            $table->id();
-            $table->integer('qty')->nullable();
+        // Schema::create('detail_items', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->integer('qty')->nullable();
 
-            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('item_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+        //     $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
+        //     $table->foreignId('item_id')->nullable()->constrained()->nullOnDelete();
+        //     $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
-            $table->timestamps();
-        });
+        //     $table->timestamps();
+        // });
     }
 
     /**
