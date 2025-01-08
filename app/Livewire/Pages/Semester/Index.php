@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages\Semester;
 
 use App\Models\Semester;
+use Illuminate\Support\Facades\Crypt;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -31,6 +32,26 @@ class Index extends Component
                     })
                     ->with('academicYear')
                     ->paginate($this->semesterPerPage);
+    }
+
+    public function delete($key) {
+        $id = Crypt::decrypt($key);
+
+        try {
+            $role = Semester::find($id);
+            $role->delete();
+
+            $this->reset();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Semester Berhasil Dihapus',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function render()

@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createCourseState: true}, showEditCourse())">
+<x-container x-data="Object.assign({createCourseState: false}, showEditCourse())">
     <div>
         <x-modals.modal identifier="createCourseState" max_width="max-w-3xl">
             <livewire:pages.course.create />
@@ -43,7 +43,7 @@
                             </td>
                             <td class="text-center">
                                 <x-badges.outline x-on:click="showEditCourse('{{ Crypt::encrypt($course->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteCourse('{{ Crypt::encrypt($course->id) }}', '{{ $course->course }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -62,6 +62,25 @@
                     showEditCourse(key) {
                         $wire.dispatch('initEditCourse', {key: key});
                         this.editCourseState = true;
+                    },
+                    deleteCourse(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus Mata kuliah ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Mata Kuliah Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

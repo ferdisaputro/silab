@@ -9,8 +9,8 @@
 ])
 
 <!-- component -->
-<div>
-    <div {{ $attributes }}
+<div {{ $attributes }}>
+    <div
         x-data="selectComponent($el, '{{ $label }}')"
         wire:ignore.self
     >
@@ -30,7 +30,7 @@
                     <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
             </button>
-            <div x-show="isOpen" class="fixed z-30 p-1 mt-2 space-y-1 bg-white rounded-md shadow-lg select-form-menu ring-1 ring-black ring-opacity-5">
+            <div x-show="isOpen" class="absolute max-w-full min-w-full z-30 p-1 mt-2 space-y-1 bg-white rounded-md shadow-lg select-form-menu ring-1 ring-black ring-opacity-5">
                 <!-- Search input -->
                 <input x-model="search" class="block w-full px-4 py-2 text-gray-800 border border-gray-300 rounded-md search-input focus:outline-none" type="text" placeholder="Search items" autocomplete="off">
                 <!-- Dropdown content goes here -->

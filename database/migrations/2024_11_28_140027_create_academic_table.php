@@ -42,7 +42,7 @@ return new class extends Migration
 
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 30)->nullable();
+            $table->string('code', 30)->nullable()->unique();
             $table->string('course');
             $table->boolean('is_active');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();

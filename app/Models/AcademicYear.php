@@ -10,4 +10,9 @@ class AcademicYear extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function semesters()
+    {
+        return $this->hasMany(Semester::class);
+    }
 }

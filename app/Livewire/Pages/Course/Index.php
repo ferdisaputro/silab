@@ -12,7 +12,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
-    
+
     // template for datatable
     public $coursePerPage = 15;
     public $courseFilter = null;
@@ -47,6 +47,26 @@ class Index extends Component
         $course->update([
             "is_active" => $status
         ]);
+    }
+
+    public function delete($key) {
+        $id = Crypt::decrypt($key);
+
+        try {
+            $role = Course::find($id);
+            $role->delete();
+
+            $this->reset();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Mata kuliah Berhasil Dihapus',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function render()
