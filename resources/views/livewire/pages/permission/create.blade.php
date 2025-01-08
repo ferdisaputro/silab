@@ -5,15 +5,16 @@
         {{-- @dump($errors->all()) --}}
         @foreach ($permissions as $index => $permission)
         <div class="relative flex gap-3" wire:key='{{ $index }}'>
-            <x-forms.input
+            <x-forms.input class="flex-1"
                 wire:model.live.debounce="permissions.{{ $index }}.name"
                 name="permissions.{{ $index }}.name"
                 key="permissions.{{ $index }}.name"
-                label="Nama Permission"
-                class="flex-1">
+                label="Nama Permission">
             </x-forms.input>
             @if (count($permissions) > 1)
-                <x-badges.fill wire:click='removePermission({{ $index }})' color='red' class="w-10 h-10 mt-0.5" title="Hapus">
+                <x-badges.fill class="w-10 h-10 mt-0.5" color='red'
+                    wire:click='removePermission({{ $index }})'
+                    title="Hapus">
                     <i class="fa-regular fa-trash-can"></i>
                 </x-badges.fill>
             @endif

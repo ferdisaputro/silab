@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createItemState: false}, editItemModal())">
+<x-container x-data="Object.assign({createItemState: false}, Item())">
     <div>
         <x-modals.modal identifier="createItemState" max_width="max-w-6xl">
             <livewire:pages.item.create lazy/>
@@ -7,7 +7,7 @@
             <livewire:pages.item.edit/>
         </x-modals.modal>
     </div>
-    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
+z`    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <x-text.page-title>
                 Tabel Data Barang
@@ -18,27 +18,27 @@
         </div>
 
         <div>
-            <x-tables.datatable id="item-table">
+            <x-tables.datatable id="item-table" :data="$this->items" eventTarget="item">
                 <thead>
                     <tr>
                         <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Barang<i class="fa-solid fa-sort ms-2"></i></th>
-                        <th>Quantity<i class="fa-solid fa-sort ms-2"></i></th>
+                        <th data-sortby="item_name">Barang</th>
+                        <th data-sortby="quantity">Quantity</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for($i = 0; $i < 70; $i++)
-                        <tr wire:key='{{ $i }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i + 1 }}</td>
-                            <td>nama {{ $i }}</td>
-                            <td>{{ mt_rand(1, 100) }}</td>
+                    @foreach ($this->items as $index => $item)
+                        <tr wire:key='{{ $loop->iteration + ($this->items->perPage() * ($this->items->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->items->perPage() * ($this->items->currentPage() - 1)) }}</td>
+                            <td>{{ $item->item_name }}</td>
+                            <td>{{ $item->quantity }}</td>
                             <td class="text-center">
-                                <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($i) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($item->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($item->id) }}', '{{ $item->item_name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
@@ -48,12 +48,33 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editItemModal', () => {
+            Alpine.data('Item', () => {
                 return {
                     editItemState: false,
-                    showEditItem(id) {
-                        $wire.dispatch("initEditItem", {id: id});
+                    showEditItem(key) {
+                        // console.log(key);
+                        $wire.dispatch("initEditItem", {key: key});
                         this.editItemState = true;
+                    },
+
+                    deleteItem(key,item_name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus Item ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data item Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

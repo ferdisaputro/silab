@@ -12,7 +12,7 @@ class Create extends Component
     #[Validate(rule: ['permissions.*.name' => 'required|min:3'], message: 'Permission name is required and must be at least 5 characters')]
     public $permissions = [
         ['name' => ''],
-    ];
+        ];
 
     public function updatedPermissions() {
         $this->validate();
