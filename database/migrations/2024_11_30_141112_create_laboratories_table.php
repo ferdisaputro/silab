@@ -35,8 +35,8 @@ return new class extends Migration
 
         Schema::create('lab_items', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 12);
-            $table->string('description');
+            $table->string('code', 12)->nullable();
+            $table->string('description')->nullable();
             $table->integer('stock');
             $table->foreignId('laboratory_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('item_id')->nullable()->constrained()->cascadeOnDelete();

@@ -10,8 +10,8 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    #[Validate('required|min:5')]
-    public $item_name;
+        #[Validate('required|min:5')]
+        public $item_name;
     #[Validate('min:3|nullable')]
     public $item_code;
     #[Validate('required|numeric')]

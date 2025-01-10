@@ -15,4 +15,8 @@ class LabMember extends Model
     {
         return $this->belongsTo(Staff::class);
     }
+
+    public function laboratory() {
+        return $this->belongsTo(Laboratory::class);
+    }
 }

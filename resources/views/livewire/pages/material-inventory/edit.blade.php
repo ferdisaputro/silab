@@ -1,15 +1,24 @@
 <div>
-    <x-text.page-title class="mb-5">Ubah Bahan Laboratorium {{ $id }}</x-text.page-title>
-    <form wire:submit='submitHandle' class="space-y-4">
-    <form action="">
+    <x-text.page-title class="mb-5" wire:loading.remove>Edit Bahan {{ $materialTopName }} </x-text.page-title>
+        <x-text.page-title class="mb-5" wire:loading>Loading...</x-text.page-title>
+    <form x-data="editLabItem" x-on:submit.prevent="submitHandler" class="space-y-4">
         <div class="flex gap-4">
-            <x-forms.select class="flex-1" name="bahan" label="Pilih Bahan">
-                <option value="key1">test1</option>
-                <option value="key2">test2</option>
-                <option value="key3">test3</option>
-                <option value="key4">test4</option>
+            <x-forms.select class="flex-1"
+                name="editItemId"
+                label="Pilih Bahan"
+                key="editItemId"
+                wire:model.live.debounce="editItemId">
+                @foreach ($items as $item)
+                <option value="{{ $item->id }}" {{ $item->id == $materialName ? 'selected' : '' }}>
+                    {{ ucfirst($item->item_name) }}
+                </option>
+                @endforeach
             </x-forms.select>
-            <x-forms.input class="w-full max-w-40" name="quantity" label="Quantity" />
+            <x-forms.input class="w-full max-w-40"
+                name="editStock"
+                label="Jumlah"
+                key="editStock"
+                wire:model.live.debounce="editStock"/>
         </div>
 
         <div class="text-center">
@@ -17,3 +26,34 @@
         </div>
     </form>
 </div>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('editLabItem', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Edit Item ?',
+                            text: 'Pastikan Data Item Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.edit   ()
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', 'Data item Berhasil di Edit', 'success')
+                                    // this.$el.closest('form').reset() // reset form
+                                    $wire.$parent.$refresh()
+                                } else
+                                    swal.fire('Gagal', 'Data Item Gagal di Edit:'+ result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce
