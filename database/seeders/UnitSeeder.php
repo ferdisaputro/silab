@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Unit;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UnitSeeder extends Seeder
 {
@@ -13,6 +13,49 @@ class UnitSeeder extends Seeder
      */
     public function run(): void
     {
-        Unit::factory()->count(100)->create(); // Membuat 10 data unit
+        Unit::create([
+            'satuan' => 'Lembar',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'Rim',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'Dus',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'pcs',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'pack',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'unit',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'buah',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'Meter',
+            'user_id' => 1
+        ]);
+
+        Unit::create([
+            'satuan' => 'Bendel',
+            'user_id' => 1
+        ]);
     }
 }

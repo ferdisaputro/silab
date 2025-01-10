@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Laboratory extends Model
 {
@@ -14,5 +14,10 @@ class Laboratory extends Model
     public function members()
     {
         return $this->hasMany(LabMember::class);
+    }
+
+    public function labItems()
+    {
+        return $this->hasMany(LabItem::class);
     }
 }

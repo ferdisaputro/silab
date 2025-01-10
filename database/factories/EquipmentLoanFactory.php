@@ -17,7 +17,24 @@ class EquipmentLoanFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => $this->faker->word,
+            'staff_id' => mt_rand(1, 10),
+            'is_staff' => $this->faker->boolean,
+            'borrowing_date' => $this->faker->date,
+            'name' => $this->faker->name,
+            'nim' => $this->faker->randomNumber(8),
+            'group_class' => $this->faker->randomLetter('a', 'e'),
+            'staff_id_returner' => mt_rand(1, 10),
+            'is_returner_staff' => $this->faker->boolean,
+            'return_date' => $this->faker->date,
+            'returner_name' => $this->faker->name,
+            'returner_nim' => $this->faker->randomNumber(8),
+            'returner_group_class' => $this->faker->word,
+            'status' => $this->faker->randomElement([1, 2]),
+            'laboratory_id' => mt_rand(1, 10),
+            'lab_member_id_borrow' => mt_rand(1, 10),
+            'lab_member_id_return' => mt_rand(1, 10),
+            'staff_id_mentor' => mt_rand(1, 10),
         ];
     }
 }

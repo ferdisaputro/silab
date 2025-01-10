@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Pages\Laboratory;
 
-use App\Models\Department;
-use App\Models\LabMember;
-use App\Models\Laboratory;
 use App\Models\Staff;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Models\LabMember;
+use App\Models\Department;
+use App\Models\Laboratory;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
 
 class Create extends Component
 {
@@ -16,30 +16,30 @@ class Create extends Component
     public $code;
     #[Validate("required|min:3|max:255")]
     public $name;
-    #[Validate("boolean")]
+    #[Validate("between:0,1")]
     public $isActive = 1;
-    #[Validate("required|min:3|max:255")]
+    #[Validate("nullable|min:3|max:255")]
     public $acronym;
     #[Validate("nullable|min:3|max:255")]
     public $color;
     #[Validate("nullable|exists:departments,id")]
-    public $department; 
+    public $department;
     #[Validate("nullable|exists:staff,id")]
     public $labLeader;
-        
-    public function create() 
+
+    public function create()
     {
         $this->validate();
-        
+
         try {
             DB::beginTransaction();
             $laboratory = Laboratory::create([
-                'code' => $this->code,
+                'code' => $this->code?? null,
                 'name' => $this->name,
                 'is_active' => $this->isActive,
                 'acronym' => $this->acronym,
-                'color' => $this->color,
-                'department_id' => $this->department,
+                'color' => $this->color?? null,
+                'department_id' => $this->department?? null,
             ]);
 
             if ($this->labLeader) {

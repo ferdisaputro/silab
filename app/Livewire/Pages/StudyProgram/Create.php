@@ -47,11 +47,11 @@ class Create extends Component
             return response()->json(['status' => 'error', 'message' => 'Gagal membuat jurusan: ' . $e->getMessage()]);
         }
     }
-    
+
     public function render()
     {
         return view('livewire.pages.study-program.create', [
-            'lecturers' => Staff::where("staff_status_id", 1)->with('user')->get(),
+            'lecturers' => Staff::where('status', 1)->where("staff_status_id", 1)->with('user')->get(),
             'departments' => Department::get(),
         ]);
     }

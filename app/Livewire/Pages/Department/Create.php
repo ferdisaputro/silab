@@ -48,7 +48,7 @@ class Create extends Component
     public function render()
     {
         return view('livewire.pages.department.create', [
-            'lecturers' => Staff::where("staff_status_id", 1)->with('user')->get()
+            'lecturers' => Staff::where('status', 1)->where("staff_status_id", 1)->with('user')->get()
         ]);
     }
 }

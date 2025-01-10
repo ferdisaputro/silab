@@ -1,4 +1,4 @@
-<x-container x-data="Object.assign({createLaboratoryState: false}, editLaboratoryModal(), detailLaboratoryModal())">
+<x-container x-data="Object.assign({createLaboratoryState: false}, laboratory())">
     <div>
         <x-modals.modal identifier="detailLaboratoryState" max_width="max-w-4xl">
             <livewire:pages.laboratory.detail lazy/>
@@ -43,7 +43,7 @@
                             <td class="text-center text-nowrap">
                                 <x-badges.outline x-on:click="showDetailLaboratory('{{ Crypt::encrypt($laboratory->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
                                 <x-badges.outline x-on:click="showEditLaboratory('{{ Crypt::encrypt($laboratory->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($laboratory->id) }}', '{{ $laboratory->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -56,23 +56,39 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('editLaboratoryModal', () => {
+            Alpine.data('laboratory', () => {
                 return {
                     editLaboratoryState: false,
+                    detailLaboratoryState: false,
+
                     showEditLaboratory(key) {
                         $wire.dispatch("initEditLaboratory", {key: key});
                         this.editLaboratoryState = true;
-                    }
-                }
-            })
-
-            Alpine.data('detailLaboratoryModal', () => {
-                return {
-                    detailLaboratoryState: false,
+                    },
                     showDetailLaboratory(key) {
                         $wire.dispatch("initDetailLaboratory", {key: key});
                         this.detailLaboratoryState = true;
+                    },
+                    deleteLaboratory(key, name) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus laboratorium ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Laboratorium Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
+
                 }
             })
         </script>

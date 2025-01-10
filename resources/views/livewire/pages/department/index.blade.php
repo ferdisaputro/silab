@@ -15,7 +15,7 @@
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title class="mb-5 flex items-center gap-4">Tabel Jurusan</x-text.page-title> 
+            <x-text.page-title class="mb-5 flex items-center gap-4">Tabel Jurusan</x-text.page-title>
             <div>
                 <x-buttons.fill x-on:click="createDepartmentState = true" title="" color="purple">Tambah Jurusan</x-buttons.fill>
             </div>

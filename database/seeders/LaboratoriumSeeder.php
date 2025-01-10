@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\LabMember;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class LaboratoriumSeeder extends Seeder
 {
@@ -27,5 +28,16 @@ class LaboratoriumSeeder extends Seeder
             ['code' => 'PL17.3.5.06', 'name' => 'Multimedia Cerdas - NJK', 'department_id' => 8, 'user_id' => 1, 'created_at' => '2024-03-07 02:05:39', 'updated_at' => '2024-03-07 02:05:39', 'acronym' => null, 'color' => null],
             ['code' => 'PL17.3.5.01', 'name' => 'Komputasi Dan Sistem Informasi - NJK', 'department_id' => 8, 'user_id' => 1, 'created_at' => '2024-03-07 02:07:57', 'updated_at' => '2024-03-07 02:08:18', 'acronym' => null, 'color' => null],
         ]);
+
+        $laboratories = DB::table('laboratories')->get();
+
+        foreach ($laboratories as $laboratory) {
+            LabMember::factory(mt_rand(1, 5))->create([
+                'is_lab_leader' => \Faker\Factory::create()->randomElement([true, false]),
+                'is_active' => 1,
+                'laboratory_id' => $laboratory->id,
+                'staff_id' => \Faker\Factory::create()->numberBetween(1, 10),
+            ]);
+        }
     }
 }

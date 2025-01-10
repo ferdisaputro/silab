@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('equipment_loans', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 12);
+            $table->string('code', 12)->nullable();
             $table->foreignId('staff_id')->nullable()->constrained()->onDelete('SET NULL');
-            $table->boolean('is_staff');
+            $table->boolean('is_staff')->nullable();
             $table->dateTime('borrowing_date');
-            $table->string('name');
-            $table->string('nim');
-            $table->string('group_class')->comment('golongan_kelompok');
+            $table->string('name')->nullable();
+            $table->string('nim')->nullable();
+            $table->string('group_class')->nullable()->comment('golongan_kelompok');
 
             $table->foreignId('staff_id_returner')->nullable()->constrained(table: 'staff', column: 'id')->onDelete('SET NULL');
-            $table->boolean('is_returner_staff');
-            $table->dateTime('return_date');
-            $table->string('returner_name');
-            $table->string('returner_nim');
-            $table->string('returner_group_class')->comment('kembali_golongan_kelompok');
+            $table->boolean('is_returner_staff')->nullable();
+            $table->dateTime('return_date')->nullable();
+            $table->string('returner_name')->nullable();
+            $table->string('returner_nim')->nullable();
+            $table->string('returner_group_class')->nullable()->comment('kembali_golongan_kelompok');
 
             $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
 
@@ -39,14 +39,15 @@ return new class extends Migration
 
         Schema::create('equipment_loan_details', function (Blueprint $table) {
             $table->id();
-            $table->string('code',12);
+            // $table->string('code',12);
             $table->integer('qty');
-            $table->integer('return_qty');
-            $table->string('description');
-            $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
+            $table->integer('return_qty')->nullable();
+            $table->string('description')->nullable();
+            $table->tinyInteger('status')->nullable()->comment('1 => complete, 2 => incomplete');
             $table->foreignId('equipment_loan_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('lab_item_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('stock_card_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('stock_card_id_return')->nullable()->constrained(table: 'stock_cards', column: 'id')->onDelete('SET NULL');
             $table->timestamps();
         });
     }

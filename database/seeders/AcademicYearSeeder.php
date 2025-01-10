@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\AcademicWeek;
 use App\Models\Semester;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AcademicWeek;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class AcademicYearSeeder extends Seeder
 {
@@ -26,29 +26,27 @@ class AcademicYearSeeder extends Seeder
         DB::table('academic_years')->insert($academicYears);
 
         foreach ($academicYears as $academicYear) {
-            $academicYearId = DB::table('academic_years')
+            $academicYearData = DB::table('academic_years')
                 ->where('start_year', $academicYear['start_year'])
                 ->where('end_year', $academicYear['end_year'])
                 ->where('is_even', $academicYear['is_even'])
                 ->where('is_active', $academicYear['is_active'])
-                ->value('id');
+                ->first();
 
             for ($weekNumber = 1; $weekNumber <= 16; $weekNumber++) {
                 $semester = 0;
                 AcademicWeek::factory()->create([
-                    'academic_year_id' => $academicYearId,
+                    'academic_year_id' => $academicYearData->id,
                     'week_number' => $weekNumber,
                 ]);
             }
-            $is_even = false;
-            for ($i=1; $i <= 8; $i++) { 
+            for ($i=1; $i <= 8; $i += 2) {
                 Semester::create([
-                    'semester' => $i,
-                    'is_even' => $is_even? 1 : 0,
+                    'semester' => $i + $academicYearData->is_even,
+                    'is_even' => $academicYearData->is_even,
                     'user_id' => 1,
-                    'academic_year_id' => $academicYearId
+                    'academic_year_id' => $academicYearData->id
                 ]);
-                $is_even = !$is_even;
             }
         }
     }

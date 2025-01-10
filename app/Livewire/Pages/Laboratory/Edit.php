@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Pages\Laboratory;
 
-use App\Models\Department;
-use App\Models\Laboratory;
 use App\Models\Staff;
 use Livewire\Component;
+use App\Models\Department;
+use App\Models\Laboratory;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
@@ -20,9 +21,9 @@ class Edit extends Component
     public $editCode;
     #[Validate("required|min:3|max:255")]
     public $editName;
-    #[Validate("boolean")]
+    #[Validate("between:0,1")]
     public $editIsActive = 1;
-    #[Validate("required|min:3|max:255")]
+    #[Validate("nullable|min:3|max:255")]
     public $editAcronym;
     #[Validate("nullable|min:3|max:255")]
     public $editColor;
@@ -63,20 +64,19 @@ class Edit extends Component
         try {
             DB::beginTransaction();
             $laboratory = Laboratory::findOrFail($this->id);
-            $laboratory->code = $this->editCode || $this->editCode == ''? null : $this->editCode;
+            $laboratory->code = !$this->editCode || $this->editCode == ''? null : $this->editCode;
             $laboratory->name = $this->editName;
-            $laboratory->is_active = $this->editIsActive;
             $laboratory->acronym = $this->editAcronym;
-            $laboratory->color = $this->editColor || $this->editColor == ''? null : $this->editColor;
-            $laboratory->department_id = $this->editDepartment || $this->editDepartment == ''? null : $this->editDepartment;
+            $laboratory->color = !$this->editColor || $this->editColor == ''? null : $this->editColor;
+            $laboratory->department_id = !$this->editDepartment || $this->editDepartment == ''? null : $this->editDepartment;
+            $laboratory->user_id = Auth::user()->staff->id;
 
             // dd($laboratory);
-
             if ($this->editLabLeader || $this->editLabLeader !== '') {
                 $laboratory->members()->updateOrCreate([
                     'staff_id' => $this->editLabLeader
                 ], [
-                    'is_lab_leader' => 1, 
+                    'is_lab_leader' => 1,
                     'is_active' => 1,
                     'staff_id' => $this->editLabLeader
                 ]);

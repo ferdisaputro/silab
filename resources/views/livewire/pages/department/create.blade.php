@@ -1,5 +1,5 @@
 <div>
-    <x-text.page-title class="mb-5 flex items-center gap-4">Tambah Jurusan</x-text.page-title> 
+    <x-text.page-title class="mb-5 flex items-center gap-4">Tambah Jurusan</x-text.page-title>
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form x-data="createDepartment" x-on:submit.prevent='submitHandler' class="space-y-4">
         <x-forms.input wire:model.live.debounce='code' name="code" label="Kode Jurusan" />

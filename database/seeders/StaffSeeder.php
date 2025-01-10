@@ -38,7 +38,7 @@ class StaffSeeder extends Seeder
             'staff_status_id' => fake()->numberBetween(1, 3),
         ]);
 
-        User::factory(50)->create()->each(function($user) {
+        User::factory(20)->create()->each(function($user) {
             Staff::factory(1)->create([
                 'user_id' => $user->id
             ]);

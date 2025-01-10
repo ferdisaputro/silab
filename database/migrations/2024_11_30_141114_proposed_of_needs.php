@@ -40,12 +40,12 @@ return new class extends Migration
 
         Schema::create('stock_cards', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 12);
+            $table->string('code', 12)->nullable();
             $table->integer('qty');
             $table->integer('stock');
             $table->boolean('is_stock_in');
-            $table->string('description');
-            $table->string('system_description');
+            $table->string('description')->nullable();
+            $table->string('system_description')->nullable();
             $table->foreignId('lab_item_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('lab_member_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('proposed_need_detail_id')->nullable()->constrained()->nullOnDelete();

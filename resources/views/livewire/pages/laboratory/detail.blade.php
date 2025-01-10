@@ -1,4 +1,4 @@
-<div x-data="Object.assign({listEmployeeState: false}, laboratory())">
+<div x-data="Object.assign({listEmployeeState: false}, detailLaboratory())">
     <div>
         <x-modals.modal identifier="listEmployeeState">
             <livewire:pages.employee.table-employee isSelectable="true" employeeStatus="technician" identifier="listEmployeeState" {{-- this is the identifier to close the modal(table-employee modal) --}} />
@@ -99,7 +99,7 @@
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('laboratory', () => {
+            Alpine.data('detailLaboratory', () => {
                 return {
                     submitHandler() {
                         swal.fire({

@@ -133,7 +133,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('peminjaman-alat-praktek')->group(function() {
         Route::get('/', PracticumEquipmentLoanIndex::class)
             ->name('prac-equipment-loan');
-        Route::get('/tambah', PracticumEquipmentLoanCreate::class)
+        Route::get('/tambah/{id}', PracticumEquipmentLoanCreate::class)
             ->name('prac-equipment-loan.create');
         Route::get('/{id}/{type}', PracticumEquipmentLoanEdit::class)
             ->name('prac-equipment-loan.edit');

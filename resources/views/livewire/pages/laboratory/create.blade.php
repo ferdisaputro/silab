@@ -44,9 +44,9 @@
                             cancelButtonText: 'Batal',
                         }).then(async res => {
                             if (res.isConfirmed) {
-                                result = await $wire.create()
-                                console.log(result);
-                                
+                                const result = await $wire.create()
+                                // console.log(result);
+
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', 'Data laboratory Berhasil Dibuat', 'success')
                                     this.$el.closest('form').reset() // reset form

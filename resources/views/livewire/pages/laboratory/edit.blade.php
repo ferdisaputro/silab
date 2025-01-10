@@ -44,11 +44,14 @@
                             cancelButtonText: 'Batal',
                         }).then(async res => {
                             if (res.isConfirmed) {
-                                result = await $wire.edit()
-                                if (result.original.status !== 'error') {
-                                    swal.fire('Berhasil', result.original.message, result.original.status)
+                                const result = await $wire.edit()
+                                console.log(result);
+
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', result.original.message, 'success')
                                     $wire.$parent.$refresh()
-                                } else
+                                }
+                                else
                                     swal.fire('Gagal', 'Data Laboratorium Gagal Diubah :'+ result.original.message, 'error')
                             }
                         })

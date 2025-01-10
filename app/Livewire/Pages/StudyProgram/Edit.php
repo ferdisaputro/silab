@@ -2,15 +2,15 @@
 
 namespace App\Livewire\Pages\StudyProgram;
 
-use App\Models\Department;
 use App\Models\Staff;
-use App\Models\StudyProgram;
 use Livewire\Component;
+use App\Models\Department;
 use Livewire\Attributes\On;
+use App\Models\StudyProgram;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Auth;
 
 class Edit extends Component
 {
@@ -89,7 +89,7 @@ class Edit extends Component
     public function render()
     {
         return view('livewire.pages.study-program.edit', [
-            'lecturers' => Staff::where("staff_status_id", 1)->with('user')->get(),
+            'lecturers' => Staff::where('status', 1)->where("staff_status_id", 1)->with('user')->get(),
             'departments' => Department::get(),
         ]);
     }

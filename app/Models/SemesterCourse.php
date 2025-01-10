@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SemesterCourse extends Model
 {
@@ -14,5 +14,10 @@ class SemesterCourse extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function courseInstructor()
+    {
+        return $this->hasOne(CourseInstructor::class);
     }
 }
