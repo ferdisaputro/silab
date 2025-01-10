@@ -1,21 +1,56 @@
 <div>
     <x-text.page-title class="mb-5">Tambah Alat Laboratorium</x-text.page-title>
-{{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
-    <form wire:submit='submitHandle' class="space-y-4">
-    <form action="">
+    <form x-data="createLabTool" x-on:submit.prevent="submitHandler" class="space-y-4">
         <div class="flex gap-4">
-            {{-- <x-forms.input class="flex-1" name="kode_jurusan" label="Kode Jurusan" /> --}}
-            <x-forms.select class="flex-1" name="alat" label="Pilih Alat">
-                <option value="key1">test1</option>
-                <option value="key2">test2</option>
-                <option value="key3">test3</option>
-                <option value="key4">test4</option>
+            <x-forms.select class="flex-1"
+                name="tool_id"
+                label="Pilih Alat"
+                key="tool_id"
+                wire:model.live.debounce="tool_id">
+                @foreach ($items as $item)
+                    <option value="{{ $item->id }}">{{ ucfirst($item->item_name) }}</option>
+                @endforeach
             </x-forms.select>
-            <x-forms.input class="w-full max-w-40" name="quantity" label="Quantity" />
-        </div>
 
+            <x-forms.input class="w-full max-w-40"
+                name="jumlah"
+                label="Jumlah"
+                wire:model.live.debounce="jumlah"/>
+        </div>
         <div class="text-center">
-            <x-buttons.outline type="submit" class="w-full max-w-xs">Tambah</x-buttons.outline>
+            <x-buttons.fill type="submit" class="w-full max-w-xs">Tambah</x-buttons.fill>
         </div>
     </form>
 </div>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('createLabTool', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Tambah Alat Baru?',
+                            text: 'Pastikan Data Alat Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.create();
+                                this.$el.closest('livewire').reset(); // reset form
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', 'Data Alat Berhasil Ditambahkan', 'success');
+                                    $wire.$refresh(); // Refresh komponen jika perlu
+                                } else {
+                                    swal.fire('Gagal', 'Data Alat Gagal Ditambahkan: ' + result.original.message, 'error');
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce

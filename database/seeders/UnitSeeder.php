@@ -13,28 +13,15 @@ class UnitSeeder extends Seeder
      */
     public function run(): void
     {
+        Unit::insert([
+            ['satuan' => 'rim', 'user_id' => '1' , 'created_at' => now(), 'updated_at' => now()],
+            ['satuan' => 'pcs', 'user_id' => '1' , 'created_at' => now(), 'updated_at' => now()],
+            ['satuan' => 'dus', 'user_id' => '1' , 'created_at' => now(), 'updated_at' => now()],
+            ['satuan' => 'pack', 'user_id' => '1' , 'created_at' => now(), 'updated_at' => now()],
+            ['satuan' => 'meter', 'user_id' => '1' , 'created_at' => now(), 'updated_at' => now()],
+        ]);
         Unit::create([
             'satuan' => 'Lembar',
-            'user_id' => 1
-        ]);
-
-        Unit::create([
-            'satuan' => 'Rim',
-            'user_id' => 1
-        ]);
-
-        Unit::create([
-            'satuan' => 'Dus',
-            'user_id' => 1
-        ]);
-
-        Unit::create([
-            'satuan' => 'pcs',
-            'user_id' => 1
-        ]);
-
-        Unit::create([
-            'satuan' => 'pack',
             'user_id' => 1
         ]);
 
@@ -45,11 +32,6 @@ class UnitSeeder extends Seeder
 
         Unit::create([
             'satuan' => 'buah',
-            'user_id' => 1
-        ]);
-
-        Unit::create([
-            'satuan' => 'Meter',
             'user_id' => 1
         ]);
 

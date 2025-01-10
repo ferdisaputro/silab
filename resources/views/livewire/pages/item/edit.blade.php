@@ -4,7 +4,7 @@
         <x-text.page-title class="mb-5" wire:loading>Loading...</x-text.page-title>
         <div class="flex flex-col gap-8 mb-6 md:gap-6 md:flex-row">
             <div class="flex flex-col flex-1 space-y-5">
-                <x-alerts.outline message="Data barang yang akan ditambahkan" icon="fa-caret-right" />
+                <x-alerts.outline message="Data barang yang akan di Edit" icon="fa-caret-right" />
                 <div class="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
                     <x-forms.input
                         name="editItemCode"
@@ -55,7 +55,7 @@
                 <x-buttons.fill
                     type="submit"
                     class="hidden w-full md:inline-block">
-                    Tambah Barang
+                    Edit Barang
                 </x-buttons.fill>
             </div>
 
