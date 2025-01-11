@@ -20,4 +20,8 @@ class SemesterCourse extends Model
     {
         return $this->hasOne(CourseInstructor::class);
     }
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }

@@ -12,6 +12,6 @@ class course_instructuresSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        
     }
 }

@@ -25,25 +25,22 @@
             <div class="space-y-4">
                 <div class="flex gap-4">
                     <x-forms.select class="flex-1" name="prodi" label="Pilih Program Studi">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($Prodis as $prodi )
+                            <option value="{{ $prodi->id }}">{{ $prodi->department }}</option>
+                        @endforeach
                     </x-forms.select>
 
                     <div class="flex flex-1 gap-4">
                         <x-forms.select class="flex-1" name="tahun_ajaran" label="Pilih Tahun Ajaran">
-                            <option value="key1">test1</option>
-                            <option value="key2">test2</option>
-                            <option value="key3">test3</option>
-                            <option value="key4">test4</option>
+                            @foreach ($Years as $year)
+                                <option value="{{ $year->id }}">{{ $year->year }}</option>
+                            @endforeach
                         </x-forms.select>
 
                         <x-forms.select class="flex-1" name="semester" label="Pilih Semester">
-                            <option value="key1">test1</option>
-                            <option value="key2">test2</option>
-                            <option value="key3">test3</option>
-                            <option value="key4">test4</option>
+                            @foreach ($Courses as $course )
+                                <option value="{{ $course->id }}">{{ $course->course }}</option>
+                            @endforeach
                         </x-forms.select>
                     </div>
                 </div>
@@ -52,17 +49,14 @@
             <div class="space-y-4">
                 <div class="flex gap-4">
                     <x-forms.select class="flex-1" name="mata_kuliah" label="Pilih Mata Kuliah">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($Matkuls as $matkul )
+                            <option value="{{ $matkul->id }}">{{ $matkul->study_program }}</option>
+                        @endforeach
                     </x-forms.select>
-
                     <x-forms.select class="flex-1" name="dosen" label="Pilih Dosen">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($Dosens as $dosen )
+                            <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
+                        @endforeach
                     </x-forms.select>
                 </div>
             </div>
@@ -70,12 +64,10 @@
             <div class="space-y-4">
                 <div class="flex gap-4">
                     <x-forms.select class="flex-1" name="minggu" label="Pilih Minggu">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($Weeks as $week )
+                            <option value="{{ $week->id }}">{{ $week->week_number }}</option>
+                        @endforeach
                     </x-forms.select>
-
                     <x-forms.input name="tanggal" label="Tanggal" type="datepicker" />
 
                     <x-forms.select class="flex-1" name="rekomendasi_dosen" label="Rekomendasi Dosen">
@@ -93,21 +85,33 @@
             <div class="space-y-4">
                 @foreach ($test_results as $index => $test_result)
                     <div class="flex gap-4">
-                        <x-forms.select class="flex-1" wire:model='test_results.{{ $index }}.bahan' name="test_results.{{ $index }}.bahan" label="Pilih Barang">
-                            <option value="key1">test1</option>
-                            <option value="key2">test2</option>
-                            <option value="key3">test3</option>
-                            <option value="key4">test4</option>
-                        </x-forms.select>
+                        <x-forms.select class="flex-1"
+                        wire:model="test_results.{{ $index }}.bahan"
+                        wire:change="handleItemChange({{ $index }}, $event.target.value)"
+                        name="test_results.{{ $index }}.bahan"
+                        label="Pilih Barang">
+                        @foreach ($Items as $item)
+                            <option value="{{ $item->id }}">{{ ucfirst($item->item_name) }}</option>
+                        @endforeach
+                    </x-forms.select>
 
-                        <x-forms.input class="max-w-20" wire:model='test_results.{{ $index }}.stok' name="test_results.{{ $index }}.stok" label="Stok" disabled="true" />
-                        <x-forms.input class="max-w-20" wire:model='test_results.{{ $index }}.jumlah' name="test_results.{{ $index }}.jumlah" label="Jumlah" />
+                    <!-- Input untuk stok -->
+                        <x-forms.input class="max-w-20"
+                            wire:model="test_results.{{ $index }}.stok"
+                            name="test_results.{{ $index }}.stok"
+                            label="Stok"
+                            disabled="true" />
 
-                        <x-forms.select class="flex-1 max-w-60" wire:model='test_results.{{ $index }}.tahun_ajaran' name="test_results.{{ $index }}.tahun_ajaran" label="Pilih Tahun Ajaran">
-                            <option value="key1">test1</option>
-                            <option value="key2">test2</option>
-                            <option value="key3">test3</option>
-                            <option value="key4">test4</option>
+
+                        <x-forms.input class="max-w-20"
+                            wire:model='test_results.{{ $index }}.jumlah'
+                            name="test_results.{{ $index }}.jumlah"
+                            label="Jumlah" />
+
+                        <x-forms.select class="flex-1 max-w-60" wire:model='test_results.{{ $index }}.tahun_ajaran' name="test_results.{{ $index }}.tahun_ajaran" label="Pilih Satuan">
+                            @foreach ($Units as $unit )
+                                <option value="{{$unit->id}}">{{$unit->satuan}}</option>
+                            @endforeach
                         </x-forms.select>
 
                         <x-forms.input class="flex-1" wire:model='test_results.{{ $index }}.keterangan' name="test_results.{{ $index }}.keterangan" label="Keterangan" />
