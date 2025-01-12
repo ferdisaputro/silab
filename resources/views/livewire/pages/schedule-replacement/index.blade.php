@@ -1,11 +1,24 @@
 <x-container>
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title>
-                Tabel Peminjaman Alat Praktikum
-            </x-text.page-title>
             <div>
-                <a href="{{ route('schedule-replacement.create') }}" wire:navigate>
+                <x-text.page-title>
+                    Tabel Peminjaman Alat Praktikum
+                </x-text.page-title>
+                <x-forms.select
+                    class="mt-3 ml-2"
+                    name="selectedLab"
+                    label="Pilih Lab"
+                    wire:model.live='selectedLab'
+                    wire:key='{{ $selectedLab }}'
+                >
+                    @foreach ($this->laboratories as $lab)
+                        <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>{{ $lab->code }} - {{ $lab->name }} (Jurusan : {{ $lab->department->department }})</option>
+                    @endforeach
+                </x-forms.select>
+            </div>
+            <div>
+                <a href="{{ route('schedule-replacement.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
                     <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Buat Penggantian Jadwal</x-buttons.fill>
                 </a>
             </div>

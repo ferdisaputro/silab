@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StudyProgram extends Model
 {
@@ -19,15 +19,15 @@ class StudyProgram extends Model
     public function throughHeadOfDepartments()
     {
         return $this->hasManyThrough(
-            Staff::class, 
-            HeadOfStudyProgram::class, 
-            'study_program_id', 
+            Staff::class,
+            HeadOfStudyProgram::class,
+            'study_program_id',
             'id',
             'id',
             'staff_id'
         );
     }
-    
+
     public function headOfStudyPrograms()
     {
         return $this->hasMany(HeadOfStudyProgram::class);

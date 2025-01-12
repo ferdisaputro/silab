@@ -19,7 +19,9 @@ class Edit extends Component
     public $editCode;
     #[Validate('required|min:3')]
     public $editStudyProgram;
+    #[Validate("required|exists:departments,id")]
     public $editDepartment; // id of department
+    #[Validate("required|exists:staff,id")]
     public $editHeadOfStudyProgram; // id of staff
 
     #[On('initEditStudyProgram')]

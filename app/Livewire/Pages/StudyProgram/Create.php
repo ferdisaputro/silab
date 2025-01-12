@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Pages\StudyProgram;
 
+use App\Models\Staff;
+use Livewire\Component;
 use App\Models\Department;
 use App\Models\StudyProgram;
-use App\Models\HeadOfStudyProgram;
-use App\Models\Staff;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
+use App\Models\HeadOfStudyProgram;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
@@ -17,7 +17,9 @@ class Create extends Component
     public $code;
     #[Validate("required|min:3")]
     public $studyProgram;
+    #[Validate("required|exists:departments,id")]
     public $department; // id of department
+    #[Validate("required|exists:staff,id")]
     public $headOfStudyProgram; // id of staff
 
     public function create() {

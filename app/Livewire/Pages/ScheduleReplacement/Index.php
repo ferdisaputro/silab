@@ -3,14 +3,16 @@
 namespace App\Livewire\Pages\ScheduleReplacement;
 
 use App\Models\Item;
-use App\Models\ScheduleReplacement;
-use App\Models\StudyProgram;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Models\Laboratory;
+use App\Models\StudyProgram;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use App\Models\ScheduleReplacement;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -19,6 +21,7 @@ class Index extends Component
     public $scheduleFilter = null;
     public $scheduleOrderBy = 'id';
     public $scheduleOrderByDirection = 'asc';
+    public $selectedLab;
 
     // template for datatable filter
     public function updatedScheduleFilter() {
@@ -32,6 +35,12 @@ class Index extends Component
                     })
                     ->paginate($this->schedulePerPage);
     }
+
+    #[Computed()]
+    public function laboratories() {
+        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
+    }
+
     // ->orderBy($this->permissionOrderBy, $this->permissionOrderByDirection)
     public function delete($key) {
         $id = null;
@@ -63,6 +72,11 @@ class Index extends Component
             ]);
         }
     }
+
+    public function mount() {
+        $this->selectedLab = $this->laboratories()->first()->id;
+    }
+
     public function render()
     {
         return view('livewire.pages.schedule-replacement.index',[

@@ -19,4 +19,8 @@ class Semester extends Model
     public function semesterCourses() {
         return $this->hasMany(SemesterCourse::class);
     }
+
+    public function courses() {
+        return $this->hasManyThrough(Course::class, SemesterCourse::class, 'semester_id', 'id', 'id', 'course_id');
+    }
 }

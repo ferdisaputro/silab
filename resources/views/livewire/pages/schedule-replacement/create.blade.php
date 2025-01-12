@@ -13,63 +13,101 @@
         </x-modals.modal>
     </div> --}}
 <x-container>
-    <form>
+    <form x-data="createScheduleReplacement()" x-on:submit.prevent="submitHandler">
         <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
                 <x-text.page-title>
-                    Buat Penggantian Jadwal
+                    Buat Penggantian Jadwal (Jurusan: {{ $this->department->department }})
                 </x-text.page-title>
             </div>
 
             <div class="space-y-5">
-                <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
-                    <x-forms.select class="flex-1 md:min-w-56" name="prodi" label="Pilih Prodi">
-                        @foreach ($Prodis as $prodi )
-                            <option value="{{ $prodi->study_program }}">{{ $prodi->study_program }}</option>
-                        @endforeach
-                        {{-- @foreach ($this->schedules as $index=>$schedule )
-                            <option value="{{ $schedule->id }}">{{ $schedule->head_of_study_program->studyProgram->study_program }}</option>
-                        @endforeach --}}
-                    </x-forms.select>
-                    <x-forms.select class="flex-1 md:min-w-56" name="tahun_ajaran" label="Pilih Tahun Ajaran">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
-                    </x-forms.select>
-                    <x-forms.select class="flex-1 md:min-w-56" name="semester" label="Pilih Semester">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
-                    </x-forms.select>
+                {{-- @dump($selectedStudyProgram, $selectedAcademicYear, $selectedSemester)
+                @dump($this->studyPrograms, $this->academicYears, $this->semesters, $this->courses) --}}
 
-                    <x-forms.select class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
-                        @foreach ($courses as $course )
-                            <option value="{{ $course->course }}">{{ $course->course }}</option>
+                <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
+                    <x-forms.select-advanced model="selectedStudyProgram" class="flex-1 md:min-w-56" name="studyProgram" label="Pilih Prodi">
+                        @foreach ($this->studyPrograms as $studyProgram )
+                            <option value="{{ $studyProgram->id }}">{{ $studyProgram->study_program }}</option>
                         @endforeach
-                    </x-forms.select>
-                    <x-forms.select class="flex-1 md:min-w-56" name="dosen" label="Pilih Dosen">
-                        @foreach ($dosens as $dosen)
-                            <option value="{{ $dosen->name }}"></option>
+                    </x-forms.select-advanced>
+                    <x-forms.select-advanced model="selectedAcademicYear" class="flex-1 md:min-w-56" name="tahun_ajaran" label="Pilih Tahun Ajaran">
+                        @foreach ($this->academicYears as $academicYear)
+                            <option value="{{ $academicYear->id }}">{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
                         @endforeach
-                    </x-forms.select>
+                    </x-forms.select-advanced>
+                    <x-forms.select-advanced wire:key='{{ $selectedAcademicYear }}' model="selectedSemester" class="flex-1 md:min-w-56" name="semester" label="Pilih Semester">
+                        @foreach ($this->semesters as $semester)
+                            <option value="{{ $semester->id }}">{{ $semester->semester }}</option>
+                        @endforeach
+                    </x-forms.select-advanced>
+
+                    <x-forms.select-advanced wire:key='{{ $selectedSemester.$selectedStudyProgram }}' model="selectedCourse" class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
+                        @foreach ($this->courses as $course )
+                            <option value="{{ $course->id }}">{{ $course->course }}</option>
+                        @endforeach
+                    </x-forms.select-advanced>
+
+                    <x-forms.select-advanced model="selectedLecturer" class="flex-1 md:min-w-56" name="dosen" label="Pilih Dosen">
+                        @foreach ($lecturers as $lecturer)
+                            <option value="{{ $lecturer->id }}">{{ $lecturer->user->name }}</option>
+                        @endforeach
+                    </x-forms.select-advanced>
                 </div>
 
                 <div class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
-                    <x-forms.input name="jadwal_asli" label="Jadwal Asli" type="datepicker" />
-                    <x-forms.input name="jadwal_pengganti" label="Jadwal Pengganti" type="datepicker" />
+                    <x-forms.input
+                            wire:model.live.debounce="realSchedule"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="realSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1" name="realSchedule" label="Tanggal Peminjaman" datepicker />
+                    <x-forms.input
+                            wire:model.live.debounce="replacementSchedule"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="replacementSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
                 </div>
 
-                <x-forms.textarea class="min-h-32" name="acara_praktikum" label="Acara Praktikum"></x-forms.textarea>
+                <x-forms.textarea wire:model.live.debounce='practicumEvent' class="min-h-44" name="acara_praktikum" label="Acara Praktikum"></x-forms.textarea>
 
                 <div class="text-center">
-                    <x-buttons.fill class="w-full max-w-xs">Buat Penggantian Jadwal</x-buttons.fill>
+                    <x-buttons.fill type="submit" class="w-full max-w-xs">Buat Penggantian Jadwal</x-buttons.fill>
                 </div>
             </div>
         </div>
     </form>
+    {{-- @dump($laboratoryId, $this->department) --}}
 </x-container>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('createScheduleReplacement', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Buat Penggantian Jadwal',
+                            text: 'Pastikan Data Penggantian Jadwal Sudah Benar',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                const result = await $wire.create()
+                                if (result.original.status == 'success') {
+                                    swal.fire('Berhasil', 'Data Penggantian Jadwal Berhasil Dibuat', 'success')
+                                    // $wire.resetForm()
+                                } else
+                                    swal.fire('Gagal', 'Data laboratory Gagal Ditambahkan :'+ result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce
 
 
 {{-- @pushOnce('scripts')

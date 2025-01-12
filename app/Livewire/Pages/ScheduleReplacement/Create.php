@@ -2,30 +2,138 @@
 
 namespace App\Livewire\Pages\ScheduleReplacement;
 
-use App\Models\Course;
-use App\Models\ScheduleReplacement;
-use App\Models\Semester;
+use Carbon\Carbon;
 use App\Models\Staff;
-use App\Models\StudyProgram;
-use Livewire\Attributes\Computed;
+use App\Models\Course;
 use Livewire\Component;
+use App\Models\Semester;
+use App\Models\Laboratory;
+use Illuminate\Support\Str;
+use App\Models\AcademicYear;
+use App\Models\StudyProgram;
+use App\Models\SemesterCourse;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
+use App\Models\ScheduleReplacement;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class Create extends Component
 {
+    #[Validate('required|exists:laboratories,id')]
+    public $laboratoryId;
+    #[Validate('required|exists:staff,id')]
+    public $selectedLecturer;
+
+    #[Validate('required|date_format:d/m/Y')]
+    public $realSchedule;
+    #[Validate('required|date_format:d/m/Y')]
+    public $replacementSchedule;
+    #[Validate('required')]
+    public $practicumEvent;
+
+    // #[Computed()]
+    // public function getSchedulesProperty()
+    // {
+    //     return ScheduleReplacement::all();
+    // }
+
+
+
     #[Computed()]
-    public function getSchedulesProperty()
-{
-    return ScheduleReplacement::all();
-}
+    public function department() {
+        return Laboratory::find($this->laboratoryId)->department;
+    }
+
+    #[Validate('required|exists:study_programs,id')]
+    public $selectedStudyProgram;
+    #[Computed()]
+    public function studyPrograms() {
+        return $this->department->studyPrograms;
+    }
+
+    #[Validate('required|exists:academic_years,id')]
+    public $selectedAcademicYear;
+    #[Computed()]
+    public function academicYears() {
+        return AcademicYear::all();
+    }
+
+    #[Validate('required|exists:semesters,id')]
+    public $selectedSemester;
+    #[Computed()]
+    public function semesters() {
+        return Semester::where('academic_year_id', $this->selectedAcademicYear)->get();
+    }
+
+    #[Validate('required|exists:courses,id')]
+    public $selectedCourse;
+    #[Computed()]
+    public function courses() {
+        return SemesterCourse::where('semester_id', $this->selectedSemester)
+                        ->where('study_program_id', $this->selectedStudyProgram)
+                        ->get()->load('course')->pluck('course');
+    }
+
+    public function resetForm() {
+        $this->reset();
+    }
+
+    public function create() {
+        $this->validate();
+
+        // dump(
+        //     'Laboratory ID: ' . $this->laboratoryId,
+        //     'Selected Lecturer: ' . $this->selectedLecturer,
+        //     'Real Schedule: ' . $this->realSchedule,
+        //     'Replacement Schedule: ' . $this->replacementSchedule,
+        //     'Selected Study Program: ' . $this->selectedStudyProgram,
+        //     'Selected Academic Year: ' . $this->selectedAcademicYear,
+        //     'Selected Semester: ' . $this->selectedSemester,
+        //     'Selected Course: ' . $this->selectedCourse,
+        //     'Practicum Event: ' . $this->practicumEvent
+        // );
+
+        $data = [
+            'code' => Str::random(8),
+            'practicum_event' => $this->practicumEvent,
+            'real_schedule' => Carbon::createFromFormat('d/m/Y', $this->realSchedule)->toDateTimeString(),
+            'replacement_schedule' => Carbon::createFromFormat('d/m/Y', $this->replacementSchedule)->toDateTimeString(),
+            'head_of_study_program_id' => StudyProgram::find($this->selectedStudyProgram)->headOfStudyPrograms->firstWhere('is_active', 1)->id,
+            'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
+            'course_id' => $this->selectedCourse,
+            'staff_id' => $this->selectedLecturer,
+        ];
+
+        try {
+            DB::beginTransaction();
+            ScheduleReplacement::create($data);
+
+            dd(ScheduleReplacement::create($data));
+            // DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data penggantian jadwal berhasil dibuat'
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function mount($id) {
+        $this->laboratoryId = Crypt::decrypt($id);
+    }
 
     public function render()
     {
         // dd($this->getSchedulesProperty());
         return view('livewire.pages.schedule-replacement.create',[
-            'Prodis' => StudyProgram::all(),
-            'courses' => Course::all(),
-            'semesters' => Semester::all(),
-            'dosens' => Staff::where("status", 1)->get(),
+            'lecturers' => Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user'),
         ]);
     }
 }

@@ -145,7 +145,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('penggantian-jadwal')->group(function() {
         Route::get('/', ScheduleReplacementIndex::class)
             ->name('schedule-replacement');
-        Route::get('/tambah', ScheduleReplacementCreate::class)
+        Route::get('/{id}/tambah', ScheduleReplacementCreate::class)
             ->name('schedule-replacement.create');
         Route::get('/{id}/edit', ScheduleReplacementEdit::class)
             ->name('schedule-replacement.edit');
