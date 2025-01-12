@@ -16,9 +16,23 @@
     <form x-data="createScheduleReplacement()" x-on:submit.prevent="submitHandler">
         <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
-                <x-text.page-title>
-                    Buat Penggantian Jadwal (Jurusan: {{ $this->department->department }})
-                </x-text.page-title>
+                <div>
+                    <x-text.page-title>
+                        Buat Penggantian Jadwal
+                    </x-text.page-title>
+                    {{-- @dd($this->departments) --}}
+                    <x-forms.select
+                        class="mt-3 ml-2"
+                        name="selectedLaboratory"
+                        label="Pilih Jurusan"
+                        wire:model.live='selectedLaboratory'
+                        wire:key='{{ $selectedLaboratory }}'
+                    >
+                        @foreach ($this->laboratories as $laboratory)
+                            <option value="{{ $laboratory->id }}" {{ $laboratory->id == $selectedLaboratory? "selected" : "" }}>{{ $laboratory->code }} - {{ $laboratory->name }} ({{ $laboratory->department->department }})</option>
+                        @endforeach
+                    </x-forms.select>
+                </div>
             </div>
 
             <div class="space-y-5">
@@ -26,7 +40,7 @@
                 @dump($this->studyPrograms, $this->academicYears, $this->semesters, $this->courses) --}}
 
                 <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
-                    <x-forms.select-advanced model="selectedStudyProgram" class="flex-1 md:min-w-56" name="studyProgram" label="Pilih Prodi">
+                    <x-forms.select-advanced wire:key='{{ $selectedLaboratory }}' model="selectedStudyProgram" class="flex-1 md:min-w-56" name="studyProgram" label="Pilih Prodi">
                         @foreach ($this->studyPrograms as $studyProgram )
                             <option value="{{ $studyProgram->id }}">{{ $studyProgram->study_program }}</option>
                         @endforeach
@@ -96,8 +110,9 @@
                             if (res.isConfirmed) {
                                 const result = await $wire.create()
                                 if (result.original.status == 'success') {
-                                    swal.fire('Berhasil', 'Data Penggantian Jadwal Berhasil Dibuat', 'success')
-                                    // $wire.resetForm()
+                                    swal.fire('Berhasil', 'Data Penggantian Jadwal Berhasil Dibuat', 'success').then(() => {
+                                        $wire.redirectToIndex()
+                                    })
                                 } else
                                     swal.fire('Gagal', 'Data laboratory Gagal Ditambahkan :'+ result.original.message, 'error')
                             }

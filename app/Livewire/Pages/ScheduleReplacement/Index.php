@@ -21,7 +21,6 @@ class Index extends Component
     public $scheduleFilter = null;
     public $scheduleOrderBy = 'id';
     public $scheduleOrderByDirection = 'asc';
-    public $selectedLab;
 
     // template for datatable filter
     public function updatedScheduleFilter() {
@@ -36,30 +35,17 @@ class Index extends Component
                     ->paginate($this->schedulePerPage);
     }
 
-    #[Computed()]
-    public function laboratories() {
-        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
-    }
-
     // ->orderBy($this->permissionOrderBy, $this->permissionOrderByDirection)
     public function delete($key) {
-        $id = null;
-        try {
-            $id = Crypt::decrypt($key);
-        } catch (DecryptException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Kode Enkripsi Tidak Valid'
-            ]);
-        }
+        $id = Crypt::decrypt($key);
 
         try {
             DB::beginTransaction();
 
             $item = ScheduleReplacement::find($id);
             $item->delete();
-
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'item deleted successfully',
@@ -71,10 +57,6 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
-    }
-
-    public function mount() {
-        $this->selectedLab = $this->laboratories()->first()->id;
     }
 
     public function render()

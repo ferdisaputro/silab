@@ -18,4 +18,10 @@ class ScheduleReplacement extends Model
     public function head_of_study_program(){
         return $this->belongsTo(HeadOfStudyProgram::class);
     }
+    public function lecturer() {
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
+    }
+    public function labMember() {
+        return $this->belongsTo(LabMember::class);
+    }
 }

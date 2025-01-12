@@ -7,6 +7,7 @@ use App\Models\Staff;
 use App\Models\Course;
 use Livewire\Component;
 use App\Models\Semester;
+use App\Models\Department;
 use App\Models\Laboratory;
 use Illuminate\Support\Str;
 use App\Models\AcademicYear;
@@ -21,8 +22,6 @@ use Illuminate\Support\Facades\Crypt;
 
 class Create extends Component
 {
-    #[Validate('required|exists:laboratories,id')]
-    public $laboratoryId;
     #[Validate('required|exists:staff,id')]
     public $selectedLecturer;
 
@@ -39,11 +38,16 @@ class Create extends Component
     //     return ScheduleReplacement::all();
     // }
 
-
+    #[Validate('required|exists:laboratories,id')]
+    public $selectedLaboratory;
+    #[Computed()]
+    public function laboratories() {
+        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
+    }
 
     #[Computed()]
     public function department() {
-        return Laboratory::find($this->laboratoryId)->department;
+        return Laboratory::find($this->selectedLaboratory)->department;
     }
 
     #[Validate('required|exists:study_programs,id')]
@@ -80,20 +84,12 @@ class Create extends Component
         $this->reset();
     }
 
+    public function redirectToIndex() {
+        $this->redirectRoute('schedule-replacement', navigate: true);
+    }
+
     public function create() {
         $this->validate();
-
-        // dump(
-        //     'Laboratory ID: ' . $this->laboratoryId,
-        //     'Selected Lecturer: ' . $this->selectedLecturer,
-        //     'Real Schedule: ' . $this->realSchedule,
-        //     'Replacement Schedule: ' . $this->replacementSchedule,
-        //     'Selected Study Program: ' . $this->selectedStudyProgram,
-        //     'Selected Academic Year: ' . $this->selectedAcademicYear,
-        //     'Selected Semester: ' . $this->selectedSemester,
-        //     'Selected Course: ' . $this->selectedCourse,
-        //     'Practicum Event: ' . $this->practicumEvent
-        // );
 
         $data = [
             'code' => Str::random(8),
@@ -101,7 +97,7 @@ class Create extends Component
             'real_schedule' => Carbon::createFromFormat('d/m/Y', $this->realSchedule)->toDateTimeString(),
             'replacement_schedule' => Carbon::createFromFormat('d/m/Y', $this->replacementSchedule)->toDateTimeString(),
             'head_of_study_program_id' => StudyProgram::find($this->selectedStudyProgram)->headOfStudyPrograms->firstWhere('is_active', 1)->id,
-            'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
+            'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id,
             'course_id' => $this->selectedCourse,
             'staff_id' => $this->selectedLecturer,
         ];
@@ -109,9 +105,7 @@ class Create extends Component
         try {
             DB::beginTransaction();
             ScheduleReplacement::create($data);
-
-            dd(ScheduleReplacement::create($data));
-            // DB::commit();
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data penggantian jadwal berhasil dibuat'
@@ -125,8 +119,8 @@ class Create extends Component
         }
     }
 
-    public function mount($id) {
-        $this->laboratoryId = Crypt::decrypt($id);
+    public function mount() {
+        $this->selectedLaboratory = $this->laboratories()->first()->id;
     }
 
     public function render()
