@@ -20,14 +20,16 @@
                     Buat Penggantian Jadwal
                 </x-text.page-title>
             </div>
-            
+
             <div class="space-y-5">
                 <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
                     <x-forms.select class="flex-1 md:min-w-56" name="prodi" label="Pilih Prodi">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($Prodis as $prodi )
+                            <option value="{{ $prodi->study_program }}">{{ $prodi->study_program }}</option>
+                        @endforeach
+                        {{-- @foreach ($this->schedules as $index=>$schedule )
+                            <option value="{{ $schedule->id }}">{{ $schedule->head_of_study_program->studyProgram->study_program }}</option>
+                        @endforeach --}}
                     </x-forms.select>
                     <x-forms.select class="flex-1 md:min-w-56" name="tahun_ajaran" label="Pilih Tahun Ajaran">
                         <option value="key1">test1</option>
@@ -41,18 +43,16 @@
                         <option value="key3">test3</option>
                         <option value="key4">test4</option>
                     </x-forms.select>
-                    
+
                     <x-forms.select class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($courses as $course )
+                            <option value="{{ $course->course }}">{{ $course->course }}</option>
+                        @endforeach
                     </x-forms.select>
                     <x-forms.select class="flex-1 md:min-w-56" name="dosen" label="Pilih Dosen">
-                        <option value="key1">test1</option>
-                        <option value="key2">test2</option>
-                        <option value="key3">test3</option>
-                        <option value="key4">test4</option>
+                        @foreach ($dosens as $dosen)
+                            <option value="{{ $dosen->name }}"></option>
+                        @endforeach
                     </x-forms.select>
                 </div>
 
@@ -60,7 +60,7 @@
                     <x-forms.input name="jadwal_asli" label="Jadwal Asli" type="datepicker" />
                     <x-forms.input name="jadwal_pengganti" label="Jadwal Pengganti" type="datepicker" />
                 </div>
-                
+
                 <x-forms.textarea class="min-h-32" name="acara_praktikum" label="Acara Praktikum"></x-forms.textarea>
 
                 <div class="text-center">
