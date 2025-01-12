@@ -15,4 +15,8 @@ class HeadOfStudyProgram extends Model
     {
         return $this->belongsTo(Staff::class);
     }
+    public function studyProgram()
+    {
+        return $this->belongsTo(StudyProgram::class);
+    }
 }
