@@ -16,6 +16,11 @@ class LabMember extends Model
         return $this->belongsTo(Staff::class);
     }
 
+    public function user()
+    {
+        return $this->hasOneThrough(User::class, Staff::class, 'id', 'id', 'staff_id', 'user_id');
+    }
+
     public function laboratory() {
         return $this->belongsTo(Laboratory::class);
     }

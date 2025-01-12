@@ -50,7 +50,6 @@ class Create extends Component
     public function create() {
         $this->validate();
 
-        $user = null;
         $data = [
             'code' => $this->code,
             'name' => $this->name,
@@ -65,7 +64,6 @@ class Create extends Component
                 $photoPath = $this->photo->store('public/uploads/images/photo-profiles');
                 $data['photo'] = $photoPath;
             } catch (\Exception $e) {
-                dd($e);
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to upload photo',
@@ -79,8 +77,8 @@ class Create extends Component
 
             Staff::create([
                 'status' => $this->status,
-                'staff_statuses_id' => $this->staff_statuses_id,
-                'users_id' => $user->id
+                'staff_status_id' => $this->staff_statuses_id,
+                'user_id' => $user->id
             ]);
 
             $user->assignRole(Role::find($this->role));
@@ -93,7 +91,6 @@ class Create extends Component
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),

@@ -1,7 +1,7 @@
 <x-container x-data="detailPracticumEquipmentLoan()">
     <div>
         <x-modals.modal identifier="detailPracticumEquipmentLoanState" max_width="max-w-6xl">
-            <livewire:pages.practicum-equipment-loan.detail />
+            <livewire:pages.practicum-equipment-loan.detail lazy/>
         </x-modals.modal>
     </div>
 
@@ -47,7 +47,7 @@
                         <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->equipmentLoans->perPage() * ($this->equipmentLoans->currentPage() - 1)) }}</td>
                             <td>
                                 @if ($eqLoan->is_staff)
-                                    {{ $eqLoan->staff->user->name }}
+                                    {{ $eqLoan->staffBorrower->user->name }}
                                 @else
                                     {{ $eqLoan->nim }} - {{ $eqLoan->name }}
                                 @endif
@@ -60,13 +60,13 @@
                                     @if ($eqLoan->status == 2)
                                         <x-badges.outline x-on:click="showDetailPracticumEquipmentLoan('{{ Crypt::encrypt($eqLoan->id) }}')" title="Detail Peminjaman" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
                                     @else
-                                        <a href="{{ route('prac-equipment-loan.edit', ['id' => Crypt::encrypt($eqLoan->id), 'type' => 'return']) }}" wire:navigate>
+                                        <a href="{{ route('prac-equipment-loan.return', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
                                             <x-badges.outline title="Pengembalian Pinjaman" class="px-2.5 py-1.5" color="green"><i class="fa-solid fa-check-to-slot fa-lg"></i></x-badges.outline>
                                         </a>
-                                        <a href="{{ route('prac-equipment-loan.edit', ['id' => Crypt::encrypt($eqLoan->id), 'type' => 'edit']) }}" wire:navigate>
+                                        <a href="{{ route('prac-equipment-loan.edit', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
                                             <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                         </a>
-                                        <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                        <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($eqLoan->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                                     @endif
                                     <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
                                 </div>
@@ -88,6 +88,25 @@
                     showDetailPracticumEquipmentLoan (id) {
                         $wire.dispatch('initDetailPracticumEquipmentLoan', {id: id});
                         this.detailPracticumEquipmentLoanState = true;
+                    },
+                    deleteLaboratory(key) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus laporan peminjaman?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Peminjaman Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
                     }
                 }
             })

@@ -73,7 +73,7 @@ class Edit extends Component
         $user = User::find($this->user_id);
 
         $user->staff->status = $this->editStatus;
-        $user->staff->staff_statuses_id = $this->editStaffStatusesId;
+        $user->staff->staff_status_id = $this->editStaffStatusesId;
         $user->code = $this->editCode;
         $user->name = $this->editName;
         $user->phone = $this->editPhone;
@@ -87,7 +87,6 @@ class Edit extends Component
                 }
                 $user->photo = $photoPath;
             } catch (\Exception $e) {
-                dd($e);
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to upload photo',
@@ -125,7 +124,6 @@ class Edit extends Component
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -138,18 +136,18 @@ class Edit extends Component
             $id = Crypt::decrypt($key);
             $this->user_id = $id;
             $user = User::find($id);
+
             $this->editCode = $user->code;
             $this->editName = $user->name;
             $this->editPhone = $user->phone;
             $this->editEmail = $user->email;
             $this->editStatus = $user->staff->status;
-            $this->editStaffStatusesId = $user->staff->staff_statuses_id;
+            $this->editStaffStatusesId = $user->staff->staff_status_id;
             $this->editRole = $user->roles->first()->id?? null;
             $this->editPhoto = $user->photo;
 
             // dump($this->editCode, $this->editName, $this->editPhone, $this->editEmail, $this->editStatus, $this->editStaffStatusesId, $this->editRole, $this->editPhoto, $user);
         } catch (DecryptException $e) {
-            dd($e);
             $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
         }
     }

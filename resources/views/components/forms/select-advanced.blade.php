@@ -19,8 +19,10 @@
         <div class="relative group select-form-container">
             {{-- <input wire:ignore type="hidden" class="select-form-value" name="{{ $name }}" id="{{ $name }}" {{ $disabled? "disabled" : '' }}> --}}
 
-            <button type="button" class="{{ $height }} select-form flex items-center border disabled:bg-primaryGrey group capitalize border-gray-200 min-w-44 text-sm rounded-lg focus:ring-primaryTeal focus:ring-1 focus:border-primaryTeal w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal @error($name) border-red-500 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror"
-                @click="openMenu()"
+            <button type="button" @if($disabled) disabled @endif class="{{ $height }} select-form flex items-center border disabled:bg-primaryGrey group capitalize border-gray-200 min-w-44 text-sm rounded-lg focus:ring-primaryTeal focus:ring-1 focus:border-primaryTeal w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal @error($name) border-red-500 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror"
+                @if (!$disabled)
+                    @click="openMenu()"
+                @endif
             >
                 {{-- Small Floating text --}}
                 <span class="absolute mr-2 text-sm duration-300 text-start transform -translate-y-[1.2rem] scale-75 left-2 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 group-focus:px-2 group-focus:text-primaryTeal group-disabled:bg-transparent capitalize group-focus:dark:text-primaryLightTeal group-focus:top-1.5 group-focus:scale-90 group-focus:-translate-y-4 focus:px-2 focus:text-primaryTeal focus:dark:text-primaryLightTeal focus:top-1.5 focus:scale-90 focus:-translate-y-4 @error($name) text-red-700 dark:text-red-500 @enderror">
@@ -43,7 +45,9 @@
                     </div>
                     <template x-for="(item, index) in options" :key="index">
                         <span :class="item.value == selectedItem.value? 'bg-primaryTeal' : ''" x-show="search === '' || item.value.toLowerCase().includes(search.toLowerCase()) || item.text.toLowerCase().includes(search.toLowerCase())" :data-value="item.value" class="block px-4 py-2 text-sm text-gray-700 rounded-md cursor-pointer text-start select-form-item hover:bg-gray-100 active:bg-blue-100"
-                            @click="selectedItem = item; isOpen = false; $wire.set('{{ $model }}', item.value, {{ $withRefresh }})"
+                            @if (!$disabled)
+                                @click="selectedItem = item; isOpen = false; $wire.set('{{ $model }}', item.value, {{ $withRefresh }})"
+                            @endif
                         >
                             <span x-text="item.text"></span>
                         </span>
@@ -53,9 +57,11 @@
         </div>
     </div>
     <div>
-        @error($model)
-            <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> {{ $message }}</p>
-        @enderror
+        @if (!$disabled)
+            @error($model)
+                <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> {{ $message }}</p>
+            @enderror
+        @endif
     </div>
 </div>
 

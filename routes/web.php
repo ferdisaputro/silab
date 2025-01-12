@@ -36,6 +36,7 @@ use App\Livewire\Pages\HandoverPracticalResult\Index as HandoverPracticalResultI
 use App\Livewire\Pages\PracticumEquipmentLoan\Create as PracticumEquipmentLoanCreate;
 use App\Livewire\Pages\HandoverPracticalResult\Create as HandoverPracticalResultCreate;
 use App\Livewire\Pages\PracticumMaterialReadiness\Edit as PracticumMaterialReadinessEdit;
+use App\Livewire\Pages\PracticumEquipmentLoan\BorrowReturn as PracticumEquipmentLoanReturn;
 use App\Livewire\Pages\PracticumMaterialReadiness\Index as PracticumMaterialReadinessIndex;
 use App\Livewire\Pages\PracticumMaterialReadiness\Create as PracticumMaterialReadinessCreate;
 
@@ -135,8 +136,10 @@ Route::middleware(["auth"])->group(function() {
             ->name('prac-equipment-loan');
         Route::get('/tambah/{id}', PracticumEquipmentLoanCreate::class)
             ->name('prac-equipment-loan.create');
-        Route::get('/{id}/{type}', PracticumEquipmentLoanEdit::class)
+        Route::get('/{id}/edit', PracticumEquipmentLoanEdit::class)
             ->name('prac-equipment-loan.edit');
+        Route::get('/{id}/return', PracticumEquipmentLoanReturn::class)
+            ->name('prac-equipment-loan.return');
     });
 
     Route::prefix('penggantian-jadwal')->group(function() {

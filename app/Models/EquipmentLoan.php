@@ -23,21 +23,21 @@ class EquipmentLoan extends Model
 
     public function memberBorrow()
     {
-        return $this->hasOne(LabMember::class, 'lab_member_id_borrow', 'id');
+        return $this->belongsTo(LabMember::class, 'lab_member_id_borrow', 'id');
     }
 
-    public function memberReceive()
+    public function memberReturn()
     {
-        return $this->hasOne(LabMember::class, 'lab_member_id_receive', 'id');
+        return $this->belongsTo(LabMember::class, 'lab_member_id_return', 'id');
     }
 
     public function mentor()
     {
-        return $this->hasOne(Staff::class, 'staff_id_mentor', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id_mentor', 'id');
     }
 
-    public function staff()
+    public function staffBorrower()
     {
-        return $this->belongsTo(Staff::class);
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 }

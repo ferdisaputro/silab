@@ -5,6 +5,7 @@ namespace App\Livewire\Pages\Employee;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -31,11 +32,9 @@ class Index extends Component
     }
 
     public function delete($key) {
-        $id = null;
         try {
             $id = Crypt::decrypt($key);
         } catch (DecryptException $e) {
-            dd($e);
             $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
         }
 
@@ -56,6 +55,8 @@ class Index extends Component
 
     public function render()
     {
+        // dd(Auth::user()->getPermissionsViaRoles());
+
         return view('livewire.pages.employee.index');
     }
 }

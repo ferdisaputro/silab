@@ -45,8 +45,16 @@
                 <x-alerts.outline class="mb-5" color="green" message="Data Petugas" />
                 <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2">
                     <div class="space-y-4">
-                        <x-forms.input wire:model.live.debounce="borrowingDate" class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
-                        <x-forms.input value="{{ Auth::user()->name }}" disabled class="flex-1" name="petugas_peminjaman" label="Petugas Penanggung Jawab Peminjaman" />
+                        <x-forms.input
+                            wire:model.live.debounce="borrowingDate"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.input
+                            value="{{ Auth::user()->name }}"
+                            disabled class="flex-1"
+                            name="petugas_peminjaman"
+                            label="Petugas Penanggung Jawab Peminjaman" />
                     </div>
                     <div class="space-y-4">
                         <x-forms.input disabled class="flex-1" name="tangal pengembalian" label="Tanggal Pengembalian" datepicker />
@@ -81,7 +89,10 @@
                                 <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
                                     <div
                                         wire:key='{{ $selectedItems[$index]['item']?? now() }}'
-                                        wire:init="set('selectedItems.{{ $index }}.stock', {{ $this->labItems->find($selectedItems[$index]['item'])? $this->labItems->find($selectedItems[$index]['item'])->stock : '0' }})"
+                                        wire:init="set('selectedItems.{{ $index }}.stock', {{
+                                            $this->labItems->find($selectedItems[$index]['item'])?
+                                                $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
+                                        }})"
                                     >
                                         <x-forms.input
                                         class="flex-1 md:flex-none md:max-w-20"

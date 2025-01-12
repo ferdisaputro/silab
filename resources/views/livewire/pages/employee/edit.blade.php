@@ -35,14 +35,14 @@
                         <ul class="flex items-center w-full overflow-hidden text-sm font-medium border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600">
                             <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <input wire:model='editStatus' id="edit-aktif" checked type="radio" name="editStatus" value="1" class="hidden peer">
+                                    <input wire:model.live='editStatus' id="edit-aktif" checked type="radio" name="editStatus" value="1" class="hidden peer">
                                     <label for="edit-aktif" class="w-full py-3 text-sm font-medium text-center cursor-pointer hover:bg-primaryLightTeal/60 peer-checked:bg-primaryLightTeal">Aktif</label>
                                 </div>
                             </li>
                             <div class="border-r"></div>
                             <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                                 <div class="flex items-center">
-                                    <input wire:model='editStatus' id="edit-tidak-aktif" type="radio" name="editStatus" value="0" class="hidden peer">
+                                    <input wire:model.live='editStatus' id="edit-tidak-aktif" type="radio" name="editStatus" value="0" class="hidden peer">
                                     <label for="edit-tidak-aktif" class="w-full py-3 text-sm font-medium text-center cursor-pointer hover:bg-red-500/60 peer-checked:text-primaryWhite peer-checked:bg-red-500">Tidak Aktif</label>
                                 </div>
                             </li>
@@ -60,7 +60,7 @@
                                 @endif
                                 <li class="flex-1 border-b border-gray-200 sm:border-b-0 @if (!$loop->last) sm:border-r @endif dark:border-gray-600">
                                     <div class="flex items-center">
-                                        <input wire:model='editStaffStatusesId' {{ $loop->first? "checked" : '' }} id="edit-{{ $staffStatus->staff_status }}" value="{{ $staffStatus->id }}" type="radio" name="status-employee" class="hidden peer">
+                                        <input wire:model.live='editStaffStatusesId' id="edit-{{ $staffStatus->staff_status }}" value="{{ $staffStatus->id }}" type="radio" name="status-employee" class="hidden peer">
                                         <label for="edit-{{ $staffStatus->staff_status }}" class="w-full py-3 text-sm font-medium text-center cursor-pointer peer-checked:text-white peer-checked:bg-blue-500 hover:bg-blue-300">{{ $staffStatus->staff_status }}</label>
                                     </div>
                                 </li>
@@ -87,7 +87,7 @@
                         <x-forms.input wire:model.live.debounce='editEmail' required name="editEmail" type="email" label="email" key="email"></x-forms.input>
                         <x-forms.select wire:model.live.debounce='editRole' required name="editRole" label="Role" key="role">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                <option value="{{ $role->id }}" {{ $role->id == $editRole }}>{{ $role->name }}</option>
                             @endforeach
                         </x-forms.select>
                         {{-- <x-forms.input wire:model='password_confirmation' name="password_confirmation" type="password" label="Password" key="password_confirmation"></x-forms.input>

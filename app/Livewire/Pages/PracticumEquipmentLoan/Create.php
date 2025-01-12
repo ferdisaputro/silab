@@ -77,17 +77,12 @@ class Create extends Component
     ])]
     public $selectedItems = [
         [
-            'item' => '', // id item
+            'item' => '', // id of lab_item_id
             'stock' => '', // id stock
             'qty' => '', // qty
             'description' => '', // description
         ]
     ];
-
-    #[Computed()]
-    public function labItems() {
-        return Laboratory::find($this->laboratoryId?? null)->labItems->load('item');
-    }
 
     // public function addItem($item, $stock, $qty, $tahun_ajaran, $description) {
     public function addItem() {
@@ -100,39 +95,17 @@ class Create extends Component
     }
 
     public function removeItem($index) {
-        unset($this->items[$index]);
-        // dump($this->items);
+        unset($this->selectedItems[$index]);
     }
 
-    public function mount($id){
-        $decrypted = Crypt::decrypt($id);
-        $this->laboratoryId = $decrypted;
-        $this->labMemberIdBorrow = Auth::user()->staff->id;
-        $this->code = Str::random(8);
+    #[Computed()]
+    public function labItems() {
+        return Laboratory::find($this->laboratoryId?? null)->labItems->load('item');
     }
 
     public function create() {
-
-        // dd([
-        //     'Code' => $this->code,
-        //     'Is Staff' => $this->isStaff,
-        //     'Staff' => $this->staff,
-        //     'Name' => $this->name,
-        //     'NIM' => $this->nim,
-        //     'Group Class' => $this->groupClass,
-        //     'Mentor' => $this->mentor,
-        //     'Borrowing Date' => $this->borrowingDate,
-        //     'Lab Member ID Borrow' => $this->labMemberIdBorrow,
-        //     'Status' => $this->status,
-        //     'Laboratory ID' => $this->laboratoryId,
-        //     'Selected Items' => $this->selectedItems,
-        // ]);
-
         $this->validate();
-        // dd($this->selectedItems);
-
         $data = [];
-
         $data['code'] = $this->code;
         $data['borrowing_date'] = Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->toDateTimeString();
         $data['status'] = 1;
@@ -199,7 +172,7 @@ class Create extends Component
             DB::rollback();
             // dump($th->getMessage());
             return response()->json([
-                'status' => 'success',
+                'status' => 'error',
                 'message' => $th->getMessage()
             ]);
         }
@@ -209,10 +182,17 @@ class Create extends Component
         $this->redirectRoute('prac-equipment-loan', navigate: true);
     }
 
+    public function mount($id){
+        $decrypted = Crypt::decrypt($id);
+        $this->laboratoryId = $decrypted;
+        $this->labMemberIdBorrow = Auth::user()->staff->id;
+        $this->code = Str::random(8);
+    }
+
     public function render()
     {
         return view('livewire.pages.practicum-equipment-loan.create', [
-            'lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
+            'lecturers' => Staff::with('user')->get(), //dosen
         ]);
     }
 }

@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Pages\PracticumEquipmentLoan;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\Staff;
 use Livewire\Component;
+use App\Models\EquipmentLoan;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Detail extends Component
 {
     public $listeners = ['initDetailPracticumEquipmentLoan'];
-    public $prev_url;
-    
+
     public $id;
     public $items = [
         [
@@ -22,11 +23,13 @@ class Detail extends Component
         ]
     ];
 
+    public $equipmentLoan;
+
     public function initDetailPracticumEquipmentLoan($id) {
-        $this->prev_url = url()->previous();
         try {
             $decrypted = Crypt::decrypt($id);
-            $this->id = $decrypted;
+            // $this->id = $decrypted;
+            $this->equipmentLoan = EquipmentLoan::find($decrypted)->load('loanDetails', 'loanDetails.labItem');
         } catch (DecryptException $e) {
             return $this->redirect($this->prev_url, navigate: true);
         }
@@ -34,6 +37,8 @@ class Detail extends Component
 
     public function render()
     {
-        return view('livewire.pages.practicum-equipment-loan.detail');
+        return view('livewire.pages.practicum-equipment-loan.detail', [
+            'lecturers' => Staff::with('user')->get(), //dosen
+        ]);
     }
 }
