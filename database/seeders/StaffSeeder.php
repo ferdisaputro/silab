@@ -8,6 +8,7 @@ use App\Models\Staff;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StaffSeeder extends Seeder
@@ -37,6 +38,8 @@ class StaffSeeder extends Seeder
             'status' => 1,
             'staff_status_id' => fake()->numberBetween(1, 3),
         ]);
+
+        $defaultUser->assignRole(Role::find(1));
 
         User::factory(20)->create()->each(function($user) {
             Staff::factory(1)->create([

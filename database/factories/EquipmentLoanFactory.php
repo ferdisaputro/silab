@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EquipmentLoan>
@@ -17,7 +18,7 @@ class EquipmentLoanFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => $this->faker->word,
+            'code' => Str::random(8),
             'staff_id' => mt_rand(1, 10),
             'is_staff' => $this->faker->boolean,
             'borrowing_date' => $this->faker->date,
