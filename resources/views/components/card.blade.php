@@ -2,7 +2,7 @@
    $jumlah = $jumlah?? '';
    $kuantitas = $kuantitas?? '';
    $teks = $teks?? '';
-   $ikon = $ikon?? '';
+   $ikon = $ikon?? null;
    $keterangan = $keterangan?? '';
 
    // $bg_class = "bg-gradient-to-br from-$background/40 to-$background"
@@ -19,8 +19,10 @@
          </span>
       </div>
       <div class="flex items-center gap-3">
-         <i class="fa-solid {{ $ikon }} fa-xl"></i>
-         <span class="text-lg font-bold uppercase">{{ $teks }}</span>
+        @if ($ikon)
+            <i class="fa-solid {{ $ikon }} fa-xl"></i>
+        @endif
+         <span class="text-lg line-clamp-1 font-bold uppercase" title="{{ $teks }}">{{ $teks }}</span>
       </div>
    </div>
    <div class="absolute top-0 bottom-0 right-0 translate-x-1/3 z-0 w-1/2 -skew-x-[35deg] bg-gradient-to-r from-white/20 to-transparent"></div>
