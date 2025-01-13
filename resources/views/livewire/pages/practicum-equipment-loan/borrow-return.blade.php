@@ -1,5 +1,4 @@
 <x-container>
-    @dump($errors->all())
     <form x-on:submit.prevent="submitHandler" x-data="createEqLoan()">
         <div class="p-5 space-y-10 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
@@ -21,9 +20,9 @@
 
                     <div>
                         <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
-                            <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="staffReturner" name="staffReturner" label="Pilih Dosen">
-                                @foreach ($lecturers as $lecturer)
-                                    <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $staffReturner? "selected" : '' }}>{{ $lecturer->user->name }}</option>
+                            <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="staffReturner" name="staffReturner" label="Pilih Pegawai">
+                                @foreach ($staffs as $staffData)
+                                    <option value="{{ $staffData->id {{-- this is staff id --}} }}" {{ $staffData->id == $staffReturner? "selected" : '' }}>{{ $staffData->user->name }}</option>
                                 @endforeach
                             </x-forms.select-advanced>
                         </div>

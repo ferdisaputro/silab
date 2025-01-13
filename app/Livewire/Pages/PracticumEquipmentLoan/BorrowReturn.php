@@ -159,7 +159,8 @@ class BorrowReturn extends Component
     public function render()
     {
         return view('livewire.pages.practicum-equipment-loan.borrow-return', [
-            'lecturers' => Staff::with('user')->get(), //dosen
+            'lecturers' => Staff::with('user')->where('staff_status_id', 1)->get(), //dosen
+            'staffs' => Staff::with('user')->get(), //staff
         ]);
     }
 }

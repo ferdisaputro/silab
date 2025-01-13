@@ -39,10 +39,10 @@
                         }).then(async res => {
                             if (res.isConfirmed) {
                                 result = await $wire.create();
-                                this.$el.closest('livewire').reset(); // reset form
+                                this.$el.closest('form').reset(); // reset form
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', 'Data Alat Berhasil Ditambahkan', 'success');
-                                    $wire.$refresh(); // Refresh komponen jika perlu
+                                    $wire.$parent.$refresh()
                                 } else {
                                     swal.fire('Gagal', 'Data Alat Gagal Ditambahkan: ' + result.original.message, 'error');
                                 }

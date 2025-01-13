@@ -62,10 +62,10 @@
                     <x-tables.datatable>
                         <thead>
                             <tr>
-                                <th>#<i class="fa-solid fa-sort ms-2"></i></th>
-                                <th>Kode Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                                <th>Nama Matkul<i class="fa-solid fa-sort ms-2"></i></th>
-                                <th>Status<i class="fa-solid fa-sort ms-2"></i></th>
+                                <th>#</th>
+                                <th>Kode Matkul</th>
+                                <th>Nama Matkul</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,7 +127,7 @@
                             if (res.isConfirmed) {
                                 result = await $wire.create()
                                 console.log(result);
-                                
+
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', result.original.message, 'success')
                                     this.$el.closest('form').reset() // reset form
@@ -137,7 +137,7 @@
                             }
                         })
                     }
-                    
+
                 }
             })
 

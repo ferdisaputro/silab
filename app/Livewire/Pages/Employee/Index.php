@@ -16,11 +16,6 @@ class Index extends Component
     public $employeeOrderBy = 'id';
     public $employeeOrderByDirection = 'desc';
 
-    // template for datatable filter
-    public function updatedEmployeeFilter() {
-        $this->resetPage();
-    }
-
     #[Computed()]
     public function users() {
         return User::where('name', 'like', "%$this->employeeFilter%")

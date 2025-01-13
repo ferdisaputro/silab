@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Pages\Laboratory;
 
-use App\Models\LabMember;
-use App\Models\Laboratory;
 use App\Models\Staff;
 use Livewire\Component;
+use App\Models\LabMember;
+use App\Models\Laboratory;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Livewire\Attributes\Computed;
 
 class Detail extends Component
 {
@@ -38,7 +38,7 @@ class Detail extends Component
     }
 
     public function removeNewTechnician($index) {
-        unset($this->newStudies[$index]);
+        unset($this->newTechnicians[$index]);
     }
 
     public function edit() {

@@ -21,22 +21,20 @@
                     </div>
 
                     <div>
-                        {{-- @dump($equipmentLoan) --}}
                         @if ($equipmentLoan->is_staff)
                             <div class="flex flex-wrap gap-4">
-                                <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Dosen">
-                                    @foreach ($lecturers as $lecturer)
-                                        <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $equipmentLoan->staff_id? "selected" : '' }}>{{ $lecturer->user->name }}</option>
+                                <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Pegawai">
+                                    @foreach ($staffs as $staffData)
+                                        <option value="{{ $staffData->id {{-- this is staff id --}} }}" {{ $staffData->id == $equipmentLoan->staff_id? "selected" : '' }}>{{ $staffData->user->name }}</option>
                                     @endforeach
                                 </x-forms.select-advanced>
                             </div>
                         @else
-                            @dump($equipmentLoan->staffBorrower)
                             <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
                                 <x-forms.input wire:model.live.debounce="nim" class="flex-1 md:min-w-[20rem]" name="nim" label="NIM" />
                                 <x-forms.input wire:model.live.debounce="name" class="flex-1 md:min-w-[20rem]" name="name" label="Nama" />
                                 <x-forms.input wire:model.live.debounce="groupClass" class="flex-1 md:min-w-[20rem]" name="groupClass" label="Golongan/Kelompok" />
-                                <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="mentor" name="mentor" label="Pilih Dosen">
+                                <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="mentor" name="mentor" label="Pilih Dosen Pembimbing">
                                     @foreach ($lecturers as $lecturer)
                                         <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $equipmentLoan->staff_id_mentor? "selected" : '' }}>{{ $lecturer->user->name }}</option>
                                     @endforeach

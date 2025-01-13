@@ -22,11 +22,12 @@
                 <div>
                     @if ($this->equipmentLoan->is_staff)
                         <div class="flex flex-wrap gap-4">
-                            <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Dosen">
+                            <x-forms.input disabled value="{{ $this->equipmentLoan->staffBorrower->user->name }}" class="flex-1 md:min-w-[20rem] md:max-w-lg" name="nim" label="Pegawai Peminjam" />
+                            {{-- <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Dosen">
                                 @foreach ($lecturers as $lecturer)
-                                    <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $this->equipmentLoan->staff_id? "selected" : '' }}>{{ $lecturer->user->name }}</option>
+                                    <option value="{{ $lecturer->id}}" {{ $lecturer->id == $this->equipmentLoan->staff_id? "selected" : '' }}>{{ $lecturer->user->name }}</option>
                                 @endforeach
-                            </x-forms.select-advanced>
+                            </x-forms.select-advanced> --}}
                         </div>
                     @else
                         <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
@@ -60,11 +61,13 @@
                 <div>
                     @if ($this->equipmentLoan->is_returner_staff)
                         <div class="flex flex-wrap gap-4">
-                            <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Dosen">
+                            {{-- @dd() --}}
+                            <x-forms.input disabled value="{{ $this->equipmentLoan->staffReturner->user->name }}" class="flex-1 md:min-w-[20rem] md:max-w-lg" name="nim" label="Pegawai Pengembali" />
+                            {{-- <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Dosen">
                                 @foreach ($lecturers as $lecturer)
-                                    <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $this->equipmentLoan->staff_id_returner? "selected" : '' }}>{{ $lecturer->user->name }}</option>
+                                    <option value="{{ $lecturer->id}}" {{ $lecturer->id == $this->equipmentLoan->staff_id_returner? "selected" : '' }}>{{ $lecturer->user->name }}</option>
                                 @endforeach
-                            </x-forms.select-advanced>
+                            </x-forms.select-advanced> --}}
                         </div>
                     @else
                         <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">

@@ -40,4 +40,9 @@ class EquipmentLoan extends Model
     {
         return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
+
+    public function staffReturner()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id_returner', 'id');
+    }
 }

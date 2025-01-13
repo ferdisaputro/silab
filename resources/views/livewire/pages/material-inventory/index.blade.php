@@ -31,7 +31,7 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-materialInventory" :data="$this->labItems" eventTarget="labItem">
+            <x-tables.datatable :data="$this->labItems" eventTarget="labItem">
                 <thead>
                     <tr>
                         <th data-sortby="id">#</th>

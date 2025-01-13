@@ -29,7 +29,7 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-toolInventory">
+            <x-tables.datatable>
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>

@@ -4,8 +4,8 @@ namespace App\Livewire\Pages\ToolInventory;
 
 use App\Models\Item;
 use App\Models\LabItem;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
@@ -52,9 +52,9 @@ class Create extends Component
         $this->lab_id = $data;
     }
     public function resetForm()
-{
-    $this->reset();
-}
+    {
+        $this->reset();
+    }
     public function render()
     {
         return view('livewire.pages.tool-inventory.create',[
