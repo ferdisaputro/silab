@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Pages\Semester;
 
-use App\Models\AcademicYear;
-use App\Models\Semester;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Models\Semester;
+use App\Models\AcademicYear;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
     #[Validate('required|exists:academic_years,id')]
     public $academic_year;
-    #[Validate('required|integer|between:1,8|digits:1')]
+    #[Validate('required|integer')]
     public $semester;
 
     public function create()
@@ -19,15 +19,26 @@ class Create extends Component
         $this->validate();
 
         try {
-            Semester::create([
-                'academic_year_id' => $this->academic_year,
-                'semester' => $this->semester,
-                'is_even' => $this->semester % 2 == 0? 1 : 0 
-            ]);
-            $this->reset();
+            $isExist = Semester::where('academic_year_id', $this->academic_year)
+                                ->where('semester', $this->semester)
+                                ->get();
+
+            if ($isExist->count() == 0) {
+                Semester::create([
+                    'academic_year_id' => $this->academic_year,
+                    'semester' => $this->semester,
+                    'is_even' => $this->semester % 2 == 0? 1 : 0
+                ]);
+                $this->reset();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Semester berhasil dibuat'
+                ]);
+            }
+
             return response()->json([
-                'status' => 'success',
-                'message' => 'Semester berhasil dibuat'
+                'status' => 'error',
+                'message' => "Data sudah ada"
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -36,7 +47,7 @@ class Create extends Component
             ]);
         }
     }
-    
+
     public function render()
     {
         return view('livewire.pages.semester.create', [

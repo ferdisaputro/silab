@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Pages\Semester;
 
-use App\Models\AcademicYear;
-use App\Models\Semester;
 use Livewire\Component;
+use App\Models\Semester;
 use Livewire\Attributes\On;
+use App\Models\AcademicYear;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -15,7 +15,7 @@ class Edit extends Component
     public $id;
     #[Validate('required|exists:academic_years,id')]
     public $academic_year;
-    #[Validate('required|integer|between:1,8|digits:1')]
+    #[Validate('required|integer')]
     public $semester;
 
     public function edit()
@@ -23,20 +23,30 @@ class Edit extends Component
         $this->validate();
 
         try {
-            $semester = Semester::find($this->id);
-            $semester->academic_year_id = $this->academic_year;
-            $semester->semester = $this->semester;
+            $isExist = Semester::where('academic_year_id', $this->academic_year)
+                                ->where('semester', $this->semester)
+                                ->get();
 
-            if ($semester->isDirty(['academic_year_id', 'semester'])) {
-                $semester->save();
+            if ($isExist->count() == 0) {
+                $semester = Semester::find($this->id);
+                $semester->academic_year_id = $this->academic_year;
+                $semester->semester = $this->semester;
+
+                if ($semester->isDirty(['academic_year_id', 'semester'])) {
+                    $semester->save();
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Semester berhasil diubah'
+                    ]);
+                }
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Semester berhasil diubah'
+                    'status' => 'info',
+                    'message' => 'Tidak ada perubahan data'
                 ]);
             }
             return response()->json([
-                'status' => 'info',
-                'message' => 'Tidak ada perubahan data'
+                'status' => 'error',
+                'message' => "Data sudah ada"
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -45,7 +55,7 @@ class Edit extends Component
             ]);
         }
     }
-    
+
     #[On('initEditSemester')]
     public function initEditSemester($key) {
         try {

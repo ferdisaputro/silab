@@ -8,16 +8,7 @@
             @endforeach
         </x-forms.select>
 
-        <x-forms.select wire:model.live='semester' name="semester" label="Semester">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-        </x-forms.select>
+        <x-forms.input wire:model.live='semester' name="semester" label="Semester" />
 
         <div class="text-center">
             <x-buttons.outline type="submit" class="w-full max-w-xs">Ubah</x-buttons.outline>
@@ -42,7 +33,7 @@
                             if (res.isConfirmed) {
                                 result = await $wire.edit()
                                 console.log(result);
-                                
+
                                 if (result.original.status !== 'error') {
                                     swal.fire('Berhasil', result.original.message, result.original.status)
                                     $wire.$parent.$refresh()
