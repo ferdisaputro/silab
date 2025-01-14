@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages\Role;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -11,8 +12,9 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
-    public $id;
+    use WithPagination;
 
+    public $id;
     // template for datatable
     public $rolePerPage = 15;
     public $roleFilter = null;

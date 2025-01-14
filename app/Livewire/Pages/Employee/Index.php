@@ -4,6 +4,7 @@ namespace App\Livewire\Pages\Employee;
 
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -11,6 +12,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
+    use WithPagination;
+    
     public $employeePerPage = 15;
     public $employeeFilter = null;
     public $employeeOrderBy = 'id';

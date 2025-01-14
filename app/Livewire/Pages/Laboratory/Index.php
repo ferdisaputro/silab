@@ -4,12 +4,14 @@ namespace App\Livewire\Pages\Laboratory;
 
 use Livewire\Component;
 use App\Models\Laboratory;
+use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
+    use WithPagination;
     // template for datatable
     public $laboratoryPerPage = 15;
     public $laboratoryFilter = null;
