@@ -32,7 +32,7 @@ z`    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
                         <tr wire:key='{{ $loop->iteration + ($this->items->perPage() * ($this->items->currentPage() - 1)) }}'>
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->items->perPage() * ($this->items->currentPage() - 1)) }}</td>
                             <td>{{ $item->item_name }}</td>
-                            <td>{{ $item->quantity }}</td>
+                            <td>{{ $item->labItems->sum('stock') }}</td>
                             <td class="text-center">
                                 <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($item->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($item->id) }}', '{{ $item->item_name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>

@@ -31,7 +31,7 @@ class Homepage extends Component
     {
         $laboratories = null;
         $labMembers = Auth::user()->labMembers;
-        $itemTypes = ItemType::withCount('items')->get();
+        $itemTypes = ItemType::with('items', 'items.labItems')->withCount('items')->get();
 
         $month = Carbon::now()->month; // Retrieves the current month as an integer
         $year = Carbon::now()->year;   // Retrieves the current year as an integer

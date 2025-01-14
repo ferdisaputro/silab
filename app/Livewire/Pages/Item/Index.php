@@ -3,12 +3,12 @@
 namespace App\Livewire\Pages\Item;
 
 use App\Models\Item;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -30,6 +30,7 @@ class Index extends Component
                     ->when($this->itemOrderBy && $this->itemOrderByDirection, function ($query) {
                         $query->orderBy($this->itemOrderBy, $this->itemOrderByDirection);
                     })
+                    ->with('labItems')
                     ->paginate($this->itemPerPage);
     }
 

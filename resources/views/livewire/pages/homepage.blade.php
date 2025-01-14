@@ -6,7 +6,8 @@
                     gradient="from-gray-400/45 to-gray-400"
                     color="text-primaryDark"
                     jumlah="{{ $itemType->items_count }}"
-                    kuantitas="{{ $itemType->items->sum('stock') }}"
+                    keterangan="Item"
+                    kuantitas="{{ $itemType->items->sum(fn($item) => $item->labItems->sum('stock')) }}"
                     teks="{{ $itemType->item_type }}"
                     ikon="fa-toolbox"
                 ></x-card>
