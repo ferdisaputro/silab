@@ -55,7 +55,7 @@
                                                 wire:init="set('semesterCoursesList.{{ $semesterCourse->course->id }}.lecturer_id', {{ $semesterCourse->courseInstructor->staff_id?? null }})"
                                                 model="semesterCoursesList.{{ $semesterCourse->course->id }}.lecturer_id"
                                                 name="semesterCoursesList.{{ $semesterCourse->course->id }}.lecturer_id"
-                                                label="Pilih Ketua Jurusan"
+                                                label="Pilih Dosen Pengampu"
                                                 withRefresh="false"
                                                 {{-- wire:init="set('semesterCoursesList.{{ $semesterCourse->staff_id }}.course_id', {{ $semesterCourse->staff_id }})" --}}
                                             >

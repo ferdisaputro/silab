@@ -32,14 +32,27 @@ class StaffSeeder extends Seeder
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ]);
-
         Staff::create([
             'user_id' => $defaultUser->id,
             'status' => 1,
-            'staff_status_id' => fake()->numberBetween(1, 3),
+            'staff_status_id' => 1,
+        ]);
+        $teknisi = User::create([
+            'name' => 'Teknisi',
+            'code' => Str::random(4),
+            'phone' => fake()->phoneNumber, // Optional, can be null
+            'email' => 'teknisi@gmail.com',
+            'password' => bcrypt('password'),
+            'remember_token' => Str::random(10),
+        ]);
+        Staff::create([
+            'user_id' => $teknisi->id,
+            'status' => 1,
+            'staff_status_id' => 3,
         ]);
 
         $defaultUser->assignRole(Role::find(1));
+        $teknisi->assignRole(Role::find(1));
 
         User::factory(20)->create()->each(function($user) {
             Staff::factory(1)->create([

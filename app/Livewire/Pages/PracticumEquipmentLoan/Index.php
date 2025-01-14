@@ -85,7 +85,7 @@ class Index extends Component
     }
 
     public function mount() {
-        $this->selectedLab = $this->laboratories()->first()->id;
+        $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()->id : null;
     }
 
     public function render()

@@ -79,6 +79,8 @@ class Edit extends Component
         $user->phone = $this->editPhone;
         $user->email = $this->editEmail;
 
+        // dd($user->staff);
+
         if ($this->editPhoto && !is_string($this->editPhoto)) {
             try {
                 $photoPath = $this->editPhoto->store('public/uploads/images/photo-profiles');
@@ -99,12 +101,12 @@ class Edit extends Component
             $isStaffUpdated = false;
             $isUserUpdated = false;
 
-            if ($user->staff->isDirty(['status', 'staff_statuses_id'])) {
-                $user->staff->update();
+            if ($user->staff->isDirty('status', 'staff_status_id')) {
+                $user->staff->save();
                 $isStaffUpdated = true;
             }
-            if ($user->isDirty(['code', 'name', 'phone', 'email', 'photo'])) {
-                $user->update();
+            if ($user->isDirty('code', 'name', 'phone', 'email', 'photo')) {
+                $user->save();
                 $isUserUpdated = true;
             }
 

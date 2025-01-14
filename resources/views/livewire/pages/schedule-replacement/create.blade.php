@@ -40,31 +40,31 @@
                 @dump($this->studyPrograms, $this->academicYears, $this->semesters, $this->courses) --}}
 
                 <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
-                    <x-forms.select-advanced wire:key='{{ $selectedLaboratory }}' model="selectedStudyProgram" class="flex-1 md:min-w-56" name="studyProgram" label="Pilih Prodi">
+                    <x-forms.select-advanced wire:key='{{ now() }}' model="selectedStudyProgram" class="flex-1 md:min-w-56" name="studyProgram" label="Pilih Prodi">
                         @foreach ($this->studyPrograms as $studyProgram )
-                            <option value="{{ $studyProgram->id }}">{{ $studyProgram->study_program }}</option>
+                            <option value="{{ $studyProgram->id }}" {{ $studyProgram->id == $selectedStudyProgram? "selected" : "" }}>{{ $studyProgram->study_program }}</option>
                         @endforeach
                     </x-forms.select-advanced>
                     <x-forms.select-advanced model="selectedAcademicYear" class="flex-1 md:min-w-56" name="tahun_ajaran" label="Pilih Tahun Ajaran">
                         @foreach ($this->academicYears as $academicYear)
-                            <option value="{{ $academicYear->id }}">{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
+                            <option value="{{ $academicYear->id }}" {{ $academicYear->id == $selectedAcademicYear? "selected" : "" }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
                         @endforeach
                     </x-forms.select-advanced>
-                    <x-forms.select-advanced wire:key='{{ $selectedAcademicYear }}' model="selectedSemester" class="flex-1 md:min-w-56" name="semester" label="Pilih Semester">
+                    <x-forms.select-advanced wire:key='{{ now() }}' model="selectedSemester" class="flex-1 md:min-w-56" name="semester" label="Pilih Semester">
                         @foreach ($this->semesters as $semester)
-                            <option value="{{ $semester->id }}">{{ $semester->semester }}</option>
+                            <option value="{{ $semester->id }}" {{ $semester->id == $selectedSemester? "selected" : "" }}>{{ $semester->semester }}</option>
                         @endforeach
                     </x-forms.select-advanced>
 
-                    <x-forms.select-advanced wire:key='{{ $selectedSemester.$selectedStudyProgram }}' model="selectedCourse" class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
+                    <x-forms.select-advanced wire:key='{{ now() }}' model="selectedCourse" class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
                         @foreach ($this->courses as $course )
-                            <option value="{{ $course->id }}">{{ $course->course }}</option>
+                            <option value="{{ $course->id }}" {{ $course->id == $selectedCourse? "selected" : "" }}>{{ $course->course }}</option>
                         @endforeach
                     </x-forms.select-advanced>
 
                     <x-forms.select-advanced model="selectedLecturer" class="flex-1 md:min-w-56" name="dosen" label="Pilih Dosen">
                         @foreach ($lecturers as $lecturer)
-                            <option value="{{ $lecturer->id }}">{{ $lecturer->user->name }}</option>
+                            <option value="{{ $lecturer->id }}" {{ $lecturer->id == $selectedLecturer? "selected" : "" }}>{{ $lecturer->user->name }}</option>
                         @endforeach
                     </x-forms.select-advanced>
                 </div>
