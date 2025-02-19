@@ -60,6 +60,43 @@
     </div>
 </x-container>
 
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('initEditLabItem', () => {
+                return {
+                    editMaterialInventoryState: false,
+                    showEditMaterialInventory (key) {
+                        $wire.dispatch('initEditLabItem', {key: key}); // this is function is dispatching a function from pages/MaterialInventory/Edit
+                        this.editMaterialInventoryState = true;
+                    },
+
+                    deleteItem(key, code) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus Tool ${name}?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Tool Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endpushOnce
+
+
 {{-- @pushOnce('scripts')
     @script
         <script>
