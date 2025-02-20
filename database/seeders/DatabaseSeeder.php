@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             EquipmentLoanSeeder::class,
             UnitSeeder::class,
+            SemesterCourseSeeder::class,
+            CourseInstructorSeeder::class,
+            PracticumReadinessSeeder::class,
         ]);
     }
 }

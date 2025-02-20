@@ -26,7 +26,7 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-pracMatReady">
+            <x-tables.datatable :data="$this->practicumMaterialReadiness" id="tabel-pracMatReady">
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>
@@ -38,22 +38,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 50; $i++)
-                        <tr>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $i }}</td>
-                            <td>mata kuliah - {{ $i }}</td>
-                            <td>{{ $i }}(2024-2025)</td>
-                            <td>{{ $i }}(24/2/2024)</td>
-                            <td>Siap dan Lanjutkan</td>
+                    @foreach ($this->practicumMaterialReadiness as $index => $PMR)
+                        <tr wire:key='{{ $loop->iteration + ($this->practicumMaterialReadiness->perPage() * ($this->practicumMaterialReadiness->currentPage() - 1)) }}'>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"></td>
+                            <td>{{ $PMR->semesterCourse->studyProgram->study_program}}</td>
+                            <td>{{ $PMR->semesterCourse->semester->semester }}</td>
+                            <td>{{ $PMR->academic_week_id }}</td>
+                            <td>{{ $PMR->recomendation }}</td>
                             <td class="text-center">
-                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate>
+                            <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                {{-- <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate> --}}
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
