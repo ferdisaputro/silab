@@ -11,6 +11,7 @@ use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use App\Models\ScheduleReplacement;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -56,6 +57,12 @@ class Index extends Component
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function mount() {
+        if (Gate::allows('isALabMember', Auth::user())) {
+            abort(404);
         }
     }
 

@@ -14,6 +14,7 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use App\Models\EquipmentLoanDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -187,6 +188,9 @@ class Edit extends Component
     }
 
     public function mount($id, $type = "edit") {
+        if (Gate::allows('isALabMember', Auth::user())) {
+            abort(404);
+        }
         try {
             $this->id = Crypt::decrypt($id);
             // $this->laboratoryId = Crypt::decrypt($labId);

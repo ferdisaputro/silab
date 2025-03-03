@@ -14,6 +14,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 
 class Create extends Component
@@ -107,7 +108,7 @@ class Create extends Component
 
     public function create() {
         // dump(
-        //     $this->borrowingDate." ".$this->borrowingTime, 
+        //     $this->borrowingDate." ".$this->borrowingTime,
         //     Carbon::createFromFormat('d/m/Y H:i', $this->borrowingDate." ".$this->borrowingTime)->toDateTimeString()
         // );
         // return;
@@ -190,6 +191,9 @@ class Create extends Component
     }
 
     public function mount($id){
+        if (Gate::allows('isALabMember', Auth::user())) {
+            abort(404);
+        }
         $decrypted = Crypt::decrypt($id);
         $this->laboratoryId = $decrypted;
         $this->labMemberIdBorrow = Auth::user()->staff->id;

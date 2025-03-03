@@ -18,7 +18,7 @@ new class extends Component
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="px-4 mx-auto sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" class="inline-flex items-center p-2 mt-2 text-sm text-gray-500 rounded-lg ms-3 sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -34,9 +34,12 @@ new class extends Component
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
 
-                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                        <button class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
 
-                            <span class="text-sm">{{ Auth::user()->email }}</span>
+                            <div class="flex flex-col text-right pt-0.5">
+                                <span class="text-sm">{{ Auth::user()->email }}</span>
+                                <span class="text-xs">{{ Auth::user()->getRoleNames()[0] }}</span>
+                            </div>
 
                             {{-- <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div> --}}
                             <x-slot name="content">

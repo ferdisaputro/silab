@@ -18,6 +18,7 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use App\Models\ScheduleReplacement;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 
 class Create extends Component
@@ -29,7 +30,6 @@ class Create extends Component
     public $realSchedule;
     #[Validate('required|date_format:d/m/Y')]
     public $replacementSchedule;
-    #[Validate('required')]
     public $practicumEvent;
 
     // #[Computed()]
@@ -90,13 +90,14 @@ class Create extends Component
 
     public function create() {
         $this->validate();
+        $headOfStudyProgram = StudyProgram::find($this->selectedStudyProgram)->headOfStudyPrograms->firstWhere('is_active', 1);
 
         $data = [
             'code' => Str::random(8),
             'practicum_event' => $this->practicumEvent,
             'real_schedule' => Carbon::createFromFormat('d/m/Y', $this->realSchedule)->toDateTimeString(),
             'replacement_schedule' => Carbon::createFromFormat('d/m/Y', $this->replacementSchedule)->toDateTimeString(),
-            'head_of_study_program_id' => StudyProgram::find($this->selectedStudyProgram)->headOfStudyPrograms->firstWhere('is_active', 1)->id,
+            'head_of_study_program_id' => $headOfStudyProgram? $headOfStudyProgram->id : null,
             'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id,
             'course_id' => $this->selectedCourse,
             'staff_id' => $this->selectedLecturer,
@@ -120,6 +121,9 @@ class Create extends Component
     }
 
     public function mount() {
+        if (Gate::allows('isALabMember', Auth::user())) {
+            abort(404);
+        }
         $this->selectedLaboratory = $this->laboratories()->first()->id;
     }
 

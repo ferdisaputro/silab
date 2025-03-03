@@ -9,6 +9,7 @@ use App\Models\EquipmentLoan;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -85,6 +86,9 @@ class Index extends Component
     }
 
     public function mount() {
+        if (Gate::allows('isALabMember', Auth::user())) {
+            abort(404);
+        }
         $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()->id : null;
     }
 

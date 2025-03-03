@@ -82,7 +82,7 @@
                             class="flex-1" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
                 </div>
 
-                <x-forms.textarea wire:model.live.debounce='practicumEvent' class="min-h-44" name="acara_praktikum" label="Acara Praktikum"></x-forms.textarea>
+                <x-forms.textarea wire:model.live.debounce='practicumEvent' class="min-h-44" name="practicumEvent" label="Acara Praktikum"></x-forms.textarea>
 
                 <div class="text-center">
                     <x-buttons.fill type="submit" class="w-full max-w-xs">Buat Penggantian Jadwal</x-buttons.fill>

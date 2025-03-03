@@ -19,7 +19,7 @@
         <div class="relative group select-form-container">
             {{-- <input wire:ignore type="hidden" class="select-form-value" name="{{ $name }}" id="{{ $name }}" {{ $disabled? "disabled" : '' }}> --}}
 
-            <button type="button" @if($disabled) disabled @endif class="{{ $height }} select-form flex items-center border disabled:bg-primaryGrey group capitalize border-gray-200 min-w-44 text-sm rounded-lg focus:ring-primaryTeal focus:ring-1 focus:border-primaryTeal w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal @error($name) border-red-500 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror"
+            <button type="button" @if($disabled) disabled @endif class="{{ $height }} select-form flex items-center border disabled:bg-primaryGrey group capitalize min-w-44 text-sm rounded-lg focus:ring-primaryTeal focus:ring-1 focus:border-primaryTeal w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primaryTeal dark:focus:border-primaryTeal @error($name) border-red-500 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror"
                 @if (!$disabled)
                     @click="openMenu()"
                 @endif
@@ -95,6 +95,12 @@
                         // console.log(this.options);
                         document.addEventListener('scroll', () => {
                             if (this.isOpen) {
+                                this.isOpen = false
+                            }
+                        })
+
+                        document.addEventListener('click', (e) => {
+                            if (!this.selectContainer.contains(e.target)) {
                                 this.isOpen = false
                             }
                         })

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('schedule_replacements', function (Blueprint $table) {
             $table->id();
             $table->string('code', 12);
-            $table->string('practicum_event');
+            $table->string('practicum_event')->nullable();
             $table->dateTime('real_schedule');
             $table->dateTime('replacement_schedule');
-            $table->foreignId('head_of_study_program_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('head_of_study_program_id')->constrained()->onDelete('CASCADE')->nullable();
             $table->foreignId('lab_member_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('course_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('staff_id')->constrained()->onDelete('CASCADE');
