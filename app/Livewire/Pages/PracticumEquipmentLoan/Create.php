@@ -41,6 +41,8 @@ class Create extends Component
     // variables for borrowing
     #[Validate('required')] // DATETIME for borrowing date
     public $borrowingDate;
+    #[Validate('required')]
+    public $borrowingTime;
     #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
     public $labMemberIdBorrow;
 
@@ -104,10 +106,15 @@ class Create extends Component
     }
 
     public function create() {
+        // dump(
+        //     $this->borrowingDate." ".$this->borrowingTime, 
+        //     Carbon::createFromFormat('d/m/Y H:i', $this->borrowingDate." ".$this->borrowingTime)->toDateTimeString()
+        // );
+        // return;
         $this->validate();
         $data = [];
         $data['code'] = $this->code;
-        $data['borrowing_date'] = Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->toDateTimeString();
+        $data['borrowing_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->borrowingDate." ".$this->borrowingTime)->toDateTimeString();
         $data['status'] = 1;
         $data['laboratory_id'] = $this->laboratoryId;
         $data['lab_member_id_borrow'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;

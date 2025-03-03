@@ -38,6 +38,8 @@ class BorrowReturn extends Component
     // variable for returning
     #[Validate('required')] // DATETIME for return date, required
     public $returnDate;
+    #[Validate('required')] // DATETIME for return date, required
+    public $returnTime;
     #[Validate('required|integer|exists:lab_members,id')] // BIGINT(20), required, foreign key
     public $labMemberReturn;
 
@@ -77,6 +79,8 @@ class BorrowReturn extends Component
         // ]);
 
         try {
+            // dump(Carbon::createFromFormat('d/m/Y H:i', $this->returnDate." ".$this->returnTime)->toDateTimeString());
+            // return;
             DB::beginTransaction();
             if ($this->isStaff) {
                 $this->equipmentLoan->is_returner_staff = 1;
@@ -87,9 +91,10 @@ class BorrowReturn extends Component
                 $this->equipmentLoan->returner_name = $this->returnerName;
                 $this->equipmentLoan->returner_group_class = $this->returnerGroupClass;
             }
-            $this->equipmentLoan->return_date = Carbon::createFromFormat('d/m/Y', $this->returnDate)->toDateTimeString();
+            $this->equipmentLoan->return_date = Carbon::createFromFormat('d/m/Y H:i', $this->returnDate." ".$this->returnTime)->toDateTimeString();
             $this->equipmentLoan->lab_member_id_return = Auth::user()->labMembers->firstWhere('laboratory_id', $this->equipmentLoan->laboratory_id)->id;
             $this->equipmentLoan->status = 2;
+            
             $this->equipmentLoan->save();
 
             $loanDetailItems = collect($this->loanDetailItems);

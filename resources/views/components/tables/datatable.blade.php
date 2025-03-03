@@ -32,7 +32,7 @@
                         <x-loading.circle wire:loading></x-loading.circle>
                     </div>
                     <div class="flex-1 max-w-xs">
-                        <input wire:model.live.debounce.200ms="{{ $eventTarget."Filter" }}" placeholder="Cari Data..." class="block w-full h-12 px-4 text-sm bg-transparent border border-gray-200 rounded-lg appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-0 focus:border-primaryTeal peer">
+                        <input wire:model.live.debounce.500ms="{{ $eventTarget."Filter" }}" placeholder="Cari Data..." class="block w-full h-12 px-4 text-sm bg-transparent border border-gray-200 rounded-lg appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-0 focus:border-primaryTeal peer">
                     </div>
                 </div>
             </div>

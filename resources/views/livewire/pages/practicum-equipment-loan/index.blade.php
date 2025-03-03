@@ -52,8 +52,8 @@
                                     {{ $eqLoan->nim }} - {{ $eqLoan->name }}
                                 @endif
                             </td>
-                            <td>{{ date('d/m/Y', strtotime($eqLoan->borrowing_date)) }}<d>
-                            <td>{{ $eqLoan->return_date? date('d/m/Y', strtotime($eqLoan->return_date)) : "N/A" }}</td>
+                            <td>{{ date('d/m/Y (H:i)', strtotime($eqLoan->borrowing_date)) }}<d>
+                            <td>{{ $eqLoan->return_date? date('d/m/Y (H:i)', strtotime($eqLoan->return_date)) : "N/A" }}</td>
                             <td>{{ $eqLoan->status == 1? "Sedang dipinjam" : "Telah Kembali" }}</td>
                             <td>
                                 <div class="flex flex-wrap justify-center gap-2 text-center">

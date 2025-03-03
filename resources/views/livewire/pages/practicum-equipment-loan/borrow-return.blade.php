@@ -40,18 +40,24 @@
                 <x-alerts.outline class="mb-5" color="green" message="Data Petugas" />
                 <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2">
                     <div class="space-y-4">
-                        <x-forms.input
-                            value="{{ date('d/m/Y', strtotime($equipmentLoan->borrowing_date)) }}"
-                            disabled
-                            class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                        <div class="flex gap-4">
+                            <x-forms.input
+                                value="{{ date('d/m/Y', strtotime($equipmentLoan->borrowing_date)) }}"
+                                disabled
+                                class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                            <x-forms.timepicker disabled id="borrow_time" value="{{ date('H:i', strtotime($equipmentLoan->borrowing_date)) }}"></x-forms.timepicker>
+                        </div>
                         <x-forms.input value="{{ $equipmentLoan->memberBorrow->staff->user->name }}" disabled class="flex-1" name="petugas_peminjaman" label="Petugas Penanggung Jawab Peminjaman" />
                     </div>
                     <div class="space-y-4">
-                        <x-forms.input
-                            wire:model.live.debounce="returnDate"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="returnDate = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" name="returnDate" label="Tanggal Pengembalian" datepicker />
+                        <div class="flex gap-4">
+                            <x-forms.input
+                                wire:model.live.debounce="returnDate"
+                                value="{{ date('d/m/Y', strtotime(now())) }}"
+                                wire:init="returnDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                                class="flex-1" name="returnDate" label="Tanggal Pengembalian" datepicker />
+                            <x-forms.timepicker id="return_time" wire:init="returnTime = '{{ date('H:i', time()) }}'" wire:model='returnTime'></x-forms.timepicker>
+                        </div>
                         <x-forms.input value="{{ Auth::user()->name }}" disabled class="flex-1" label="Petugas Penanggung Jawab Pengembalian" />
                     </div>
                 </div>

@@ -45,11 +45,14 @@
                 <x-alerts.outline class="mb-5" color="green" message="Data Petugas" />
                 <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2">
                     <div class="space-y-4">
-                        <x-forms.input
-                            wire:model.live.debounce="borrowingDate"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                        <div class="flex gap-4">
+                            <x-forms.input
+                                wire:model.live.debounce="borrowingDate"
+                                value="{{ date('d/m/Y', strtotime(now())) }}"
+                                wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                                class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.timepicker wire:init="borrowingTime = '{{ date('H:i', time()) }}'" id="borrow_time" wire:model="borrowingTime"></x-forms.timepicker>
+                        </div>
                         <x-forms.input
                             value="{{ Auth::user()->name }}"
                             disabled class="flex-1"
@@ -57,8 +60,13 @@
                             label="Petugas Penanggung Jawab Peminjaman" />
                     </div>
                     <div class="space-y-4">
-                        <x-forms.input disabled class="flex-1" name="tangal pengembalian" label="Tanggal Pengembalian" datepicker />
-                        <x-forms.input disabled class="flex-1" name="petugas_pengembalian" label="Petugas Penanggung Jawab Pengembalian" />
+                        <div class="flex gap-4">
+                            <x-forms.input disabled class="flex-1" name="tangal pengembalian" label="Tanggal Pengembalian" datepicker />
+                            <x-forms.timepicker id="end_time" disabled></x-forms.timepicker>
+                        </div>
+                        <div class="flex">
+                            <x-forms.input disabled class="flex-1" name="petugas_pengembalian" label="Petugas Penanggung Jawab Pengembalian" />
+                        </div>
                     </div>
                 </div>
             </div>
