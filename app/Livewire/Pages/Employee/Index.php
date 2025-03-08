@@ -13,7 +13,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 class Index extends Component
 {
     use WithPagination;
-    
+
     public $employeePerPage = 15;
     public $employeeFilter = null;
     public $employeeOrderBy = 'id';
@@ -54,7 +54,6 @@ class Index extends Component
     public function render()
     {
         // dd(Auth::user()->getPermissionsViaRoles());
-
         return view('livewire.pages.employee.index');
     }
 }

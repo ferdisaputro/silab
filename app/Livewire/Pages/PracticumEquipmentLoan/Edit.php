@@ -127,9 +127,6 @@ class Edit extends Component
                     $equipmentLoanDetail->stockCard->delete();
                     $equipmentLoanDetail->delete();
                 });
-
-                // dd($stockCards, $deletedLoanDetails, $qeLoanDetail);
-                dump(true);
             }
 
             foreach ($this->selectedItems as $item) {
