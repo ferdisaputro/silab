@@ -3,9 +3,9 @@
 namespace App\Livewire\Pages\Unit;
 
 use App\Models\Unit;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
@@ -46,6 +46,10 @@ class Create extends Component
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => 'error']);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'satuan-create');
     }
 
     public function render()

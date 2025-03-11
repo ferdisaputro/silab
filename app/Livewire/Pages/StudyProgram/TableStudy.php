@@ -2,18 +2,18 @@
 
 namespace App\Livewire\Pages\StudyProgram;
 
-use App\Models\StudyProgram;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\StudyProgram;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class TableStudy extends Component
 {
     use WithPagination;
-    
+
     public $isSelectable = false;
     public $identifier = false;
     public $dataCount = 0;
@@ -52,6 +52,8 @@ class TableStudy extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'jurusan-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);

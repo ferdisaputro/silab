@@ -2,15 +2,15 @@
 
 namespace App\Livewire\Pages\AcademicWeek;
 
-use App\Models\AcademicWeek;
-use App\Models\AcademicYear;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\AcademicWeek;
+use App\Models\AcademicYear;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Validation\Rule;
 
 class Edit extends Component
 {
@@ -49,7 +49,7 @@ class Edit extends Component
             'end_date' => 'required|date|after_or_equal:start_date',
             'description' => 'required|string|min:3|max:255',
         ];
-                
+
         return $rules;
     }
 

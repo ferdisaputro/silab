@@ -9,14 +9,13 @@
             <x-text.page-title>
                 Tabel Role
             </x-text.page-title>
-            <div x-data="{showDetailModal: false}">
-                <a href="{{ route('role.create') }}" wire:navigate>
-                    <x-buttons.fill x-on:click="showDetailModal = true" title="" color="purple">Tambah Role</x-buttons.fill>
-                </a>
-                {{-- <x-modals.modal identifier="showDetailModal" max_width="max-w-xl">
-                    <livewire:pages.pegawai.tambah />
-                </x-modals.modal> --}}
-            </div>
+            @can('role-create')
+                <div x-data="{showDetailModal: false}">
+                    <a href="{{ route('role.create') }}" wire:navigate>
+                        <x-buttons.fill x-on:click="showDetailModal = true" title="" color="purple">Tambah Role</x-buttons.fill>
+                    </a>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -35,10 +34,14 @@
                             <td>{{ $role->name }}</td>
                             <td class="text-center">
                                 <x-badges.outline class="px-2.5 py-1.5" x-on:click="showDetailRole('{{ Crypt::encrypt($role->id) }}')" title="Detail" color="green"><i class="fa-regular fa-eye fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('role.edit', ['key' => Crypt::encrypt($role->id)]) }}" wire:navigate>
-                                    <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                </a>
-                                <x-badges.outline x-on:click="deleteRole('{{ Crypt::encrypt($role->id) }}', '{{ $role->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @can('role-edit')
+                                    <a href="{{ route('role.edit', ['key' => Crypt::encrypt($role->id)]) }}" wire:navigate>
+                                        <x-badges.outline class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                    </a>
+                                @endcan
+                                @can('role-delete')
+                                    <x-badges.outline x-on:click="deleteRole('{{ Crypt::encrypt($role->id) }}', '{{ $role->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

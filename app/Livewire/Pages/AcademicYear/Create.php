@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Pages\AcademicYear;
 
+use Livewire\Component;
 use App\Models\AcademicYear;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
 
 class Create extends Component
 {
@@ -47,6 +47,10 @@ class Create extends Component
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'tahunajaran-create');
     }
 
     public function render()

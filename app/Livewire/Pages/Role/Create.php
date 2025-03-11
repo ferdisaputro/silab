@@ -46,6 +46,10 @@ class Create extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'role-create');
+    }
+
     public function render()
     {
         return view('livewire.pages.role.create', [

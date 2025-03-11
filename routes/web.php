@@ -62,12 +62,10 @@ Route::middleware(["auth"])->group(function() {
     //     ->name('homepage');
 
     Route::get('/pegawai', EmployeeIndex::class)
-        ->name('employee')
-        ->middleware(['permission:staff-list|staff-create|staff-edit|staff-delete']);
+        ->name('employee');
 
     Route::get('/pegawai/tambah', EmployeeCreate::class)
-        ->name('pegawai.tambah')
-        ->middleware(['can:staff-create']);
+        ->name('pegawai.tambah');
 
 
     Route::prefix('role')->group(function() {

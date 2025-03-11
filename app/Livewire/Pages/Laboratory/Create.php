@@ -57,8 +57,10 @@ class Create extends Component
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
+    }
 
-        dump($this->code, $this->name, $this->isActive, $this->acronym, $this->color, $this->department);
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'lab-create');
     }
 
     public function render()

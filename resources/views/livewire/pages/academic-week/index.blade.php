@@ -38,8 +38,8 @@
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->academicWeeks->perPage() * ($this->academicWeeks->currentPage() - 1)) }}</td>
                             <td>{{ $week->week_number }}</td>
                             <td>{{ $week->academicYear->start_year }} / {{ $week->academicYear->end_year }} ({{ $week->academicYear->is_even? "Genap" : "Ganjil" }})</td>
-                            <td>{{ $week->start_date }}</td>
-                            <td>{{ $week->end_date }}</td>
+                            <td>{{ date('d/m/Y', strtotime($week->start_date)) }}</td>
+                            <td>{{ date('d/m/Y', strtotime($week->end_date)) }}</td>
                             <td>{{ $week->description }}</td>
                             <td class="text-center flex flex-wrap gap-1.5">
                                 <x-badges.outline x-on:click="showEditAcademicWeek('{{ Crypt::encrypt($week->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>

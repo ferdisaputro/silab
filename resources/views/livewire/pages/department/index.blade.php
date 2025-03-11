@@ -1,12 +1,16 @@
 <x-container x-data="Object.assign({createDepartmentState: false}, department())">
     <div>
-        <x-modals.modal identifier="createDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.create lazy/>
-        </x-modals.modal>
+        @can('jurusan-create')
+            <x-modals.modal identifier="createDepartmentState" max_width="max-w-xl">
+                <livewire:pages.department.create />
+            </x-modals.modal>
+        @endcan
 
-        <x-modals.modal identifier="editDepartmentState" max_width="max-w-xl">
-            <livewire:pages.department.edit lazy/>
-        </x-modals.modal>
+        @can('jurusan-edit')
+            <x-modals.modal identifier="editDepartmentState" max_width="max-w-xl">
+                <livewire:pages.department.edit />
+            </x-modals.modal>
+        @endcan
 
         <x-modals.modal identifier="detailDepartmentState" max_width="max-w-4xl">
             <livewire:pages.department.detail lazy/>
@@ -43,8 +47,12 @@
                             </td>
                             <td class="text-center">
                                 <x-badges.outline x-on:click="showDetailDepartment('{{ Crypt::encrypt($department->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
-                                <x-badges.outline x-on:click="showEditDepartment('{{ Crypt::encrypt($department->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteDepartment('{{ Crypt::encrypt($department->id) }}', '{{ $department->department }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @can('jurusan-edit')
+                                    <x-badges.outline x-on:click="showEditDepartment('{{ Crypt::encrypt($department->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                @endcan
+                                @can('jurusan-delete')
+                                    <x-badges.outline x-on:click="deleteDepartment('{{ Crypt::encrypt($department->id) }}', '{{ $department->department }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

@@ -4,12 +4,12 @@ namespace App\Livewire\Pages\Permission;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Edit extends Component
 {
@@ -50,6 +50,10 @@ class Edit extends Component
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'permission-edit');
     }
 
     public function render()

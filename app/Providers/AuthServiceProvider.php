@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -27,6 +28,12 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('isALabMember', function($user) {
             return $user->labMembers->count() <= 0;
+        });
+
+        Gate::define('hasPermissionTo', function($user, $permissions) {
+            // dump($user->hasAnyPermission(explode('|', $permissions)));
+            // return true;
+            return $user->hasAnyPermission(explode('|', $permissions));
         });
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Pages\Unit;
 
-use Livewire\Component;
 use App\Models\Unit;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
+use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -34,6 +34,8 @@ class Index extends Component
     }
 
     public function delete($key){
+        $this->authorize('hasPermissionTo', 'satuan-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -62,6 +64,11 @@ class Index extends Component
             ]);
         }
     }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'satuan-list|satuan-create|satuan-edit|satuan-delete');
+    }
+
     public function render()
     {
         return view('livewire.pages.unit.index');

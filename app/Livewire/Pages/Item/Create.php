@@ -10,8 +10,8 @@ use Livewire\Component;
 
 class Create extends Component
 {
-        #[Validate('required|min:5')]
-        public $item_name;
+    #[Validate('required|min:5')]
+    public $item_name;
     #[Validate('min:3|nullable')]
     public $item_code;
     #[Validate('required|numeric')]
@@ -32,6 +32,8 @@ class Create extends Component
 
     public function mount()
     {
+        $this->authorize('hasPermissionTo', 'barang-create');
+
         $this->unit_id = ''; // Default kosong atau isi dengan ID tertentu
         $this->satuanText = $this->unit_id; // Menyinkronkan dengan unit_id
     }
@@ -46,7 +48,6 @@ class Create extends Component
     {
         $this->reset();
     }
-
 
     // Submit form
     public function create()
@@ -64,15 +65,14 @@ class Create extends Component
             'unit_id' => $this->unit_id,
             'item_type_id' => $this->item_type_id,
         ];
-                Item::create($data);
-                $this->reset();
+            Item::create($data);
+            $this->reset();
             return response()->json(['message' => 'Izin berhasil dibuat!', 'status' => 'success']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => 'error']);
         }
     }
-        // Simpan data ke database atau proses lainnya
-        // Contoh: Item::create([...]);
+
     public function render()
     {
         return view('livewire.pages.item.create', [
@@ -81,40 +81,3 @@ class Create extends Component
         ]);
     }
 }
-    // public $unitItems = [
-    //     [
-    //         'satuan' => '',
-    //         'quantity' => 0,
-    //     ]
-    // ];
-
-    // public function addUnitItem() {
-    //     $this->unitItems[] = [
-    //         'satuan' => '',
-    //         'quantity' => 0,
-    //     ];
-    // }
-
-    // public function removeUnitItem($index) {
-    //     unset($this->unitItems[$index]);
-    // }
-
-    // public function resetForm() {
-    //     $this->reset();
-    // }
-
-    // public function addPermission() {
-    //     $this->items[] = ['item_name' => ''];
-    // }
-
-    // Rules untuk validasi
-    // protected $rules = [
-    //     'kode_barang' => 'required|string|max:255',
-    //     'barang' => 'required|string|max:255',
-    //     'jenis_barang' => 'required|string',
-    //     'satuan_default' => 'required|string',
-    //     'spesifikasi' => 'nullable|string',
-    //     'keterangan' => 'nullable|string',
-    //     'qty' => 'required|integer|min:1',
-    // ];
-    // Method untuk memperbarui satuanBarang

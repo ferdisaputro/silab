@@ -1,20 +1,27 @@
 <x-container x-data="Object.assign({createItemState: false}, Item())">
     <div>
-        <x-modals.modal identifier="createItemState" max_width="max-w-6xl">
-            <livewire:pages.item.create lazy/>
-        </x-modals.modal>
-        <x-modals.modal identifier="editItemState" max_width="max-w-6xl">
-            <livewire:pages.item.edit/>
-        </x-modals.modal>
+        {{-- $this->authorize('hasPermissionTo', 'barang-list|barang-create|barang-edit|barang-delete'); --}}
+        @can('barang-create')
+            <x-modals.modal identifier="createItemState" max_width="max-w-6xl">
+                <livewire:pages.item.create />
+            </x-modals.modal>
+        @endcan
+        @can('barang-edit')
+            <x-modals.modal identifier="editItemState" max_width="max-w-6xl">
+                <livewire:pages.item.edit />
+            </x-modals.modal>
+        @endcan
     </div>
-z`    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
+    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <x-text.page-title>
                 Tabel Data Barang
             </x-text.page-title>
-            <div>
-                <x-buttons.fill x-on:click="createItemState = true" color="purple">Tambah Barang</x-buttons.fill>
-            </div>
+            @can('barang-create')
+                <div>
+                    <x-buttons.fill x-on:click="createItemState = true" color="purple">Tambah Barang</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -24,7 +31,9 @@ z`    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
                         <th>#<i class="fa-solid fa-sort ms-2"></i></th>
                         <th data-sortby="item_name">Barang</th>
                         <th data-sortby="quantity">Quantity</th>
-                        <th class="text-center">Action</th>
+                        @can(['barang-edit', 'barang-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -33,10 +42,16 @@ z`    <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->items->perPage() * ($this->items->currentPage() - 1)) }}</td>
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->labItems->sum('stock') }}</td>
-                            <td class="text-center">
-                                <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($item->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($item->id) }}', '{{ $item->item_name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                            </td>
+                            @can(['barang-edit', 'barang-delete'])
+                                <td class="text-center">
+                                    @can('barang-edit')
+                                        <x-badges.outline x-on:click="showEditItem('{{ Crypt::encrypt($item->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                    @can('barang-delete')
+                                        <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($item->id) }}', '{{ $item->item_name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

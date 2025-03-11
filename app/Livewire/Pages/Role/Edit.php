@@ -23,20 +23,6 @@ class Edit extends Component
     #[Validate('min:1', message: 'Please select at least one permission')]
     public $selectedPermissions = [];
 
-
-    public function mount($key) {
-        $this->prev_url = url()->previous();
-        try {
-            $id = Crypt::decrypt($key);
-            $role = Role::find($id);
-            $this->id = $role->id;
-            $this->role = $role->name;
-            $this->selectedPermissions = $role->permissions->pluck('name');
-        } catch (DecryptException $e) {
-            return $this->redirect($this->prev_url, navigate: true);
-        }
-    }
-
     public function edit() {
         $this->validate();
         try {
@@ -60,6 +46,21 @@ class Edit extends Component
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function mount($key) {
+        $this->authorize('hasPermissionTo', 'role-edit');
+
+        $this->prev_url = url()->previous();
+        try {
+            $id = Crypt::decrypt($key);
+            $role = Role::find($id);
+            $this->id = $role->id;
+            $this->role = $role->name;
+            $this->selectedPermissions = $role->permissions->pluck('name');
+        } catch (DecryptException $e) {
+            return $this->redirect($this->prev_url, navigate: true);
         }
     }
 

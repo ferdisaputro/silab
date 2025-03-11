@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Pages\Permission;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -35,6 +35,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'permission-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -63,6 +65,10 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'permission-list|permission-create|permission-edit|permission-delete');
     }
 
     public function render()

@@ -4,11 +4,11 @@ namespace App\Livewire\Pages\Department;
 
 use Livewire\Component;
 use App\Models\Department;
+use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -31,6 +31,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'jurusan-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -55,6 +57,10 @@ class Index extends Component
                 'message' => 'Gagal menghapus data jurusan: ' . $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'jurusan-list|jurusan-create|jurusan-edit|jurusan-delete');
     }
 
     public function render()

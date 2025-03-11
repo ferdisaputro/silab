@@ -6,9 +6,9 @@ use App\Models\Staff;
 use Livewire\Component;
 use App\Models\Department;
 use App\Models\HeadOfDepartment;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
@@ -43,6 +43,10 @@ class Create extends Component
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Gagal membuat jurusan: ' . $e->getMessage()]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'jurusan-create');
     }
 
     public function render()

@@ -2,15 +2,17 @@
 
 namespace App\Livewire\Pages\AcademicYear;
 
-use App\Models\AcademicYear;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Models\AcademicYear;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'tahunajaran-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -35,8 +37,10 @@ class Index extends Component
         }
     }
 
-    public function updateStatus($key, $status) 
+    public function updateStatus($key, $status)
     {
+        $this->authorize('hasPermissionTo', 'tahunajaran-edit');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -60,6 +64,10 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        // $this->authorize('hasPermissionTo', 'tahunajaran-list|tahunajaran-create|tahunajaran-edit|tahunajaran-delete');
     }
 
     public function render()

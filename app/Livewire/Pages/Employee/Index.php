@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Can;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -30,6 +31,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'staff-delete');
+
         try {
             $id = Crypt::decrypt($key);
         } catch (DecryptException $e) {
@@ -51,9 +54,12 @@ class Index extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'staff-list|staff-create|staff-edit|staff-delete');
+    }
+
     public function render()
     {
-        // dd(Auth::user()->getPermissionsViaRoles());
         return view('livewire.pages.employee.index');
     }
 }

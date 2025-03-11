@@ -35,8 +35,9 @@ class Index extends Component
     }
 
     public function delete($key) {
-        $id = Crypt::decrypt($key);
+        $this->authorize('hasPermissionTo', 'lab-delete');
 
+        $id = Crypt::decrypt($key);
         try {
             $laboratory = Laboratory::find($id);
             $laboratory->delete();
@@ -51,6 +52,10 @@ class Index extends Component
                 'message' => 'Gagal menghapus data laboratorium: ' . $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'lab-list|lab-create|lab-edit|lab-delete');
     }
 
     public function render()
