@@ -32,8 +32,14 @@ class Edit extends Component
 
     #[Validate('required|date_format:d/m/Y')]
     public $realSchedule;
+    #[Validate('required|date_format:H:i')]
+    public $realScheduleTime;
     #[Validate('required|date_format:d/m/Y')]
     public $replacementSchedule;
+    #[Validate('required|date_format:H:i')]
+    public $replacementScheduleTime;
+
+
     #[Validate('required')]
     public $practicumEvent;
 
@@ -102,8 +108,8 @@ class Edit extends Component
         try {
             DB::beginTransaction();
             $scheduleReplacement = ScheduleReplacement::find($this->id);
-            $scheduleReplacement->real_schedule = Carbon::createFromFormat('d/m/Y', $this->realSchedule)->toDateTimeString();
-            $scheduleReplacement->replacement_schedule = Carbon::createFromFormat('d/m/Y', $this->replacementSchedule)->toDateTimeString();
+            $scheduleReplacement->real_schedule = Carbon::createFromFormat('d/m/Y H:i', $this->realSchedule." ".$this->realScheduleTime)->toDateTimeString();
+            $scheduleReplacement->replacement_schedule = Carbon::createFromFormat('d/m/Y H:i', $this->replacementSchedule." ".$this->replacementScheduleTime)->toDateTimeString();
             $scheduleReplacement->lab_member_id = Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id;
             $scheduleReplacement->practicum_event = $this->practicumEvent;
             $scheduleReplacement->staff_id = $this->selectedLecturer;
@@ -131,8 +137,10 @@ class Edit extends Component
             $decrypted = Crypt::decrypt($id);
             $this->id = $decrypted;
             $scheduleReplacement = ScheduleReplacement::find($this->id);
-            $this->realSchedule = $scheduleReplacement->real_schedule;
-            $this->replacementSchedule = $scheduleReplacement->replacement_schedule;
+            $this->realSchedule = date('d/m/Y', strtotime($scheduleReplacement->real_schedule));
+            $this->realScheduleTime = date('H:i', strtotime($scheduleReplacement->real_schedule));
+            $this->replacementSchedule = date('d/m/Y', strtotime($scheduleReplacement->replacement_schedule));
+            $this->replacementScheduleTime = date('H:i', strtotime($scheduleReplacement->replacement_schedule));
             $this->practicumEvent = $scheduleReplacement->practicum_event;
             $this->selectedLecturer = $scheduleReplacement->staff_id;
             $this->selectedLaboratory = $this->laboratories()->find($scheduleReplacement->labMember->laboratory_id)->id;

@@ -28,8 +28,13 @@ class Create extends Component
 
     #[Validate('required|date_format:d/m/Y')]
     public $realSchedule;
+    #[Validate('required|date_format:H:i')]
+    public $realScheduleTime;
     #[Validate('required|date_format:d/m/Y')]
     public $replacementSchedule;
+    #[Validate('required|date_format:H:i')]
+    public $replacementScheduleTime;
+    #[Validate('required')]
     public $practicumEvent;
 
     // #[Computed()]
@@ -95,9 +100,9 @@ class Create extends Component
         $data = [
             'code' => Str::random(8),
             'practicum_event' => $this->practicumEvent,
-            'real_schedule' => Carbon::createFromFormat('d/m/Y', $this->realSchedule)->toDateTimeString(),
-            'replacement_schedule' => Carbon::createFromFormat('d/m/Y', $this->replacementSchedule)->toDateTimeString(),
-            'head_of_study_program_id' => $headOfStudyProgram? $headOfStudyProgram->id : null,
+            'real_schedule' => Carbon::createFromFormat('d/m/Y H:i', $this->realSchedule." ".$this->realScheduleTime)->toDateTimeString(),
+            'replacement_schedule' => Carbon::createFromFormat('d/m/Y H:i', $this->replacementSchedule." ".$this->replacementScheduleTime)->toDateTimeString(),
+            'head_of_study_program_id' => isset($headOfStudyProgram->id)? $headOfStudyProgram->id : null,
             'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id,
             'course_id' => $this->selectedCourse,
             'staff_id' => $this->selectedLecturer,
@@ -129,7 +134,6 @@ class Create extends Component
 
     public function render()
     {
-        // dd($this->getSchedulesProperty());
         return view('livewire.pages.schedule-replacement.create',[
             'lecturers' => Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user'),
         ]);

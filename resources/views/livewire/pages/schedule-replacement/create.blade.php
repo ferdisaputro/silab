@@ -70,16 +70,18 @@
                 </div>
 
                 <div class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
-                    <x-forms.input
-                            wire:model.live.debounce="realSchedule"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="realSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" name="realSchedule" label="Tanggal Peminjaman" datepicker />
-                    <x-forms.input
-                            wire:model.live.debounce="replacementSchedule"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="replacementSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
+                    <div class="flex gap-4">
+                        <x-forms.input
+                                wire:model.live.debounce="realSchedule"
+                                class="flex-1" name="realSchedule" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.timepicker id="realScheduleTime" name="realScheduleTime" wire:model="realScheduleTime"></x-forms.timepicker>
+                    </div>
+                    <div class="flex gap-4">
+                        <x-forms.input
+                                wire:model.live.debounce="replacementSchedule"
+                                class="flex-1" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.timepicker id="replacementScheduleTime" name="replacementScheduleTime" wire:model="replacementScheduleTime"></x-forms.timepicker>
+                    </div>
                 </div>
 
                 <x-forms.textarea wire:model.live.debounce='practicumEvent' class="min-h-44" name="practicumEvent" label="Acara Praktikum"></x-forms.textarea>

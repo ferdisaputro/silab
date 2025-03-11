@@ -25,7 +25,12 @@
          type="time" id="{{ $id }}" 
          value="{{ $value }}"
          class="{{ $height }} block px-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-1 focus:ring-primaryTeal focus:border-primaryTeal peer @error($name) bg-red-50 border-red-500 text-red-900 placeholder-red-600 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror" 
-         min="{{ $min }}" max="{{ $max }}" required />
+         min="{{ $min }}" max="{{ $max }}" />
    </div>
+   <div>
+      @error($name)
+          <p class="mt-1 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> {{ $message }}</p>
+      @enderror
+  </div>
 </div>
 

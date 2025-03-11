@@ -57,19 +57,21 @@
                 </div>
 
                 <div class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
-                    <x-forms.input
+                    <div class="flex gap-4">
+                        <x-forms.input
                             wire:model.live.debounce="realSchedule"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="realSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" value="{{ date('d/m/Y', strtotime($realSchedule)) }}" name="realSchedule" label="Tanggal Peminjaman" datepicker />
-                    <x-forms.input
+                            class="flex-1" value="{{ $realSchedule }}" name="realSchedule" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.timepicker id="realScheduleTime" value="{{ $realSchedule }}" name="realScheduleTime" wire:model="realScheduleTime"></x-forms.timepicker>
+                    </div>
+                    <div class="flex gap-4">
+                        <x-forms.input
                             wire:model.live.debounce="replacementSchedule"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="replacementSchedule = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" value="{{ date('d/m/Y', strtotime($replacementSchedule)) }}" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
+                            class="flex-1" value="{{ $replacementSchedule }}" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
+                        <x-forms.timepicker id="replacementScheduleTime" value="{{ $replacementSchedule }}" name="replacementScheduleTime" wire:model="replacementScheduleTime"></x-forms.timepicker>
+                    </div>        
                 </div>
 
-                <x-forms.textarea wire:model.live.debounce='practicumEvent' value="{{ $practicumEvent }}" class="min-h-44" name="acara_praktikum" label="Acara Praktikum"></x-forms.textarea>
+                <x-forms.textarea wire:model.live.debounce='practicumEvent' value="{{ $practicumEvent }}" class="min-h-44" name="practicumEvent" label="Acara Praktikum"></x-forms.textarea>
 
                 <div class="text-center">
                     <x-buttons.fill type="submit" class="w-full max-w-xs">Ubah Penggantian Jadwal</x-buttons.fill>

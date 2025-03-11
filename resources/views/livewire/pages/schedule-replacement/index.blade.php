@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <x-text.page-title>
-                    Tabel Peminjaman Alat Praktikum
+                    Tabel Penggantian Jadwal
                 </x-text.page-title>
                 {{-- <x-forms.select
                     class="mt-3 ml-2"
@@ -42,8 +42,8 @@
                     {{-- @dump($schedule->lecturer) --}}
                         <tr wire:key='{{ $loop->iteration + ($this->schedules->perPage() * ($this->schedules->currentPage() - 1)) }}'>
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->schedules->perPage() * ($this->schedules->currentPage() - 1)) }}</td>
-                            <td>{{ date('d/m/Y', strtotime($schedule->real_schedule)) }}</td>
-                            <td>{{ date('d/m/Y', strtotime($schedule->replacement_schedule)) }}</td>
+                            <td>{{ date('d/m/Y (H:i)', strtotime($schedule->real_schedule)) }}</td>
+                            <td>{{ date('d/m/Y (H:i)', strtotime($schedule->replacement_schedule)) }}</td>
                             <td>{{ $schedule->course->course }}</td>
                             <td>{{ $schedule->lecturer->user->name }}</td>
                             <td class="flex flex-wrap justify-center gap-2 text-center">
