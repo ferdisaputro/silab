@@ -16,9 +16,9 @@ class Edit extends Component
 {
     public $id;
     public $academic_year;
-    #[Validate('required|date')]
+    #[Validate('required')]
     public $start_date;
-    #[Validate('required|date|after_or_equal:start_date')]
+    #[Validate('required')]
     public $end_date;
     // #[Validate("required|integer|min:1")]
     public $week_number;
@@ -54,6 +54,7 @@ class Edit extends Component
     }
 
     public function update() {
+        // dump($this->start_date, $this->end_date);
         $this->validate();
         try {
             $academic_week = AcademicWeek::find($this->id);
@@ -62,8 +63,8 @@ class Edit extends Component
             $academic_week->description = $this->description;
             if ($academic_week->isDirty('start_date', 'end_date', 'description')) {
                 $academic_week->save();
-                $this->start_date = null;
-                $this->end_date = null;
+                // $this->start_date = null;
+                // $this->end_date = null;
                 return response()->json(['status' => 'success', 'message' => 'Minggu akademik berhasil dibuat']);
             }
         } catch (\Exception $e) {

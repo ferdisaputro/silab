@@ -7,13 +7,28 @@
             @endforeach
         </x-forms.select>
         <x-forms.input type="number" wire:model.live.debounce='week_number' name="week_number" label="Minggu Ke" disabled />
-        <div class="flex gap-3 relative" date-rangepicker>
+        <div class="relative flex gap-3"
+            x-init="const datepicker = new Datepicker(
+                $el,
+                {
+                    defaultDatepickerId: null,
+                    autohide: false,
+                    format: 'dd/mm/yyyy',
+                    maxDate: null,
+                    minDate: null,
+                    orientation: 'bottom',
+                    buttons: false,
+                    autoSelectToday: false,
+                    title: null,
+                    rangePicker: true,
+                    onShow: () => {},
+                    onHide: () => {},
+                },
+            ).setDate('{{ $start_date }}')"
+            wire:key='{{ $id }}'>
             <div class="flex-1">
                 <div class="relative">
                     <input
-                        datepicker-format="dd/mm/yyyy"
-                        value="{{ date('d/m/Y', strtotime($start_date)) }}"
-                        wire:model.live.debounce='start_date'
                         wire:blur="set('start_date', $el.value)"
                         class="h-12 block px-4 pb-2.5 pt-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-1 focus:ring-primaryTeal focus:border-primaryTeal peer @error('start_date') bg-red-50 border-red-500 text-red-900 placeholder-red-600 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror">
                     <label for="start_date" class="absolute text-sm duration-300 transform -translate-y-4 scale-75 left-2 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-primaryTeal capitalize peer-disabled:bg-transparent peer-focus:dark:text-primaryLightTeal peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-4 @error('start_date') text-red-700 dark:text-red-500 @enderror">Tanggal Mulai</label>
@@ -31,8 +46,7 @@
             <div class="flex-1">
                 <div class="relative">
                     <input
-                        datepicker-format="dd/mm/yyyy"
-                        wire:model.live.debounce='end_date'
+                        wire:model='end_date'
                         wire:blur="set('end_date', $el.value)"
                         class="h-12 block px-4 pb-2.5 pt-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-1 focus:ring-primaryTeal focus:border-primaryTeal peer @error('end_date') bg-red-50 border-red-500 text-red-900 placeholder-red-600 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror">
                     <label for="end_date" class="absolute text-sm duration-300 transform -translate-y-4 scale-75 left-2 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-primaryTeal capitalize peer-disabled:bg-transparent peer-focus:dark:text-primaryLightTeal peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-4 @error('end_date') text-red-700 dark:text-red-500 @enderror">Tanggal Selesai</label>
@@ -50,9 +64,9 @@
                 name="start_date"
                 label="Minggu Mulai"
                 class="flex-1">
-                <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
+                <i class="absolute -translate-y-1/2 fa-solid fa-calendar-days fa-sm top-1/2 right-4"></i>
             </x-forms.input>
-            <span class="absolute left-1/2 top-3 -translate-x-1/2">
+            <span class="absolute -translate-x-1/2 left-1/2 top-3">
                 to
             </span>
             <x-forms.input
@@ -61,7 +75,7 @@
                 name="end_date"
                 label="Minggu Selesai"
                 class="flex-1">
-                <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
+                <i class="absolute -translate-y-1/2 fa-solid fa-calendar-days fa-sm top-1/2 right-4"></i>
             </x-forms.input> --}}
         </div>
         <x-forms.input wire:model.live.debounce='description' name="description" label="keterangan" />
