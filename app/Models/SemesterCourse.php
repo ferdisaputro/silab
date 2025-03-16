@@ -16,6 +16,8 @@ class SemesterCourse extends Model
         return $this->belongsTo(Course::class);
     }
 
+    
+
     public function courseInstructor()
     {
         return $this->hasOne(CourseInstructor::class);

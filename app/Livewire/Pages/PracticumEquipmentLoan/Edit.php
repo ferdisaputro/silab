@@ -185,6 +185,7 @@ class Edit extends Component
     }
 
     public function mount($id, $type = "edit") {
+        $this->authorize('hasPermissionTo', 'bonalat-edit');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Pages\SemesterCourse;
 
-use App\Models\AcademicYear;
 use App\Models\Course;
-use App\Models\Department;
+use Livewire\Component;
 use App\Models\Semester;
+use App\Models\Department;
+use App\Models\AcademicYear;
 use App\Models\StudyProgram;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
@@ -62,6 +62,8 @@ class Index extends Component
     }
 
     public function create() {
+        $this->authorize('hasPermissionTo', 'setmatakuliah-create');
+
         $this->validate();
         try {
             DB::beginTransaction();
@@ -78,8 +80,8 @@ class Index extends Component
             }
 
             Semester::find($this->semesterId)->semesterCourses()->createMany($data);
-            
-            DB::commit();            
+
+            DB::commit();
             $this->reset();
 
             return response()->json(['status' => 'success', 'message' => 'Mata Kuliah Semester berhasil dibuat']);
@@ -87,6 +89,10 @@ class Index extends Component
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'setmatakuliah-list');
     }
 
     public function render()

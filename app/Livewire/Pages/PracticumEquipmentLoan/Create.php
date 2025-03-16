@@ -191,6 +191,7 @@ class Create extends Component
     }
 
     public function mount($id){
+        $this->authorize('hasPermissionTo', 'bonalat-create');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

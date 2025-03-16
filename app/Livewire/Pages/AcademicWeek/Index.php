@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Pages\AcademicWeek;
 
-use App\Models\AcademicWeek;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Crypt;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Models\AcademicWeek;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -30,6 +30,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'minggu-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -40,7 +42,6 @@ class Index extends Component
         try {
             $role = AcademicWeek::find($id);
             $role->delete();
-
             $this->reset();
             return response()->json([
                 'status' => 'success',
@@ -53,7 +54,11 @@ class Index extends Component
             ]);
         }
     }
-    
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'minggu-list|minggu-create|minggu-edit|minggu-delete');
+    }
+
     public function render()
     {
         return view('livewire.pages.academic-week.index');

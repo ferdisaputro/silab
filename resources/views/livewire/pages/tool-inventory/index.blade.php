@@ -1,12 +1,17 @@
 <x-container x-data="Object.assign({toolInventoryState: false}, editToolInventory())">
     <div>
-        <x-modals.modal identifier="toolInventoryState" max_width="max-w-xl">
-            <livewire:pages.tool-inventory.create data="{{ $lab_id }}" wire:key="{{ now() }}" />
-        </x-modals.modal>
+        {{-- // $this->authorize('hasPermissionTo', 'inventaris-alat-list|inventaris-alat-create|inventaris-alat-edit|inventaris-alat-delete'); --}}
+        @can('inventaris-alat-create')
+            <x-modals.modal identifier="toolInventoryState" max_width="max-w-xl">
+                <livewire:pages.tool-inventory.create data="{{ $lab_id }}" wire:key="{{ now() }}" />
+            </x-modals.modal>
+        @endcan
 
-        <x-modals.modal identifier="editToolInventoryState" max_width="max-w-xl">
-            <livewire:pages.tool-inventory.edit />
-        </x-modals.modal>
+        @can('inventaris-alat-edit')
+            <x-modals.modal identifier="editToolInventoryState" max_width="max-w-xl">
+                <livewire:pages.tool-inventory.edit />
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -23,9 +28,11 @@
                     @endforeach
                 </x-forms.select>
             </x-text.page-title>
-            <div>
-                <x-buttons.fill x-on:click="toolInventoryState = true" title="" color="purple">Tambah Alat Laboratorium</x-buttons.fill>
-            </div>
+            @can('inventaris-alat-create')
+                <div>
+                    <x-buttons.fill x-on:click="toolInventoryState = true" title="" color="purple">Tambah Alat Laboratorium</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -36,7 +43,9 @@
                         <th data-sortby=''>Barang <i class="fa-solid fa-sort ms-2"></i></th>
                         <th data-sortby=''>Jumlah <i class="fa-solid fa-sort ms-2"></i></th>
                         <th data-sortby=''>Keterangan <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th class="text-center">Action</th>
+                        @can(['inventaris-alat-edit', 'inventaris-alat-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -46,10 +55,16 @@
                             <td>{{ $labtool->item->item_name }}</td>
                             <td>{{ $labtool->item->unit->satuan }}</td>
                             <td>{{ $labtool->stock }}</td>
-                            <td class="text-center">
-                                <x-badges.outline x-on:click="showEditToolInventory('{{ Crypt::encrypt($labtool->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($labtool->id) }}', '{{ $labtool->code }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                            </td>
+                            @can(['inventaris-alat-edit', 'inventaris-alat-delete'])
+                                <td class="text-center">
+                                    @can('inventaris-alat-edit')
+                                        <x-badges.outline x-on:click="showEditToolInventory('{{ Crypt::encrypt($labtool->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                    @can('inventaris-alat-delete')
+                                        <x-badges.outline x-on:click="deleteItem('{{ Crypt::encrypt($labtool->id) }}', '{{ $labtool->code }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                </td>
+                            @endcan
                         </tr>
                         @endforeach
                 </tbody>

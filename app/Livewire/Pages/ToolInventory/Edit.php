@@ -6,9 +6,9 @@ use App\Models\Item;
 use App\Models\LabItem;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
@@ -23,11 +23,6 @@ class Edit extends Component
 
     public $toolName;
     public $toolTopName;
-    public function mount()
-    {
-        $this->editItemIdTool = ''; // Default kosong atau isi dengan ID tertentu
-        $this->toolName = $this->editItemIdTool; // Menyinkronkan dengan unit_id
-    }
 
     public function updatedEditTool($value)
     {
@@ -57,10 +52,7 @@ class Edit extends Component
             return response()->json(['status' => 'error', 'message' => 'Invalid decryption key']);
         }
     }
-    // public function mount($data) {
-    //     $this->lab_id = $data;
-    // }
-    // public function
+
     public function edit() {
         $this->validate();
         try {
@@ -79,9 +71,16 @@ class Edit extends Component
         }
     }
     public function resetForm()
-{
-    $this->reset();
-}
+    {
+        $this->reset();
+    }
+
+    public function mount()
+    {
+        $this->authorize('hasPermissionTo', 'inventaris-alat-edit');
+        $this->editItemIdTool = ''; // Default kosong atau isi dengan ID tertentu
+        $this->toolName = $this->editItemIdTool; // Menyinkronkan dengan unit_id
+    }
 
     public function render()
     {

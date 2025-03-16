@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Pages\Semester;
 
-use App\Models\Semester;
-use Illuminate\Support\Facades\Crypt;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Models\Semester;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Crypt;
 
 class Index extends Component
 {
@@ -35,6 +35,7 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'semester-delete');
         $id = Crypt::decrypt($key);
 
         try {
@@ -52,6 +53,10 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'semester-list|semester-create|semester-edit|semester-delete');
     }
 
     public function render()

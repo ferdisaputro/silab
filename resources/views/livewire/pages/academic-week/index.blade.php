@@ -1,12 +1,17 @@
 <x-container x-data="Object.assign({createAcademicWeekState: false}, showEditAcademicWeek())">
     <div>
-        <x-modals.modal identifier="createAcademicWeekState" max_width="max-w-xl">
-            <livewire:pages.academic-week.create />
-        </x-modals.modal>
+        {{-- // $this->authorize('hasPermissionTo', 'minggu-list|minggu-create|minggu-edit|minggu-delete'); --}}
+        @can('minggu-create')
+            <x-modals.modal identifier="createAcademicWeekState" max_width="max-w-xl">
+                <livewire:pages.academic-week.create />
+            </x-modals.modal>
+        @endcan
 
-        <x-modals.modal identifier="editAcademicWeekState" max_width="max-w-xl">
-            <livewire:pages.academic-week.edit />
-        </x-modals.modal>
+        @can('minggu-edit')
+            <x-modals.modal identifier="editAcademicWeekState" max_width="max-w-xl">
+                <livewire:pages.academic-week.edit />
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -14,9 +19,11 @@
             <x-text.page-title>
                 Tabel Minggu Akademik
             </x-text.page-title>
-            <div>
-                <x-buttons.fill x-on:click="createAcademicWeekState = true" title="" color="purple">Tambah Minggu Akademik</x-buttons.fill>
-            </div>
+            @can('minggu-create')
+                <div>
+                    <x-buttons.fill x-on:click="createAcademicWeekState = true" title="" color="purple">Tambah Minggu Akademik</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -29,7 +36,9 @@
                         <th>Awal Minggu</th>
                         <th>Akhir Minggu</th>
                         <th>Keterangan</th>
-                        <th class="text-center">Action</th>
+                        @can(['minggu-edit', 'minggu-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -41,10 +50,16 @@
                             <td>{{ date('d/m/Y', strtotime($week->start_date)) }}</td>
                             <td>{{ date('d/m/Y', strtotime($week->end_date)) }}</td>
                             <td>{{ $week->description }}</td>
-                            <td class="text-center flex flex-wrap gap-1.5">
-                                <x-badges.outline x-on:click="showEditAcademicWeek('{{ Crypt::encrypt($week->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteAcademicWeek('{{ Crypt::encrypt($week->id) }}', '{{ $week->week_number.' tahun ajaran '. $week->academicYear->start_year.' / '.$week->academicYear->end_year.' '.($week->academicYear->is_even? 'Genap' : 'Ganjil') }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                            </td>
+                            @can(['minggu-edit', 'minggu-delete'])
+                                <td class="text-center flex flex-wrap gap-1.5">
+                                    @can('minggu-edit')
+                                        <x-badges.outline x-on:click="showEditAcademicWeek('{{ Crypt::encrypt($week->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                    @can('minggu-delete')
+                                        <x-badges.outline x-on:click="deleteAcademicWeek('{{ Crypt::encrypt($week->id) }}', '{{ $week->week_number.' tahun ajaran '. $week->academicYear->start_year.' / '.$week->academicYear->end_year.' '.($week->academicYear->is_even? 'Genap' : 'Ganjil') }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

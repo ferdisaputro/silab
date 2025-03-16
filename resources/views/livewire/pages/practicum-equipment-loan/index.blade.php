@@ -1,8 +1,11 @@
 <x-container x-data="detailPracticumEquipmentLoan()">
     <div>
-        <x-modals.modal identifier="detailPracticumEquipmentLoanState" max_width="max-w-6xl">
-            <livewire:pages.practicum-equipment-loan.detail lazy/>
-        </x-modals.modal>
+        {{-- $this->authorize('hasPermissionTo', 'bonalat-list|bonalat-create|bonalat-edit|bonalat-delete'); --}}
+        @can('bonalat-list')
+            <x-modals.modal identifier="detailPracticumEquipmentLoanState" max_width="max-w-6xl">
+                <livewire:pages.practicum-equipment-loan.detail lazy/>
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -22,11 +25,13 @@
                     @endforeach
                 </x-forms.select>
             </div>
-            <div>
-                <a href="{{ route('prac-equipment-loan.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
-                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Peminjaman</x-buttons.fill>
-                </a>
-            </div>
+            @can('bonalat-create')
+                <div>
+                    <a href="{{ route('prac-equipment-loan.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
+                        <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Peminjaman</x-buttons.fill>
+                    </a>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -38,7 +43,9 @@
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Kembali</th>
                         <th>Status</th>
-                        <th class="text-center">Action</th>
+                        @can(['bonalat-edit', 'bonalat-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -55,22 +62,30 @@
                             <td>{{ date('d/m/Y (H:i)', strtotime($eqLoan->borrowing_date)) }}<d>
                             <td>{{ $eqLoan->return_date? date('d/m/Y (H:i)', strtotime($eqLoan->return_date)) : "N/A" }}</td>
                             <td>{{ $eqLoan->status == 1? "Sedang dipinjam" : "Telah Kembali" }}</td>
-                            <td>
-                                <div class="flex flex-wrap justify-center gap-2 text-center">
-                                    @if ($eqLoan->status == 2)
-                                        <x-badges.outline x-on:click="showDetailPracticumEquipmentLoan('{{ Crypt::encrypt($eqLoan->id) }}')" title="Detail Peminjaman" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
-                                    @else
-                                        <a href="{{ route('prac-equipment-loan.return', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
-                                            <x-badges.outline title="Pengembalian Pinjaman" class="px-2.5 py-1.5" color="green"><i class="fa-solid fa-check-to-slot fa-lg"></i></x-badges.outline>
-                                        </a>
-                                        <a href="{{ route('prac-equipment-loan.edit', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
-                                            <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                        </a>
-                                        <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($eqLoan->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                                    @endif
-                                    <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                </div>
-                            </td>
+                            @can(['bonalat-list', 'bonalat-edit', 'bonalat-delete'])
+                                <td>
+                                    <div class="flex flex-wrap justify-center gap-2 text-center">
+                                        @if ($eqLoan->status == 2)
+                                            @can('bonalat-list')
+                                                <x-badges.outline x-on:click="showDetailPracticumEquipmentLoan('{{ Crypt::encrypt($eqLoan->id) }}')" title="Detail Peminjaman" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
+                                            @endcan
+                                        @else
+                                            @can('bonalat-edit')
+                                                <a href="{{ route('prac-equipment-loan.return', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
+                                                    <x-badges.outline title="Pengembalian Pinjaman" class="px-2.5 py-1.5" color="green"><i class="fa-solid fa-check-to-slot fa-lg"></i></x-badges.outline>
+                                                </a>
+                                                <a href="{{ route('prac-equipment-loan.edit', ['id' => Crypt::encrypt($eqLoan->id)]) }}" wire:navigate>
+                                                    <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                                </a>
+                                            @endcan
+                                            @can('bonalat-delete')
+                                                <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($eqLoan->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                            @endcan
+                                        @endif
+                                        <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    </div>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

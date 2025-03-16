@@ -3,11 +3,11 @@
 namespace App\Livewire\Pages\Course;
 
 use App\Models\Course;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -34,7 +34,7 @@ class Index extends Component
                     ->paginate($this->coursePerPage);
     }
 
-    public function updateStatus($key, $status) 
+    public function updateStatus($key, $status)
     {
         $id = null;
         try {
@@ -50,6 +50,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'matakuliah-delete');
+
         $id = Crypt::decrypt($key);
 
         try {
@@ -67,6 +69,10 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'matakuliah-list|matakuliah-create|matakuliah-edit|matakuliah-delete');
     }
 
     public function render()

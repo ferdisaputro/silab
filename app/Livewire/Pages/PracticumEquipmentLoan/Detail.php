@@ -35,6 +35,10 @@ class Detail extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'bonalat-list');
+    }
+
     public function render()
     {
         return view('livewire.pages.practicum-equipment-loan.detail', [

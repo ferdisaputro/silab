@@ -72,6 +72,10 @@ class Edit extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'minggu-edit');
+    }
+
     public function render()
     {
         return view('livewire.pages.academic-week.edit', [

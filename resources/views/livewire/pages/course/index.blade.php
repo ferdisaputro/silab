@@ -1,12 +1,16 @@
 <x-container x-data="Object.assign({createCourseState: false}, showEditCourse())">
     <div>
-        <x-modals.modal identifier="createCourseState" max_width="max-w-3xl">
-            <livewire:pages.course.create />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="editCourseState" max_width="max-w-3xl">
-            <livewire:pages.course.edit />
-        </x-modals.modal>
+        {{-- $this->authorize('hasPermissionTo', 'matakuliah-list|matakuliah-create|matakuliah-edit|matakuliah-delete'); --}}
+        @can('matakuliah-create')
+            <x-modals.modal identifier="createCourseState" max_width="max-w-3xl">
+                <livewire:pages.course.create />
+            </x-modals.modal>
+        @endcan
+        @can('matakuliah-edit')
+            <x-modals.modal identifier="editCourseState" max_width="max-w-3xl">
+                <livewire:pages.course.edit />
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -14,10 +18,11 @@
             <x-text.page-title>
                 Tabel Data Mata Kuliah
             </x-text.page-title>
-            {{-- <a href="{{ route('course.create') }}" wire:navigate> --}}
-            <div>
-                <x-buttons.fill x-on:click="createCourseState = true" color="purple">Tambah Mata Kuliah</x-buttons.fill>
-            </div>
+            @can('matakuliah-create')
+                <div>
+                    <x-buttons.fill x-on:click="createCourseState = true" color="purple">Tambah Mata Kuliah</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div x-data="changeDataStatus">
@@ -28,7 +33,9 @@
                         <th data-sortby="code">Kode Matkul</th>
                         <th data-sortby="course">Nama Matkul</th>
                         <th>Status</th>
-                        <th class="text-center">Action</th>
+                        @can(['matakuliah-edit', 'matakuliah-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -41,10 +48,16 @@
                                 <x-badges.fill :color="$course->is_active? 'blue' : 'yellow'" class="px-2.5 py-1.5"
                                     x-on:click="changeStatus('{{ Crypt::encrypt($course->id) }}', {{ $course->is_active }})">{{ $course->is_active? "Aktif" : "Non Aktif" }}</x-badges.fill>
                             </td>
-                            <td class="text-center">
-                                <x-badges.outline x-on:click="showEditCourse('{{ Crypt::encrypt($course->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteCourse('{{ Crypt::encrypt($course->id) }}', '{{ $course->course }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                            </td>
+                            @can(['matakuliah-edit', 'matakuliah-delete'])
+                                <td class="text-center">
+                                    @can('matakuliah-edit')
+                                        <x-badges.outline x-on:click="showEditCourse('{{ Crypt::encrypt($course->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                    @can('matakuliah-delete')
+                                        <x-badges.outline x-on:click="deleteCourse('{{ Crypt::encrypt($course->id) }}', '{{ $course->course }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>
@@ -87,26 +100,28 @@
 
             Alpine.data('changeDataStatus', () => {
 				return {
-					changeStatus(key, status) {
-                        let title = status || status == 1 ? 'Ubah Status ke Non Aktif' : 'Ubah Status ke Aktif';
-                        let text = status || status == 1 ? 'Ubah status ke non aktif' : 'Ubah status ke aktif';
-                        let confirmButtonText = status ? 'Non Aktif' : 'Aktif';
-                        let cancelButtonText = status ? 'Aktif' : 'Non Aktif';
+                    @can('matakuliah-edit')
+                        changeStatus(key, status) {
+                            let title = status || status == 1 ? 'Ubah Status ke Non Aktif' : 'Ubah Status ke Aktif';
+                            let text = status || status == 1 ? 'Ubah status ke non aktif' : 'Ubah status ke aktif';
+                            let confirmButtonText = status ? 'Non Aktif' : 'Aktif';
+                            let cancelButtonText = status ? 'Aktif' : 'Non Aktif';
 
-                        swal.fire({
-                            title: title,
-                            text: text,
-                            icon: 'warning',
-                            confirmButtonText: "Ya",
-                            cancelButtonText: "Tidak",
-                            showCloseButton: true,
-                            showCancelButton: true
-                        }).then(response => {
-                            if (response.isConfirmed) {
-                                $wire.updateStatus(key, !status)
-                            }
-                        })
-                    }
+                            swal.fire({
+                                title: title,
+                                text: text,
+                                icon: 'warning',
+                                confirmButtonText: "Ya",
+                                cancelButtonText: "Tidak",
+                                showCloseButton: true,
+                                showCancelButton: true
+                            }).then(response => {
+                                if (response.isConfirmed) {
+                                    $wire.updateStatus(key, !status)
+                                }
+                            })
+                        }
+                    @endcan
 				}
             })
         </script>

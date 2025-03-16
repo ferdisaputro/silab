@@ -46,8 +46,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'bonalat-delete');
         $id = Crypt::decrypt($key);
-
         try {
             DB::beginTransaction();
 
@@ -86,6 +86,7 @@ class Index extends Component
     }
 
     public function mount() {
+        $this->authorize('hasPermissionTo', 'bonalat-list|bonalat-create|bonalat-edit|bonalat-delete');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

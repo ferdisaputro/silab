@@ -36,8 +36,9 @@ class Index extends Component
                     ->paginate($this->schedulePerPage);
     }
 
-    // ->orderBy($this->permissionOrderBy, $this->permissionOrderByDirection)
     public function delete($key) {
+        $this->authorize("hasPermissionTo", 'penggantian-praktek-delete');
+
         $id = Crypt::decrypt($key);
 
         try {
@@ -61,6 +62,7 @@ class Index extends Component
     }
 
     public function mount() {
+        $this->authorize("hasPermissionTo", 'penggantian-praktek-list|penggantian-praktek-create|penggantian-praktek-edit|penggantian-praktek-delete');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }
@@ -68,8 +70,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.pages.schedule-replacement.index',[
-            // 'Prodis' => StudyProgram::all(),
-        ]);
+        return view('livewire.pages.schedule-replacement.index');
     }
 }

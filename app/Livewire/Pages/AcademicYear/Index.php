@@ -67,7 +67,7 @@ class Index extends Component
     }
 
     public function mount() {
-        // $this->authorize('hasPermissionTo', 'tahunajaran-list|tahunajaran-create|tahunajaran-edit|tahunajaran-delete');
+        $this->authorize('hasPermissionTo', 'tahunajaran-list|tahunajaran-create|tahunajaran-edit|tahunajaran-delete');
     }
 
     public function render()

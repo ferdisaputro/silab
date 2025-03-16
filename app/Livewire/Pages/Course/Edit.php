@@ -13,7 +13,7 @@ class Edit extends Component
 {
     public $listeners = ['initEditCourse'];
     public $id;
-    
+
     #[Validate("required|unique:courses,code")]
     public $code;
     #[Validate("required|unique:courses,course")]
@@ -28,7 +28,7 @@ class Edit extends Component
             $course = Course::find($this->id);
             $course->code = $this->code;
             $course->course = $this->course;
-            
+
             if ($course->isDirty(['code', 'course'])) {
                 $course->save();
                 $this->resetForm();
@@ -52,6 +52,10 @@ class Edit extends Component
         } catch (DecryptException $e) {
             $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'matakuliah-edit');
     }
 
     public function render()
