@@ -21,10 +21,9 @@
                     <div>
                         <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
                             <x-forms.select class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Pegawai">
-                                <option value="key1">test1</option>
-                                <option value="key2">test2</option>
-                                <option value="key3">test3</option>
-                                <option value="key4">test4</option>
+                                @foreach($staffList as $staff)
+                                    <option value="{{ $staff->id }}">{{ $staff->user->name }}</option>
+                                @endforeach
                             </x-forms.select>
                         </div>
 
@@ -33,10 +32,9 @@
                             <x-forms.input class="flex-1 md:min-w-[20rem]" name="nama" label="Nama" />
                             <x-forms.input class="flex-1 md:min-w-[20rem]" name="golongan_kelompok" label="Golongan/Kelompok" />
                             <x-forms.select class="flex-1 md:min-w-[20rem]" name="dosen_pembimbing" label="Pilih Dosen Pembimbing">
-                                <option value="key1">test1</option>
-                                <option value="key2">test2</option>
-                                <option value="key3">test3</option>
-                                <option value="key4">test4</option>
+                                @foreach($lecturerList as $lecture)
+                                    <option value="{{ $lecture->id }}">{{ $lecture->user->name }}</option>
+                                @endforeach
                             </x-forms.select>
                         </div>
                     </div>
@@ -77,10 +75,9 @@
 
 
                             <x-forms.select class="flex-1 min-w-40 md:max-w-60" wire:model='items.{{ $index }}.tahun_ajaran' name="items.{{ $index }}.tahun_ajaran" label="Pilih Tahun Ajaran">
-                                <option value="key1">test1</option>
-                                <option value="key2">test2</option>
-                                <option value="key3">test3</option>
-                                <option value="key4">test4</option>
+                                @foreach($academicYearList as $year)
+                                    <option value="{{ $year['id'] }}">{{ $year['label'] }}</option>
+                                @endforeach
                             </x-forms.select>
 
                             <x-forms.input class="flex-1 min-w-24" wire:model='items.{{ $index }}.keterangan' name="items.{{ $index }}.keterangan" label="Keterangan" />
