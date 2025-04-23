@@ -1,18 +1,30 @@
 <x-container>
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title>
-                Tabel Ijin Penggunaan LBS
-            </x-text.page-title>
             <div>
-                <a href="{{ route('lbs-usage-permit.create') }}" wire:navigate>
+                <x-text.page-title>
+                    Tabel Ijin Penggunaan LBS
+                </x-text.page-title>
+                <x-forms.select
+                        class="mt-3 ml-2"
+                        name="selectedLab"
+                        label="Pilih Lab"
+                        wire:model.live='selectedLab'
+                    >
+                        @foreach ($this->laboratories as $lab)
+                            <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>{{ $lab->code }} - {{ $lab->name }}</option>
+                        @endforeach
+                    </x-forms.select>
+            </div>
+            <div>
+                <a href="{{ route('lbs-usage-permit.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
                     <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Ijin Penggunaan</x-buttons.fill>
                 </a>
             </div>
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-equipmentLoan">
+            <x-tables.datatable id="tabel-lbsUsagePermit">
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>

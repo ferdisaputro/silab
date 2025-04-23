@@ -166,7 +166,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('ijin-penggunaan-lbs')->group(function() {
         Route::get('/', LbsUsagePermitIndex::class)
             ->name('lbs-usage-permit');
-        Route::get('/tambah', LbsUsagePermitCreate::class)
+        Route::get('/tambah/{id}', LbsUsagePermitCreate::class)
             ->name('lbs-usage-permit.create');
         Route::get('/{id}/edit', LbsUsagePermitEdit::class)
             ->name('lbs-usage-permit.edit');
