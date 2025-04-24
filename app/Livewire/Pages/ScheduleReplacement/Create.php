@@ -126,6 +126,7 @@ class Create extends Component
     }
 
     public function mount() {
+        $this->authorize("hasPermissionTo", 'penggantian-praktek-create');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

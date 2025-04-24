@@ -1,12 +1,16 @@
 <x-container x-data="Object.assign({createEmployeeState: false}, employee())">
     <div>
-        <x-modals.modal identifier="createEmployeeState" max_width="max-w-6xl">
-            <livewire:pages.employee.create wire:key='createEmployee' />
-        </x-modals.modal>
+        @can('staff-create')
+            <x-modals.modal identifier="createEmployeeState" max_width="max-w-6xl">
+                <livewire:pages.employee.create wire:key='createEmployee' />
+            </x-modals.modal>
+        @endcan
 
-        <x-modals.modal identifier="editEmployeeState" max_width="max-w-6xl">
-            <livewire:pages.employee.edit wire:key='editEmployee' />
-        </x-modals.modal>
+        @can('staff-edit')
+            <x-modals.modal identifier="editEmployeeState" max_width="max-w-6xl">
+                <livewire:pages.employee.edit wire:key='editEmployee' />
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -14,9 +18,11 @@
             <x-text.page-title>
                 Tabel Data Pegawai
             </x-text.page-title>
-            <div>
-                <x-buttons.fill x-on:click="createEmployeeState = true" color="purple">Tambah Pegawai</x-buttons.fill>
-            </div>
+            @can('staff-create')
+                <div>
+                    <x-buttons.fill x-on:click="createEmployeeState = true" color="purple">Tambah Pegawai</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -44,8 +50,12 @@
                             </td>
                             <td>{{ $user->name }}</td>
                             <td class="text-center">
-                                <x-badges.outline x-on:click="showEditEmployee('{{ Crypt::encrypt($user->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteEmployee('{{ Crypt::encrypt($user->id) }}', '{{ addslashes($user->name) }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @can('staff-edit')
+                                    <x-badges.outline x-on:click="showEditEmployee('{{ Crypt::encrypt($user->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                @endcan
+                                @can('staff-delete')
+                                    <x-badges.outline x-on:click="deleteEmployee('{{ Crypt::encrypt($user->id) }}', '{{ addslashes($user->name) }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

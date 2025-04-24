@@ -50,6 +50,10 @@ class Edit extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'satuan-edit');
+    }
+
     public function render()
     {
         return view('livewire.pages.unit.edit');

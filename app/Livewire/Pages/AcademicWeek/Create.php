@@ -37,7 +37,7 @@ class Create extends Component
             ],
             'description' => 'required|string|min:3|max:255',
         ];
-                
+
         return $rules;
     }
 
@@ -56,6 +56,10 @@ class Create extends Component
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'minggu-create');
     }
 
     public function render()

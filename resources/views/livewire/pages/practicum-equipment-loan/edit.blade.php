@@ -69,8 +69,8 @@
                 <x-alerts.outline class="mb-5" color='teal' message="Alat yang dipinjam" />
                 <div class="px-5 space-y-5">
                     @foreach ($selectedItems as $index => $item)
-                    <div>
-                        <span class="text-sm" wire:key='{{ $index }}'>Barang {{ $index + 1 }}</span>
+                    <div wire:key='{{ $index }}'>
+                        <span class="text-sm" wire:key='{{ $index }}'>Barang {{ $loop->iteration }}</span>
                         <div class="flex flex-row flex-wrap gap-4 mt-2">
                             <div class="flex flex-[1.3] gap-4">
                                 <x-forms.select :disabled="!isset($item['new'])? true : false" class="flex-1 min-w-24"
@@ -161,7 +161,9 @@
                             if (res.isConfirmed) {
                                 const result = await $wire.edit()
                                 if (result.original.status == 'success') {
-                                    swal.fire('Berhasil', 'Data Peminjaman Berhasil Diubah', 'success')
+                                    swal.fire('Berhasil', 'Data Peminjaman Berhasil Diubah', 'success').then(() => {
+                                        $wire.redirectToIndex()
+                                    })
                                 } else
                                     swal.fire('Gagal', 'Data laboratory Gagal Ditambahkan :'+ result.original.message, 'error')
                             }

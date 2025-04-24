@@ -2,23 +2,23 @@
 
 namespace App\Livewire\Pages\AcademicWeek;
 
-use App\Models\AcademicWeek;
-use App\Models\AcademicYear;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\AcademicWeek;
+use App\Models\AcademicYear;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Validation\Rule;
 
 class Edit extends Component
 {
     public $id;
     public $academic_year;
-    #[Validate('required|date')]
+    #[Validate('required')]
     public $start_date;
-    #[Validate('required|date|after_or_equal:start_date')]
+    #[Validate('required')]
     public $end_date;
     // #[Validate("required|integer|min:1")]
     public $week_number;
@@ -49,11 +49,12 @@ class Edit extends Component
             'end_date' => 'required|date|after_or_equal:start_date',
             'description' => 'required|string|min:3|max:255',
         ];
-                
+
         return $rules;
     }
 
     public function update() {
+        // dump($this->start_date, $this->end_date);
         $this->validate();
         try {
             $academic_week = AcademicWeek::find($this->id);
@@ -62,13 +63,17 @@ class Edit extends Component
             $academic_week->description = $this->description;
             if ($academic_week->isDirty('start_date', 'end_date', 'description')) {
                 $academic_week->save();
-                $this->start_date = null;
-                $this->end_date = null;
+                // $this->start_date = null;
+                // $this->end_date = null;
                 return response()->json(['status' => 'success', 'message' => 'Minggu akademik berhasil dibuat']);
             }
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'minggu-edit');
     }
 
     public function render()

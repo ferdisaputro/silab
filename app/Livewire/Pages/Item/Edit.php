@@ -35,8 +35,11 @@ class Edit extends Component
     // ====================
     public $satuan_barang ;
     public $satuanText;
+
     public function mount()
     {
+        $this->authorize('hasPermissionTo', 'barang-edit');
+
         $this->editUnit = ''; // Default kosong atau isi dengan ID tertentu
         $this->satuanText = $this->editUnit; // Menyinkronkan dengan unit_id
     }
@@ -96,10 +99,11 @@ class Edit extends Component
         }
     }
 
-public function resetForm()
-{
-    $this->reset();
-}
+    public function resetForm()
+    {
+        $this->reset();
+    }
+
     public function render()
     {
         return view('livewire.pages.item.edit', [
@@ -109,19 +113,3 @@ public function resetForm()
 
     }
 }
-    // public function addUnitItem() {
-    //     $this->unitItems[] = [
-    //         'satuan' => '',
-    //         'quantity' => 0,
-    //     ];
-    // }
-
-    // public function removeUnitItem($index) {
-    //     unset($this->unitItems[$index]);
-    // }
-    // public $unitItems = [
-    //     [
-    //         'satuan' => '',
-    //         'quantity' => 0,
-    //     ]
-    // ];

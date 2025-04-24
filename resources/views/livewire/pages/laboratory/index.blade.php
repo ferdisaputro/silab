@@ -3,12 +3,18 @@
         <x-modals.modal identifier="detailLaboratoryState" max_width="max-w-4xl">
             <livewire:pages.laboratory.detail lazy/>
         </x-modals.modal>
-        <x-modals.modal identifier="createLaboratoryState" max_width="max-w-4xl">
-            <livewire:pages.laboratory.create lazy/>
-        </x-modals.modal>
-        <x-modals.modal identifier="editLaboratoryState" max_width="max-w-4xl">
-            <livewire:pages.laboratory.edit lazy/>
-        </x-modals.modal>
+
+        {{-- $this->authorize('hasPermissionTo', 'lab-list|lab-create|lab-edit|lab-delete'); --}}
+        @can('lab-create')
+            <x-modals.modal identifier="createLaboratoryState" max_width="max-w-4xl">
+                <livewire:pages.laboratory.create lazy/>
+            </x-modals.modal>
+        @endcan
+        @can('lab-edit')
+            <x-modals.modal identifier="editLaboratoryState" max_width="max-w-4xl">
+                <livewire:pages.laboratory.edit lazy/>
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -17,9 +23,11 @@
                 Tabel Data Laboratorium
             </x-text.page-title>
             {{-- <a href="{{ route('employee.create') }}" wire:navigate> --}}
-            <div>
-                <x-buttons.fill x-on:click="createLaboratoryState = true" color="purple">Tambah Laboratorium</x-buttons.fill>
-            </div>
+            @can('lab-create')
+                <div>
+                    <x-buttons.fill x-on:click="createLaboratoryState = true" color="purple">Tambah Laboratorium</x-buttons.fill>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -42,8 +50,12 @@
                             <td>{{ $laboratory->members->firstWhere('is_lab_leader')->staff->user->name?? 'N/A' }}</td>
                             <td class="text-center text-nowrap">
                                 <x-badges.outline x-on:click="showDetailLaboratory('{{ Crypt::encrypt($laboratory->id) }}')" title="List Prodi" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-rectangle-list fa-lg"></i></i></x-badges.outline>
-                                <x-badges.outline x-on:click="showEditLaboratory('{{ Crypt::encrypt($laboratory->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($laboratory->id) }}', '{{ $laboratory->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @can('lab-edit')
+                                    <x-badges.outline x-on:click="showEditLaboratory('{{ Crypt::encrypt($laboratory->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                @endcan
+                                @can('lab-delete')
+                                    <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($laboratory->id) }}', '{{ $laboratory->name }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

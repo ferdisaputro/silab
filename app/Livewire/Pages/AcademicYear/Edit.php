@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Pages\AcademicYear;
 
-use App\Models\AcademicYear;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\AcademicYear;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
@@ -50,6 +50,10 @@ class Edit extends Component
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'tahunajaran-edit');
     }
 
     public function render()

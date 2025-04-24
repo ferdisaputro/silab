@@ -36,6 +36,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'role-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -63,6 +65,10 @@ class Index extends Component
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'role-list|role-create|role-edit|role-delete');
     }
 
     public function render()

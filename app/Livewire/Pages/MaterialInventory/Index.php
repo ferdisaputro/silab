@@ -77,14 +77,12 @@ class Index extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'inventaris-bahan-list|inventaris-bahan-cetak|inventaris-kartu-stok');
+    }
+
     public function render()
     {
-        // dd(Auth::user()->labMembers);
-        return view('livewire.pages.material-inventory.index',[
-            // 'labItem' => LabItem::with('item','laboratory')->get(),
-            // 'labItem' => LabItem::all(),
-            // 'labolatories' => Laboratory::all()
-            // 'items' => Item::all(),
-        ]);
+        return view('livewire.pages.material-inventory.index');
     }
 }

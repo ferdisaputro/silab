@@ -94,7 +94,7 @@ class BorrowReturn extends Component
             $this->equipmentLoan->return_date = Carbon::createFromFormat('d/m/Y H:i', $this->returnDate." ".$this->returnTime)->toDateTimeString();
             $this->equipmentLoan->lab_member_id_return = Auth::user()->labMembers->firstWhere('laboratory_id', $this->equipmentLoan->laboratory_id)->id;
             $this->equipmentLoan->status = 2;
-            
+
             $this->equipmentLoan->save();
 
             $loanDetailItems = collect($this->loanDetailItems);
@@ -145,6 +145,7 @@ class BorrowReturn extends Component
     }
 
     public function mount($id) {
+        $this->authorize('hasPermissionTo', 'bonalat-edit');
         try {
             $this->id = Crypt::decrypt($id);
             $this->equipmentLoan = EquipmentLoan::find($this->id)->load('mentor', 'staffBorrower', 'loanDetails');

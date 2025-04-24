@@ -1,27 +1,20 @@
 <x-container>
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
+            {{-- $this->authorize("hasPermissionTo", 'penggantian-praktek-list|penggantian-praktek-create|penggantian-praktek-edit|penggantian-praktek-delete'); --}}
+
             <div>
                 <x-text.page-title>
-                    Tabel Penggantian Jadwal
+                    Tabel Pergantian Jadwal
                 </x-text.page-title>
-                {{-- <x-forms.select
-                    class="mt-3 ml-2"
-                    name="selectedLab"
-                    label="Pilih Lab"
-                    wire:model.live='selectedLab'
-                    wire:key='{{ $selectedLab }}'
-                >
-                    @foreach ($this->laboratories as $lab)
-                        <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>{{ $lab->code }} - {{ $lab->name }} (Jurusan : {{ $lab->department->department }})</option>
-                    @endforeach
-                </x-forms.select> --}}
             </div>
-            <div>
-                <a href="{{ route('schedule-replacement.create') }}" wire:navigate>
-                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Buat Penggantian Jadwal</x-buttons.fill>
-                </a>
-            </div>
+            @can('penggantian-praktek-create')
+                <div>
+                    <a href="{{ route('schedule-replacement.create') }}" wire:navigate>
+                        <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Buat Penggantian Jadwal</x-buttons.fill>
+                    </a>
+                </div>
+            @endcan
         </div>
 
         <div>
@@ -33,7 +26,9 @@
                         <th data-sortby="replacement_schedule">Jadwal Ganti <i class="fa-solid fa-sort ms-2"></i></th>
                         <th data-sortby="">Mata Kuliah <i class="fa-solid fa-sort ms-2"></i></th>
                         <th>Dosen <i class="fa-solid fa-sort ms-2"></i></th>
-                        <th class="text-center">Action</th>
+                        @can(['penggantian-praktek-edit', 'penggantian-praktek-delete'])
+                            <th class="text-center">Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 {{-- ('{{ $this->Schedules->course->course }}') --}}
@@ -46,13 +41,19 @@
                             <td>{{ date('d/m/Y (H:i)', strtotime($schedule->replacement_schedule)) }}</td>
                             <td>{{ $schedule->course->course }}</td>
                             <td>{{ $schedule->lecturer->user->name }}</td>
-                            <td class="flex flex-wrap justify-center gap-2 text-center">
-                                <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                <a href="{{ route('schedule-replacement.edit', ['id' => Crypt::encrypt($schedule->id)]) }}" wire:navigate>
-                                    <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                                </a>
-                                <x-badges.outline x-data="schedule()" x-on:click="deleteScheduleReplacement('{{ Crypt::encrypt($schedule->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                            </td>
+                            @can(['penggantian-praktek-edit', 'penggantian-praktek-delete'])
+                                <td class="flex flex-wrap justify-center gap-2 text-center">
+                                    <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    @can('penggantian-praktek-edit')
+                                        <a href="{{ route('schedule-replacement.edit', ['id' => Crypt::encrypt($schedule->id)]) }}" wire:navigate>
+                                            <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                        </a>
+                                    @endcan
+                                    @can('penggantian-praktek-delete')
+                                        <x-badges.outline x-data="schedule()" x-on:click="deleteScheduleReplacement('{{ Crypt::encrypt($schedule->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                    @endcan
+                                </td>
+                            @endcan
                         </tr>
                         @endforeach
                 </tbody>

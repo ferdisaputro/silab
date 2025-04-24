@@ -49,8 +49,10 @@ class Create extends Component
     }
 
     public function mount($data) {
+        $this->authorize('hasPermissionTo', 'inventaris-alat-create');
         $this->lab_id = $data;
     }
+
     public function resetForm()
     {
         $this->reset();

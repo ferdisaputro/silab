@@ -75,8 +75,8 @@
                 <x-alerts.outline class="mb-5" color='teal' message="Alat yang dipinjam" />
                 <div class="px-5 space-y-5">
                     @foreach ($selectedItems as $index => $item)
-                    <div>
-                        <span class="text-sm">Barang {{ $index + 1 }}</span>
+                    <div wire:key='{{ $index }}'>
+                        <span class="text-sm">Barang {{ $loop->iteration }}</span>
                         <div class="flex flex-row flex-wrap gap-4 mt-2">
                             <div class="flex flex-[1.3] gap-4">
                                 <x-forms.select class="flex-1 min-w-24"
@@ -96,7 +96,7 @@
 
                                 <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
                                     <div
-                                        wire:key='{{ $selectedItems[$index]['item']?? now() }}'
+                                        wire:key='{{ $selectedItems[$index]['item'] }}'
                                         wire:init="set('selectedItems.{{ $index }}.stock', {{
                                             $this->labItems->find($selectedItems[$index]['item'])?
                                                 $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
@@ -111,7 +111,7 @@
                                     <x-forms.input
                                         type="number"
                                         class="flex-1 md:flex-none md:max-w-20"
-                                        max="{{ (String) $selectedItems[$index]['stock'] }}"
+                                        max="{{ $selectedItems[$index]['stock'] }}"
                                         wire:model.live.debounce='selectedItems.{{ $index }}.qty'
                                         name="selectedItems.{{ $index }}.qty"
                                         label="jumlah" />

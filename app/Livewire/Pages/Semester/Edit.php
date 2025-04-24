@@ -69,6 +69,11 @@ class Edit extends Component
             $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
         }
     }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'semester-edit');
+    }
+
     public function render()
     {
         return view('livewire.pages.semester.edit', [

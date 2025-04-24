@@ -127,9 +127,6 @@ class Edit extends Component
                     $equipmentLoanDetail->stockCard->delete();
                     $equipmentLoanDetail->delete();
                 });
-
-                // dd($stockCards, $deletedLoanDetails, $qeLoanDetail);
-                dump(true);
             }
 
             foreach ($this->selectedItems as $item) {
@@ -188,6 +185,7 @@ class Edit extends Component
     }
 
     public function mount($id, $type = "edit") {
+        $this->authorize('hasPermissionTo', 'bonalat-edit');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

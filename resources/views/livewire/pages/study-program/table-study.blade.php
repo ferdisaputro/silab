@@ -7,7 +7,9 @@
                 <th data-sortby="study-program">Program Studi</th>
                 <th>Jurusan</th>
                 <th>Ka.program Studi</th>
-                <th class="text-center">Action</th>
+                @can(['jurusan-edit', 'jurusan-delete'])
+                    <th class="text-center">Action</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
@@ -19,38 +21,44 @@
                     <td>{{ Str::limit($studyProgram->department->department?? "N/A", 30) }}</td>
                     {{-- <td>@dump($studyProgram->headOfStudyPrograms)</td> --}}
                     <td>{{ $studyProgram->headOfStudyPrograms->firstWhere('is_active', 1)->staff->user->name?? 'N/A' }}</td>
-                    <td class="text-center text-nowrap">
-                        @if (!$isSelectable)
-                            <x-badges.outline x-on:click="showEditStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
-                            {{-- <x-badges.outline x-on:click="$dispatch('dispatchShowEditStudyProgram', '{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline> --}}
-                            <x-badges.outline x-data="deleteStudyProgram()" x-on:click="deleteStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->study_program }}')" title="Hapus" x class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
-                        @else
-                            @if ($studyProgram->department_id)
-                                <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
-                                    x-on:click="
-                                        swal.fire({
-                                            title: 'Konfirmasi',
-                                            text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'Ya',
-                                            cancelButtonText: 'Batal',
-                                        }).then(async res => {
-                                            if (res.isConfirmed) {
-                                                $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
-                                                ({{ $identifier }})? {{ $identifier }} = false : ''
-                                            }
-                                        })
-                                    "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                    @can(['jurusan-edit', 'jurusan-delete'])
+                        <td class="text-center text-nowrap">
+                            @if (!$isSelectable)
+                                @can('jurusan-edit')
+                                    <x-badges.outline x-on:click="showEditStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                @endcan
+                                @can('jurusan-delete')
+                                    {{-- <x-badges.outline x-on:click="$dispatch('dispatchShowEditStudyProgram', '{{ Crypt::encrypt($studyProgram->id) }}')" title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline> --}}
+                                    <x-badges.outline x-data="deleteStudyProgram()" x-on:click="deleteStudyProgram('{{ Crypt::encrypt($studyProgram->id) }}', '{{ $studyProgram->study_program }}')" title="Hapus" x class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             @else
-                                <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
-                                x-on:click="
-                                    $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'}); {{-- this is triggering a function from livewire/pages/department/detail --}}
-                                    ({{ $identifier }})? {{ $identifier }} = false : ''
-                                "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                                @if ($studyProgram->department_id)
+                                    <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="red"
+                                        x-on:click="
+                                            swal.fire({
+                                                title: 'Konfirmasi',
+                                                text: 'Prodi sudah memiliki jurusan. Memilih prodi ini akan mengganti jurusan yang telah ditetapkan',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Ya',
+                                                cancelButtonText: 'Batal',
+                                            }).then(async res => {
+                                                if (res.isConfirmed) {
+                                                    $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'});
+                                                    ({{ $identifier }})? {{ $identifier }} = false : ''
+                                                }
+                                            })
+                                        "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                                @else
+                                    <x-badges.outline title="Tambah" class="px-2.5 py-1.5" color="blue"
+                                    x-on:click="
+                                        $wire.dispatch('addNewStudy', {key: '{{ Crypt::encrypt($studyProgram->id) }}'}); {{-- this is triggering a function from livewire/pages/department/detail --}}
+                                        ({{ $identifier }})? {{ $identifier }} = false : ''
+                                    "><i class="fa-regular fa-plus fa-lg"></i></x-badges.outline>
+                                @endif
                             @endif
-                        @endif
-                    </td>
+                        </td>
+                    @endcan
                 </tr>
             @endforeach
         </tbody>

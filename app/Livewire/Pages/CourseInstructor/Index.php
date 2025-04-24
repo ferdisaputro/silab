@@ -41,17 +41,10 @@ class Index extends Component
     public function updatedDepartmentId() {
         $this->studyProgramId = null;
     }
-    // public function updatedStudyProgramId() {
-    //     $this->semesterCoursesList = null;
-    //     dump(2);
-    // }
+
     public function updatedAcademicYearId() {
         $this->semesterId = null;
     }
-    // public function updatedSemesterId() {
-    //     $this->semesterCoursesList = null;
-    //     dump(4);
-    // }
 
     #[Computed()]
     public function departments() {
@@ -83,60 +76,16 @@ class Index extends Component
         return $semesterCourses;
     }
 
-    // if (!$this->isSemesterCoursesFetched) {
-    //     $fetchedData = [];
-
-    //     foreach ($semesterCourses as  $semesterCourse) {
-    //         $fetchedData ["".$semesterCourse->course->id] = [
-    //             'course_id' => ''.$semesterCourse->course->id
-    //             // 'lecturer_id' => "null",
-    //         ];
-    //     }
-
-    //     $this->semesterCoursesList = $fetchedData;
-    //     $this->isSemesterCoursesFetched = true;
-    // }
-
-    // public function edit() {
-    //     try {
-    //         DB::beginTransaction();
-
-    //         $semesterCourses = SemesterCourse::where('study_program_id', $this->studyProgramId)
-    //                                         ->where('semester_id', $this->semesterId)
-    //                                         ->get();
-
-    //         foreach ($semesterCourses as $semesterCourse) {
-    //             $semesterCourse->courseInstructor()->updateOrCreate([
-    //                 'semester_course_id' => $semesterCourse->id,
-    //             ], [
-    //                 'semester_course_id' => $semesterCourse->id,
-    //                 'staff_id' => $this->lecturerId,
-    //                 'user_id' => Auth::user()->id
-    //             ]);
-    //         }
-
-    //         return response()->json(['status' => 'success', 'message' => 'Setting Pengaturan Dosen Pengampu Disimpan']);
-
-    //         DB::commit();
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-
-    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
-    //     }
-    // }
-
      public function edit() {
+        $this->authorize('hasPermissionTo', 'setpengampu-create');
         try {
             DB::beginTransaction();
-
             $semesterCoursesList = collect($this->semesterCoursesList)->filter(function($data) {
                 return $data !== null;
             });
-
             $courseIds = $semesterCoursesList
                         ->pluck('course_id')
                         ->filter();
-
             $semesterCourses = SemesterCourse::where('study_program_id', $this->studyProgramId)
                                             ->where('semester_id', $this->semesterId)
                                             ->whereIn('course_id', $courseIds)
@@ -163,6 +112,10 @@ class Index extends Component
             DB::rollback();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
+    }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'setpengampu-list');
     }
 
     public function render()

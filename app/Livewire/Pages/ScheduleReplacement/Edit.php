@@ -130,6 +130,7 @@ class Edit extends Component
     }
 
     public function mount($id) {
+        $this->authorize("hasPermissionTo", 'penggantian-praktek-edit');
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }

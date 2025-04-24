@@ -98,6 +98,10 @@ class Create extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'staff-create');
+    }
+
     public function render()
     {
         return view('livewire.pages.employee.create', [

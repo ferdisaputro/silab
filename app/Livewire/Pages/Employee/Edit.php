@@ -154,6 +154,10 @@ class Edit extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'staff-edit');
+    }
+
     public function render()
     {
         return view('livewire.pages.employee.edit', [

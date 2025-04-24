@@ -3,8 +3,8 @@
 namespace App\Livewire\Pages\Course;
 
 use App\Models\Course;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
@@ -31,6 +31,11 @@ class Create extends Component
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'matakuliah-create');
+    }
+
     public function render()
     {
         return view('livewire.pages.course.create');

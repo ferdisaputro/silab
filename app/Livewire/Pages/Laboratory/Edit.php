@@ -101,6 +101,10 @@ class Edit extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'lab-edit');
+    }
+
     public function render()
     {
         return view('livewire.pages.laboratory.edit', [

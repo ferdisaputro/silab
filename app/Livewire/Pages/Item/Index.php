@@ -35,6 +35,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'barang-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -65,13 +67,12 @@ class Index extends Component
         }
     }
 
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'barang-list|barang-create|barang-edit|barang-delete');
+    }
+
     public function render()
     {
-        return view('livewire..pages.item.index');
+        return view('livewire.pages.item.index');
     }
 }
-// public $showCreate = false;
-
-    // public function setShowCreate() {
-    //     $this->showCreate = true;
-    // }

@@ -3,14 +3,14 @@
 namespace App\Livewire\Pages\ToolInventory;
 
 use App\Models\LabItem;
+use Livewire\Component;
 use App\Models\Laboratory;
-use Illuminate\Contracts\Encryption\DecryptException;
+use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Index extends Component
 {
@@ -45,6 +45,8 @@ class Index extends Component
     }
 
     public function delete($key) {
+        $this->authorize('hasPermissionTo', 'inventaris-alat-delete');
+
         $id = null;
         try {
             $id = Crypt::decrypt($key);
@@ -74,6 +76,11 @@ class Index extends Component
             ]);
         }
     }
+
+    public function mount() {
+        $this->authorize('hasPermissionTo', 'inventaris-alat-list|inventaris-alat-create|inventaris-alat-edit|inventaris-alat-delete');
+    }
+
     public function render()
     {
         return view('livewire.pages.tool-inventory.index');

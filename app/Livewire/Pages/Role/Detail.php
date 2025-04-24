@@ -23,7 +23,6 @@ class Detail extends Component
         try {
             $this->id = Crypt::decrypt($key);
         } catch (DecryptException $e) {
-            dd($e);
             $this->dispatch('error', ['message' => "Kesalahan load data, Refresh dan coba ulang"]);
         }
     }

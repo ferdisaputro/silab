@@ -1,12 +1,15 @@
 <x-container x-data="Object.assign({ createUnitState: false }, unit())">
     <div>
-        <x-modals.modal identifier="createUnitState">
-            <livewire:pages.unit.create />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="editModalState">
-            <livewire:pages.unit.edit />
-        </x-modals.modal>
+        @can('satuan-create')
+            <x-modals.modal identifier="createUnitState">
+                <livewire:pages.unit.create />
+            </x-modals.modal>
+        @endcan
+        @can('satuan-edit')
+            <x-modals.modal identifier="editModalState">
+                <livewire:pages.unit.edit />
+            </x-modals.modal>
+        @endcan
     </div>
 
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
@@ -14,10 +17,11 @@
             <x-text.page-title>
                 Tabel Satuan
             </x-text.page-title>
-            {{-- <a href="{{ route('pegawai.create') }}" wire:navigate> --}}
-            <div>
-                <x-buttons.fill x-on:click="createUnitState = true" color="purple">Create Satuan</x-buttons.fill>
-            </div>
+            @can('satuan-create')
+                <div>
+                    <x-buttons.fill x-on:click="createUnitState = true" color="purple">Create Satuan</x-buttons.fill>
+                </div>
+            @endcan
         </div>
         <div>
             <x-tables.datatable id="tabel-unit" :data="$this->units" eventTarget="unit">
@@ -34,8 +38,12 @@
                             <td>{{ $unit->id }}</td>
                             <td>{{ $unit->satuan }}</td>
                             <td class="text-center">
+                                @can('satuan-edit')
                                     <x-badges.outline wire:key='{{ $index }}' x-on:click="showEditUnit('{{ Crypt::encrypt($unit->id) }}')" class="px-2.5 py-1.5" title="Ubah" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                @endcan
+                                @can('satuan-delete')
                                     <x-badges.outline x-on:click="deleteUnit('{{ Crypt::encrypt($unit->id) }}', '{{ $unit->satuan }}')" class="px-2.5 py-1.5" title="Hapus" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

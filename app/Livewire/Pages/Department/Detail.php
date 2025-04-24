@@ -33,25 +33,20 @@ class Detail extends Component
         return Department::find($this->id)->load('studyPrograms');
     }
 
-    // #[On('initDetailDepartment')]
     public function initDetail($key) {
         $this->reset();
         try {
             $decrypted = Crypt::decrypt($key);
-            // $this->dispatch('initTabelDepartment', ['id' => $this->id]);
-
             $this->id = $decrypted;
         } catch (DecryptException $e) {
             return $this->redirect($this->prev_url, navigate: true);
         }
     }
 
-    // #[On('addNewStudy')]
     public function addNewStudy($key) {
         try {
             $decrypted = Crypt::decrypt($key);
-            $studyProgram = StudyProgram::find($decrypted); 
-            // $studyProgram = StudyProgram::find($decrypted)->load('headOfStudyPrograms', 'headOfStudyPrograms.staff', 'headOfStudyPrograms.staff.user'); 
+            $studyProgram = StudyProgram::find($decrypted);
             $this->newStudies[] = $studyProgram;
         } catch (DecryptException $e) {
             return response()->json('error');
