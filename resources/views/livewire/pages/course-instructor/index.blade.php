@@ -7,6 +7,7 @@
         </div>
         <form x-data="courseInstructor()" x-on:submit.prevent='submitHandler'>
             <div class="space-y-5">
+                
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <x-forms.select-advanced class="flex-1" model="departmentId" name="departmentId" label="Pilih Jurusan">
                         @foreach ($this->departments as $department)
