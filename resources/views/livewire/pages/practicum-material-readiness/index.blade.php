@@ -1,32 +1,31 @@
-<x-container x-data="Object.assign({createPracMatReadyState: false}, detailPracMatReady(), editPracMatReady())">
-    {{-- <div>
-        <x-modals.modal identifier="createPracMatReadyState" max_width="max-w-xl">
-            <livewire:pages.practicum-material-readiness.create />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="editPracMatReadyState" max_width="max-w-xl">
-            <livewire:pages.practicum-material-readiness.edit />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="detailPracMatReadyState" max_width="max-w-4xl">
-            <livewire:pages.practicum-material-readiness.detail />
-        </x-modals.modal>
-    </div> --}}
-
+<x-container >
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
-            <x-text.page-title>
-                Tabel Kesiapan Bahan Praktikum
-            </x-text.page-title>
+            {{-- @dump($this->laboratories) --}}
             <div>
-                <a href="{{ route('prac-mat-ready.create') }}" wire:navigate>
-                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah</x-buttons.fill>
+                <x-text.page-title>
+                    Tabel Kesiapan Bahan Praktikum
+                </x-text.page-title>
+                <x-forms.select
+                    class="mt-3 ml-2"
+                    name="selectedLab"
+                    label="Pilih Lab"
+                    wire:model.live='selectedLab'
+                >
+                    @foreach ($this->laboratories as $lab)
+                        <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>{{ $lab->code }} - {{ $lab->name }}</option>
+                    @endforeach
+                </x-forms.select>
+            </div>
+            <div>
+                <a href="{{ route('prac-mat-ready.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
+                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Peminjaman</x-buttons.fill>
                 </a>
             </div>
         </div>
 
         <div>
-            <x-tables.datatable :data="$this->practicumMaterialReadiness" id="tabel-pracMatReady">
+            <x-tables.datatable :data="$this->practicumMaterialReadiness" id="tabel-pracMatReady" eventTarget="PracMat">
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>
@@ -38,19 +37,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($this->practicumMaterialReadiness as $index => $PMR)
+                    @foreach ($this->practicumMaterialReadiness as $index => $PracMat)
                         <tr wire:key='{{ $loop->iteration + ($this->practicumMaterialReadiness->perPage() * ($this->practicumMaterialReadiness->currentPage() - 1)) }}'>
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"></td>
-                            <td>{{ $PMR->semesterCourse->studyProgram->study_program}}</td>
-                            <td>{{ $PMR->semesterCourse->semester->semester }}</td>
-                            <td>{{ $PMR->academic_week_id }}</td>
-                            <td>{{ $PMR->recomendation }}</td>
+                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->practicumMaterialReadiness->perPage() * ($this->practicumMaterialReadiness->currentPage() - 1)) }}</td>
+                            <td>{{ $PracMat->semesterCourse->course->course}}</td>
+                            <td>{{ $PracMat->semesterCourse->semester->semester }}</td>
+                            <td>{{ $PracMat->academicWeek->week_number }}</td>
+                            <td>
+                                @if ($PracMat->recomendation == 1)
+                                    Siapkan dan Lanjutkan
+                                @elseif ($PracMat->recomendation == 2)
+                                    Dimodifikasi
+                                @elseif ($PracMat->recomendation == 3)
+                                    Diganti Acara Praktek yang Lain
+                                @elseif ($PracMat->recomendation == 4)
+                                    Ditunda
+                                @else
+                                    Tidak Diketahui
+                                @endif
+                            </td>
                             <td class="text-center">
-                            <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                {{-- <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($i)]) }}" wire:navigate> --}}
-                                    <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
+                                <x-badges.outline
+                                    title="cetak"
+                                    class="px-2.5 py-1.5"
+                                    color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($PracMat->id)]) }}" wire:navigate>
+                                    <x-badges.outline
+                                        title="Edit"
+                                        class="px-2.5 py-1.5"
+                                        color="teal"><i
+                                        class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
-                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline
+                                    x-data="PracMat()"
+                                    x-on:click="deleteKesiapan('{{ Crypt::encrypt($PracMat->id) }}')"
+                                    title="Hapus" class="px-2.5 py-1.5"
+                                    color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -59,22 +81,16 @@
         </div>
     </div>
 </x-container>
-
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('initEditLabItem', () => {
+            Alpine.data('PracMat', () => {
                 return {
-                    editMaterialInventoryState: false,
-                    showEditMaterialInventory (key) {
-                        $wire.dispatch('initEditLabItem', {key: key}); // this is function is dispatching a function from pages/MaterialInventory/Edit
-                        this.editMaterialInventoryState = true;
-                    },
-
-                    deleteItem(key, code) {
+                    deleteKesiapan(key) {
+                        console.log("Key yang diterima:", key);
                         swal.fire({
                             title: `Hapus Data`,
-                            text: `Apakah Anda yakin ingin menghapus Tool ${name}?`,
+                            text: `Apakah Anda yakin ingin menghapus Kesiapan bahan?`,
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Ya',
@@ -83,10 +99,10 @@
                             if (res.isConfirmed) {
                                 result = await $wire.delete(key);
                                 if (result.original.status !== 'error') {
-                                    swal.fire('Berhasil', 'Data Tool Berhasil Dihapus', 'success')
+                                    swal.fire('Berhasil', 'Data Kesipan Bahan Berhasil Dihapus', 'success')
                                     $wire.$refresh() //refresh component from the parent of this component wich is index
                                 } else
-                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                                    swal.fire('Gagal', 'Data Kesiapan Bahan Gagal Dihapus: ' + result.original.message, 'error')
                             }
                         })
                     }
@@ -95,6 +111,39 @@
         </script>
     @endscript
 @endpushOnce
+
+{{-- @pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('PracMat',() => {
+                return{
+                    deleteKesiapan(key) {
+                    swal.fire({
+                        title: `Hapus Data`,
+                        text: `Apakah Anda yakin ingin menghapus Kesiapan Bahan?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Batal',
+                    }).then(async res => {
+                        if (res.isConfirmed) {
+                            result = await $wire.delete(key);
+                            if (result.original.status !== 'error') {
+                                console.log("Response dari Livewire:", result);
+                                swal.fire('Berhasil', 'Data Kesiapan Bahan Berhasil Dihapus', 'success')
+                                $wire.$refresh() //refresh component from the parent of this component wich is index
+                            } else
+                                swal.fire('Gagal', 'Data Kesiapan Bahan Gagal Dihapus: ' + result.original.message, 'error')
+                        }
+                    })
+                }
+                }
+            })
+
+                // console.log(key);
+        </script>
+    @endscript
+@endpushOnce --}}
 
 
 {{-- @pushOnce('scripts')
@@ -122,3 +171,16 @@
         </script>
     @endscript
 @endpushOnce --}}
+    {{-- <div>
+        <x-modals.modal identifier="createPracMatReadyState" max_width="max-w-xl">
+            <livewire:pages.practicum-material-readiness.create />
+        </x-modals.modal>
+
+        <x-modals.modal identifier="editPracMatReadyState" max_width="max-w-xl">
+            <livewire:pages.practicum-material-readiness.edit />
+        </x-modals.modal>
+
+        <x-modals.modal identifier="detailPracMatReadyState" max_width="max-w-4xl">
+            <livewire:pages.practicum-material-readiness.detail />
+        </x-modals.modal>
+    </div> --}}

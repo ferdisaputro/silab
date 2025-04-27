@@ -90,7 +90,6 @@ class Create extends Component
 
     public function create() {
         $this->validate();
-
         $data = [
             'code' => Str::random(8),
             'practicum_event' => $this->practicumEvent,

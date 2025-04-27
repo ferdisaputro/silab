@@ -14,7 +14,8 @@
         <div class="flex items-center justify-between">
             {{-- @dump($lab_id) --}}
             <x-text.page-title>
-                <x-forms.select class="flex-1"
+                <x-forms.select
+                    class="flex-1"
                     name="lab_id"
                     label="Pilih Labolatorium"
                     key="lab_id"

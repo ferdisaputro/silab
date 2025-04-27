@@ -20,8 +20,6 @@ class Create extends Component
 {
     #[Validate('required|string|max:12')] // VARCHAR(12) for unique code
     public $code;
-
-
     #[Validate('required|boolean')] // TINYINT(1) for boolean (0 or 1)
     public $isStaff;
     // variables if isStaff is true
@@ -100,7 +98,7 @@ class Create extends Component
 
     #[Computed()]
     public function labItems() {
-        return Laboratory::find($this->laboratoryId?? null)->labItems->load('item');
+        return Laboratory::find(id: $this->laboratoryId?? null)->labItems->load('item');
     }
 
     public function create() {

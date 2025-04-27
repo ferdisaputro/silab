@@ -55,7 +55,6 @@
                             <option value="{{ $semester->id }}" {{ $semester->id == $selectedSemester? "selected" : "" }}>{{ $semester->semester }}</option>
                         @endforeach
                     </x-forms.select-advanced>
-
                     <x-forms.select-advanced wire:key='{{ now() }}' model="selectedCourse" class="flex-1 md:min-w-56" name="mata_kuliah" label="Pilih Mata Kuliah">
                         @foreach ($this->courses as $course )
                             <option value="{{ $course->id }}" {{ $course->id == $selectedCourse? "selected" : "" }}>{{ $course->course }}</option>
@@ -114,7 +113,7 @@
                                         $wire.redirectToIndex()
                                     })
                                 } else
-                                    swal.fire('Gagal', 'Data laboratory Gagal Ditambahkan :'+ result.original.message, 'error')
+                                    swal.fire('Gagal', 'Data Penggantian Jadwal Gagal Ditambahkan :'+ result.original.message, 'error')
                             }
                         })
                     }

@@ -4,7 +4,7 @@ namespace App\Livewire\Pages\CourseInstructor;
 
 use Livewire\Component;
 
-class CourseTable extends Component
+class Course extends Component
 {
     public function render()
     {
