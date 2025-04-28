@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Crypt;
 class Create extends Component
 {
     // public string $id;
+    public $selectedLab;
 
     #[Validate('required|string|max:12')] // VARCHAR(12) for unique code
     public $code;

@@ -9,27 +9,23 @@ class LbsUsagePermit extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-
-    public function loanDetails()
-    {
+    public function LbsUsageDetail(){
         return $this->hasMany(LbsUsagePermitDetail::class);
     }
-
     public function laboratory()
     {
         return $this->belongsTo(Laboratory::class);
     }
 
-    public function memberBorrow()
-    {
-        return $this->belongsTo(LabMember::class, 'lab_member_id_borrow', 'id');
-    }
+    // public function memberBorrow()
+    // {
+    //     return $this->belongsTo(LabMember::class, 'lab_member_id_borrow', 'id');
+    // }
 
-    public function memberReturn()
-    {
-        return $this->belongsTo(LabMember::class, 'lab_member_id_return', 'id');
-    }
+    // public function memberReturn()
+    // {
+    //     return $this->belongsTo(LabMember::class, 'lab_member_id_return', 'id');
+    // }
 
     public function mentor()
     {
@@ -46,4 +42,5 @@ class LbsUsagePermit extends Model
         return $this->belongsTo(Staff::class, 'staff_id_returner', 'id');
     }
 
+    protected $fillable =['code','is_staff','name','nim','start_date','end_date','status','staff_id','staff_id_mentor','study_program_id','laboratory_id','lab_member_id'];
 }
