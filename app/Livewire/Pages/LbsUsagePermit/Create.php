@@ -2,10 +2,15 @@
 
 namespace App\Livewire\Pages\LbsUsagePermit;
 
+use Illuminate\Support\Facades\Crypt;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class Create extends Component
 {
+    public $code;
+    public $selectedLab;
+    // public $id;
     public $items = [
         [
             'bahan' => '', // bahan
@@ -30,8 +35,15 @@ class Create extends Component
     public function removeItem($index) {
         unset($this->items[$index]);
 
-        dump($this->items);
+        // dump($this->items);
     }
+    public function mount($id){
+        $decrypted = Crypt::decrypt($id);
+        $this->selectedLab = $decrypted;
+        // $this->labMemberIdBorrow = Auth::user()->staff->id;
+        $this->code = Str::random(8);
+    }
+
 
     public function render()
     {

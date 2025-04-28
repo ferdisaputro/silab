@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             EquipmentLoanSeeder::class,
             UnitSeeder::class,
+            LbsSeeder::class,
         ]);
     }
 }

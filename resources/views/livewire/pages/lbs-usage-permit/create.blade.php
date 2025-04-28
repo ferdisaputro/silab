@@ -3,7 +3,7 @@
         <div class="p-5 space-y-10 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
                 <x-text.page-title>
-                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi
+                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi{{ $selectedLab }}
                 </x-text.page-title>
             </div>
 
