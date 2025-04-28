@@ -150,8 +150,11 @@
             </div>
 
             <div class="text-center">
-                <x-buttons.fill class="w-full max-w-xs">Buat Ijin Penggunaan</x-buttons.fill>
+                <x-buttons.fill class="w-full max-w-xs" wire:click="create">
+                    Buat Ijin Penggunaan
+                </x-buttons.fill>
             </div>
+
         </div>
     </form>
 </x-container>

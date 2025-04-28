@@ -14,7 +14,7 @@ use Carbon\Carbon;
 use App\Models\LabItem;
 use App\Models\Laboratory;
 use Illuminate\Support\Str;
-use App\Models\EquipmentLoan;
+// use App\Models\EquipmentLoan;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
 
@@ -125,7 +125,7 @@ class Create extends Component
                 'stock' => $item['stock'],
                 'is_stock_in' => 0,
                 'description' => $item['description']?? null,
-                'equipment_loan_id' => $equipmentLoan?? 1, // ?? 1 just temp data
+                'lbs_usage_permit_id' => $lbsUsagePermit?? 1, // ?? 1 just temp data
                 'lab_item_id' => $item['item'],
                 'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
             ];
@@ -136,19 +136,19 @@ class Create extends Component
 
             $stockCardsResult = Auth::user()->labMembers->firstWhere("laboratory_id", $this->laboratoryId)->stockCards()->createMany($stockCards);
 
-            $equipmentLoan = EquipmentLoan::create($data);
+            $lbsUsagePermit = LbsUsagePermit::create($data);
 
-            $eqLoanDetail = collect($this->selectedItems)->map(function($item) use ($equipmentLoan, $stockCardsResult) {
+            $lbsUsageDetail = collect($this->selectedItems)->map(function($item) use ($lbsUsagePermit, $stockCardsResult) {
                 return [
                     'qty' => $item['qty'],
                     'description' => $item['description']?? null,
-                    'equipment_loan_id' => $equipmentLoan->id, //  just temp data
+                    'lbs_usage_permit_id' => $lbsUsagePermit->id, //  just temp data
                     'lab_item_id' => $item['item'],
                     'stock_card_id' => $stockCardsResult->firstWhere('lab_item_id', $item['item'])->id,
                 ];
             });
 
-            $eqLoanDetailResult = $equipmentLoan->loanDetails()->createMany($eqLoanDetail);
+            $lbsUsageDetailResult = $lbsUsagePermit->UsageDetails()->createMany($lbsUsageDetail);
 
             foreach ($this->selectedItems as $item) {
                 $labItem = LabItem::find($item['item']);
@@ -156,7 +156,7 @@ class Create extends Component
                 $labItem->save();
             }
 
-            // dump($stockCardsResult, $equipmentLoan, $eqLoanDetailResult);
+            // dump($stockCardsResult, $lbsUsagePermit, $lbsUsageDetailResult);
 
             DB::commit();
             return response()->json([
