@@ -41,19 +41,45 @@
                 </div>
             </div>
 
-            <div class="space-y-5">
+            <div class="space-y-4">
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
                 <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5" date-rangepicker>
-                    <x-forms.input name="datepicker-range-start" label="Tanggal Mulai" class="flex-1">
-                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
-                    </x-forms.input>
+                    {{-- <div class="flex gap-2"> --}}
+                        <!-- Start Date Picker -->
+                        <x-forms.input
+                            wire:model.live.debounce="startDate"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="startDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1"
+                            name="startDate"
+                            label="Tanggal Mulai"
+                            datepicker />
+
+                        <!-- Start Time Picker -->
+                        <x-forms.timepicker wire:model="endTime" id="start_time" value="{{ date('H:i', time()) }}"></x-forms.timepicker>
+                    {{-- </div> --}}
+
+                    <!-- 'To' Divider -->
                     <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
                         to
                     </span>
-                    <x-forms.input name="datepicker-range-end" label="Tanggal Selesai" class="flex-1">
-                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
-                    </x-forms.input>
+
+                    {{-- <div class="flex gap-2"> --}}
+                        <!-- End Date Picker -->
+                        <x-forms.input
+                            wire:model.live.debounce="endDate"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="endDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1"
+                            name="endDate"
+                            label="Tanggal Selesai"
+                            datepicker />
+
+                        <!-- End Time Picker -->
+                        <x-forms.timepicker wire:model="endTime" id="end_time" value="{{ date('H:i', time()) }}"></x-forms.timepicker>
+                    {{-- </div> --}}
                 </div>
+
             </div>
 
             <div class="space-y-5">
