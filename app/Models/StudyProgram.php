@@ -32,4 +32,8 @@ class StudyProgram extends Model
     {
         return $this->hasMany(HeadOfStudyProgram::class);
     }
+    public function semesterCourses()
+    {
+        return $this->hasMany(SemesterCourse::class, 'study_program_id');
+    }
 }

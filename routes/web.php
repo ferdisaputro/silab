@@ -125,7 +125,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('kesiapan-baprak')->group(function() {
         Route::get('/', PracticumMaterialReadinessIndex::class)
             ->name('prac-mat-ready');
-        Route::get('/tambah', PracticumMaterialReadinessCreate::class)
+        Route::get('/tambah/{id}', PracticumMaterialReadinessCreate::class)
             ->name('prac-mat-ready.create');
         Route::get('/{id}/ubah', PracticumMaterialReadinessEdit::class)
             ->name('prac-mat-ready.edit');

@@ -16,6 +16,5 @@ class LabItem extends Model
     {
         return $this->belongsTo(Laboratory::class, 'laboratory_id','id'); // 'item_id' adalah foreign key
     }
-
     protected $fillable = ['code','description','stock','laboratory_id','item_id','is_active'];
 }

@@ -119,7 +119,11 @@
                             </div>
 
                             <div class="flex flex-1 gap-4">
-                                <x-forms.input class="flex-1 min-w-24" wire:model.live.debounce='selectedItems.{{ $index }}.description' name="selectedItems.{{ $index }}.description" label="Keterangan" />
+                                <x-forms.input
+                                    class="flex-1 min-w-24"
+                                    wire:model.live.debounce='selectedItems.{{ $index }}.description'
+                                    name="selectedItems.{{ $index }}.description"
+                                    label="Keterangan" />
 
                                 <div class="flex justify-end gap-2">
                                     @if (count($selectedItems) > 1)
