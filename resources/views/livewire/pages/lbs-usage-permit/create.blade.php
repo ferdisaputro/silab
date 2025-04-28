@@ -44,15 +44,25 @@
             <div class="space-y-5">
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
                 <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5" date-rangepicker>
-                    <x-forms.input name="datepicker-range-start" label="Tanggal Mulai" class="flex-1">
-                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
-                    </x-forms.input>
+                    <div class="flex gap-4">
+                        <x-forms.input
+                            wire:model.live.debounce="startDate"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="startDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1" name="startDate" label="Tanggal Mulai" datepicker />
+                    <x-forms.timepicker wire:init="startTime = '{{ date('H:i', time()) }}'" id="start_time" wire:model="startTime"></x-forms.timepicker>
+                    </div>
                     <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
                         to
                     </span>
-                    <x-forms.input name="datepicker-range-end" label="Tanggal Selesai" class="flex-1">
-                        <i class="fa-solid fa-calendar-days fa-sm absolute top-1/2 right-4 -translate-y-1/2"></i>
-                    </x-forms.input>
+                    <div class="flex gap-4">
+                        <x-forms.input
+                            wire:model.live.debounce="endDate"
+                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            wire:init="endDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            class="flex-1" name="endDate" label="Tanggal Selesai" datepicker />
+                    <x-forms.timepicker wire:init="endTime = '{{ date('H:i', time()) }}'" id="end_time" wire:model="endTime"></x-forms.timepicker>
+                    </div>
                 </div>
             </div>
 
@@ -105,7 +115,7 @@
                                         @foreach ($this->academicYears as $academicYear)
                                             <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academicYearId ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
                                         @endforeach
-                                    </x-forms.select-advanced>    
+                                    </x-forms.select-advanced>
                                 </div>
                             </div>
 
@@ -138,3 +148,36 @@
         </div>
     </form>
 </x-container>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('createLbsPermit', () => {
+                return {
+                    submitHandler() {
+                        swal.fire({
+                            title: 'Buat Izin Penggunaan LBS',
+                            text: 'Pastikan semua data sudah benar.',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async (res) => {
+                            if (res.isConfirmed) {
+                                const result = await $wire.create()
+                                if (result.original.status === 'success') {
+                                    swal.fire('Berhasil', 'Izin berhasil dibuat', 'success').then(() => {
+                                        $wire.redirectToIndex()
+                                    })
+                                } else {
+                                    swal.fire('Gagal', 'Gagal membuat izin: ' + result.original.message, 'error')
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endPushOnce
+

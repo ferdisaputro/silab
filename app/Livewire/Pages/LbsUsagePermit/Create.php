@@ -92,6 +92,134 @@ class Create extends Component
         return Laboratory::find($this->laboratoryId?? null)->labItems->load('item');
     }
 
+    public function create() {
+        // dump(
+        //     $this->borrowingDate." ".$this->borrowingTime,
+        //     Carbon::createFromFormat('d/m/Y H:i', $this->borrowingDate." ".$this->borrowingTime)->toDateTimeString()
+        // );
+        // return;
+        $this->validate();
+        $data = [];
+        $data['code'] = $this->code;
+        $data['start_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->startDate." ".$this->startTime)->toDateTimeString();
+        $data['end_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->endDate." ".$this->endTime)->toDateTimeString();
+        $data['status'] = 1;
+        $data['laboratory_id'] = $this->laboratoryId;
+        $data['lab_member_id_borrow'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
+
+        if ($this->isStaff) {
+            $data['is_staff'] = 1;
+            $data['staff_id'] = $this->staff;
+        } else {
+            $data['is_staff'] = 0;
+            $data['nim'] = $this->nim;
+            $data['name'] = $this->name;
+            $data['group_class'] = $this->groupClass;
+            $data['staff_id_mentor'] = $this->mentor;
+        }
+
+        $stockCards = collect($this->selectedItems)->map(function($item) {
+            return [
+                'qty' => $item['qty'],
+                'stock' => $item['stock'],
+                'is_stock_in' => 0,
+                'description' => $item['description']?? null,
+                'equipment_loan_id' => $equipmentLoan?? 1, // ?? 1 just temp data
+                'lab_item_id' => $item['item'],
+                'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
+            ];
+        });
+
+        try {
+            DB::beginTransaction();
+
+            $stockCardsResult = Auth::user()->labMembers->firstWhere("laboratory_id", $this->laboratoryId)->stockCards()->createMany($stockCards);
+
+            $equipmentLoan = EquipmentLoan::create($data);
+
+            $eqLoanDetail = collect($this->selectedItems)->map(function($item) use ($equipmentLoan, $stockCardsResult) {
+                return [
+                    'qty' => $item['qty'],
+                    'description' => $item['description']?? null,
+                    'equipment_loan_id' => $equipmentLoan->id, //  just temp data
+                    'lab_item_id' => $item['item'],
+                    'stock_card_id' => $stockCardsResult->firstWhere('lab_item_id', $item['item'])->id,
+                ];
+            });
+
+            $eqLoanDetailResult = $equipmentLoan->loanDetails()->createMany($eqLoanDetail);
+
+            foreach ($this->selectedItems as $item) {
+                $labItem = LabItem::find($item['item']);
+                $labItem->stock -= $item['qty'];
+                $labItem->save();
+            }
+
+            // dump($stockCardsResult, $equipmentLoan, $eqLoanDetailResult);
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Peminjaman alat praktikum berhasil dibuat'
+            ]);
+
+        } catch (Throwable $th) {
+            DB::rollback();
+            // dump($th->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    // public function create()
+    // {
+    //     $this->validate();
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         $data = [
+    //             'code' => $this->code,
+    //             'start_date' => Carbon::createFromFormat('d/m/Y H:i', $this->startDate . ' ' . $this->startTime)->toDateTimeString(),
+    //             'end_date' => Carbon::createFromFormat('d/m/Y H:i', $this->endDate . ' ' . $this->endTime)->toDateTimeString(),
+    //             'purpose' => $this->purpose,
+    //             'status' => 'pending',
+    //             'laboratory_id' => $this->laboratoryId,
+    //             'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)?->id,
+    //         ];
+
+    //         if ($this->isStaff) {
+    //             $data['is_staff'] = 1;
+    //             $data['staff_id'] = $this->staffId;
+    //         } else {
+    //             $data['is_staff'] = 0;
+    //             $data['nim'] = $this->nim;
+    //             $data['name'] = $this->name;
+    //             $data['group_class'] = $this->groupClass;
+    //             $data['mentor_id'] = $this->mentorId;
+    //         }
+
+    //         $permit = LbsUsagePermit::create($data);
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Izin penggunaan LBS berhasil dibuat'
+    //         ]);
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $th->getMessage()
+    //         ]);
+    //     }
+    // }
+
+
     #[Computed()]
     public function academicYears() {
         return AcademicYear::all();
