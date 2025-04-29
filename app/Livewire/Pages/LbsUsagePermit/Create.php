@@ -45,11 +45,21 @@ class Create extends Component
     #[Validate('nullable|integer|exists:staff,id|required_if:isStaff,0')]
     public $mentor; // selected staff id for mentor
 
-    // variables for borrowing
-    #[Validate('required')] // DATETIME for borrowing date
-    public $startDate;
+    // variables for starting
+    #[Validate('required')] // DATETIME for starting date
+    public $startingDate;
     #[Validate('required')]
-    public $endDate;
+    public $startingTime;
+    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    public $labMemberIdStart;
+
+    // variables for ending
+    #[Validate('required')] // DATETIME for starting date
+    public $endingDate;
+    #[Validate('required')]
+    public $endingTime;
+    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    public $labMemberIdEnd;
 
     #[Validate('required|integer|exists:academic_years,id')]
     public $academicYearId; // id of academic year table
@@ -72,6 +82,9 @@ class Create extends Component
             'description' => '', // description
         ]
     ];
+    public function staffs(){
+        return Staff::all();
+    }
 
     // public function addItem($item, $stock, $qty, $tahun_ajaran, $description) {
     public function addItem() {
@@ -102,11 +115,12 @@ class Create extends Component
         $this->validate();
         $data = [];
         $data['code'] = $this->code;
-        $data['start_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->startDate." ".$this->startTime)->toDateTimeString();
-        $data['end_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->endDate." ".$this->endTime)->toDateTimeString();
+        $data['start_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->startDate." ".$this->staringtTime)->toDateTimeString();
+        $data['end_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->endDate." ".$this->endingTime)->toDateTimeString();
         $data['status'] = 1;
         $data['laboratory_id'] = $this->laboratoryId;
-        $data['lab_member_id_borrow'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
+        $data['lab_member_id_start'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
+        $data['lab_member_id_end'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
 
         if ($this->isStaff) {
             $data['is_staff'] = 1;
@@ -148,7 +162,7 @@ class Create extends Component
                 ];
             });
 
-            $lbsUsageDetailResult = $lbsUsagePermit->UsageDetails()->createMany($lbsUsageDetail);
+            $lbsUsageDetailResult = $lbsUsagePermit->LbsUsageDetail()->createMany($lbsUsageDetail);
 
             foreach ($this->selectedItems as $item) {
                 $labItem = LabItem::find($item['item']);
@@ -238,7 +252,8 @@ class Create extends Component
 
         $decrypted = Crypt::decrypt($id);  // Decrypt the id here
         $this->laboratoryId = $decrypted;
-        $this->labMemberIdBorrow = Auth::user()->staff->id;
+        $this->labMemberIdStart= Auth::user()->staff->id;
+        $this->labMemberIdEnd= Auth::user()->staff->id;
         $this->code = Str::random(8);
     }
 

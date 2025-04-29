@@ -14,7 +14,6 @@ class Index extends Component
     public $LbsUsageFilter = null;
     public $LbsUsageOrderBy = 'id';
     public $LbsUsageOrderByDirection = 'asc';
-
     public $selectedLab;
     #[Computed()]
     public function lbsUsage() {

@@ -157,7 +157,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('serah-terima-praktikum')->group(function() {
         Route::get('/', HandoverPracticalResultIndex::class)
             ->name('handover-practical-result');
-        Route::get('/tambah', HandoverPracticalResultCreate::class)
+        Route::get('/tambah/{id}', HandoverPracticalResultCreate::class)
             ->name('handover-practical-result.create');
         Route::get('/{id}/edit', HandoverPracticalResultEdit::class)
             ->name('handover-practical-result.edit');

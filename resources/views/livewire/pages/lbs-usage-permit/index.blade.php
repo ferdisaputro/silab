@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <x-text.page-title>
-                    Tabel Ijin Penggunaan LBS
+                    Tabel Ijin Penggunaan LBS {{$selectedLab}}
                 </x-text.page-title>
                 <x-forms.select
                         class="mt-3 ml-2"

@@ -21,7 +21,7 @@
                     <div>
                         <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
                         <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="staff" name="staff" label="Pilih Pegawai">
-                                @foreach ($staffs as $staffData)
+                                @foreach ($this->staffs as $staffData)
                                     <option value="{{ $staffData->id {{-- this is staff id --}} }}" {{ $staffData->id == $staff? "selected" : '' }}>{{ $staffData->user->name }}</option>
                                 @endforeach
                             </x-forms.select-advanced>

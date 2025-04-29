@@ -3,7 +3,7 @@
         <div class="p-5 space-y-10 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
                 <x-text.page-title>
-                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi{{ $selectedLab }}
+                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi{{ $laboratoryId }}
                 </x-text.page-title>
             </div>
 
@@ -47,16 +47,16 @@
                     {{-- <div class="flex gap-2"> --}}
                         <!-- Start Date Picker -->
                         <x-forms.input
-                            wire:model.live.debounce="startDate"
+                            wire:model.live.debounce="startingDate"
                             value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="startDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            wire:init="startingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                             class="flex-1"
-                            name="startDate"
+                            name="staringDate"
                             label="Tanggal Mulai"
                             datepicker />
 
                         <!-- Start Time Picker -->
-                        <x-forms.timepicker wire:model="endTime" id="start_time" value="{{ date('H:i', time()) }}"></x-forms.timepicker>
+                        <x-forms.timepicker wire:init="startingTime = '{{ date('H:i', time()) }}'" id="start_time" wire:model="startingTime"></x-forms.timepicker>
                     {{-- </div> --}}
 
                     <!-- 'To' Divider -->
@@ -67,17 +67,16 @@
                     {{-- <div class="flex gap-2"> --}}
                         <!-- End Date Picker -->
                         <x-forms.input
-                            wire:model.live.debounce="endDate"
+                            wire:model.live.debounce="endingDate"
                             value="{{ date('d/m/Y', strtotime(now())) }}"
-                            wire:init="endDate = '{{ date('d/m/Y', strtotime(now())) }}'"
+                            wire:init="endingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                             class="flex-1"
-                            name="endDate"
+                            name="endingDate"
                             label="Tanggal Selesai"
                             datepicker />
 
                         <!-- End Time Picker -->
-                        <x-forms.timepicker wire:model="endTime" id="end_time" value="{{ date('H:i', time()) }}"></x-forms.timepicker>
-                    {{-- </div> --}}
+                        <x-forms.timepicker wire:init="endingTime = '{{ date('H:i', time()) }}'" id="end_time" wire:model="endingTime"></x-forms.timepicker>
                 </div>
 
             </div>
