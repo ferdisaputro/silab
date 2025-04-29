@@ -48,7 +48,7 @@
                         <!-- Start Date Picker -->
                         <x-forms.input
                             wire:model.live.debounce="startingDate"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            {{-- value="{{ date('d/m/Y', strtotime(now())) }}" --}}
                             wire:init="startingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                             class="flex-1"
                             name="staringDate"
@@ -68,7 +68,7 @@
                         <!-- End Date Picker -->
                         <x-forms.input
                             wire:model.live.debounce="endingDate"
-                            value="{{ date('d/m/Y', strtotime(now())) }}"
+                            {{-- value="{{ date('d/m/Y', strtotime(now())) }}" --}}
                             wire:init="endingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                             class="flex-1"
                             name="endingDate"

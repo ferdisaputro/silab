@@ -54,7 +54,7 @@ class Create extends Component
     public $labMemberIdStart;
 
     // variables for ending
-    #[Validate('required')] // DATETIME for starting date
+    #[Validate('required')] // DATETIME for ending date
     public $endingDate;
     #[Validate('required')]
     public $endingTime;
@@ -115,7 +115,7 @@ class Create extends Component
         $this->validate();
         $data = [];
         $data['code'] = $this->code;
-        $data['start_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->startDate." ".$this->staringtTime)->toDateTimeString();
+        $data['start_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->startDate." ".$this->startingtTime)->toDateTimeString();
         $data['end_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->endDate." ".$this->endingTime)->toDateTimeString();
         $data['status'] = 1;
         $data['laboratory_id'] = $this->laboratoryId;
