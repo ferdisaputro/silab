@@ -75,72 +75,68 @@
                 <x-alerts.outline class="mb-5" color='teal' message="Alat yang dipinjam" />
                 <div class="px-5 space-y-5">
                     @foreach ($selectedItems as $index => $item)
-                    <div wire:key='{{ $index }}'>
-                        <span class="text-sm">Barang {{ $loop->iteration }}</span>
-                        <div class="flex flex-row flex-wrap gap-4 mt-2">
-                            <div class="flex flex-[1.3] gap-4">
-                                <x-forms.select class="flex-1 min-w-24"
-                                    wire:model.live.debounce='selectedItems.{{ $index }}.item'
-                                    name="selectedItems.{{ $index }}.item"
-                                    label="Pilih Barang"
-                                >
-                                    @foreach ($this->labItems as $labItem)
-                                        <option
-                                            value="{{ $labItem->id }}"
-                                            {{ $labItem->id == $selectedItems[$index]['item']? "selected" : '' }}
-                                        >
-                                            {{ $labItem->item->item_name }}
-                                        </option>
-                                    @endforeach
-                                </x-forms.select>
-
-                                <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
-                                    <div
-                                        wire:key='{{ $selectedItems[$index]['item'] }}'
-                                        wire:init="set('selectedItems.{{ $index }}.stock', {{
-                                            $this->labItems->find($selectedItems[$index]['item'])?
-                                                $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
-                                        }})"
+                        <div>
+                            <span class="text-sm">Barang {{ $index + 1 }}</span>
+                            <div class="flex flex-row flex-wrap gap-4 mt-2">
+                                <div class="flex flex-[1.3] gap-4">
+                                    <x-forms.select class="flex-1 min-w-24"
+                                        wire:model.live.debounce='selectedItems.{{ $index }}.item'
+                                        name="selectedItems.{{ $index }}.item"
+                                        label="Pilih Barang"
                                     >
+                                        @foreach ($this->labItems as $labItem)
+                                            <option
+                                                value="{{ $labItem->id }}"
+                                                {{ $labItem->id == $selectedItems[$index]['item']? "selected" : '' }}
+                                            >
+                                                {{ $labItem->item->item_name }}
+                                            </option>
+                                        @endforeach
+                                    </x-forms.select>
+
+                                    <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
+                                        <div
+                                            wire:key='{{ $selectedItems[$index]['item']?? now() }}'
+                                            wire:init="set('selectedItems.{{ $index }}.stock', {{
+                                                $this->labItems->find($selectedItems[$index]['item'])?
+                                                    $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
+                                            }})"
+                                        >
+                                            <x-forms.input
+                                            class="flex-1 md:flex-none md:max-w-20"
+                                            wire:model='selectedItems.{{ $index }}.stock'
+                                            label="Stok"
+                                            disabled="true" />
+                                        </div>
                                         <x-forms.input
-                                        class="flex-1 md:flex-none md:max-w-20"
-                                        wire:model='selectedItems.{{ $index }}.stock'
-                                        label="Stok"
-                                        disabled="true" />
+                                            type="number"
+                                            class="flex-1 md:flex-none md:max-w-20"
+                                            max="{{ (String) $selectedItems[$index]['stock'] }}"
+                                            wire:model.live.debounce='selectedItems.{{ $index }}.qty'
+                                            name="selectedItems.{{ $index }}.qty"
+                                            label="jumlah" />
                                     </div>
-                                    <x-forms.input
-                                        type="number"
-                                        class="flex-1 md:flex-none md:max-w-20"
-                                        max="{{ $selectedItems[$index]['stock'] }}"
-                                        wire:model.live.debounce='selectedItems.{{ $index }}.qty'
-                                        name="selectedItems.{{ $index }}.qty"
-                                        label="jumlah" />
                                 </div>
-                            </div>
 
-                            <div class="flex flex-1 gap-4">
-                                <x-forms.input
-                                    class="flex-1 min-w-24"
-                                    wire:model.live.debounce='selectedItems.{{ $index }}.description'
-                                    name="selectedItems.{{ $index }}.description"
-                                    label="Keterangan" />
+                                <div class="flex flex-1 gap-4">
+                                    <x-forms.input class="flex-1 min-w-24" wire:model.live.debounce='selectedItems.{{ $index }}.description' name="selectedItems.{{ $index }}.description" label="Keterangan" />
 
-                                <div class="flex justify-end gap-2">
-                                    @if (count($selectedItems) > 1)
-                                        <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </x-buttons.outline>
-                                    @endif
+                                    <div class="flex justify-end gap-2">
+                                        @if (count($selectedItems) > 1)
+                                            <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </x-buttons.outline>
+                                        @endif
 
-                                    @if ($loop->iteration == 1)
-                                        <x-buttons.outline wire:click='addItem' color="blue">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </x-buttons.outline>
-                                    @endif
+                                        @if ($loop->iteration == 1)
+                                            <x-buttons.outline wire:click='addItem' color="blue">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </x-buttons.outline>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>

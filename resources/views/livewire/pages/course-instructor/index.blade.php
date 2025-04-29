@@ -7,32 +7,100 @@
         </div>
         <form x-data="courseInstructor()" x-on:submit.prevent='submitHandler'>
             <div class="space-y-5">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <x-forms.select-advanced class="flex-1" model="departmentId" name="departmentId" label="Pilih Jurusan">
+
+                <div class="space-y-8">
+                <hr>
+                <!-- Pilih Jurusan -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Jurusan</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->departments as $department)
-                            <option value="{{ $department->id }}" {{ $department->id == $departmentId ? 'selected' : '' }}>{{ $department->department }}</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="department-radio-{{ $department->id }}"
+                                        name="departmentId"
+                                        value="{{ $department->id }}"
+                                        wire:model.live="departmentId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $department->department }}</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
+                    </ul>
+                </section>
 
-                    <x-forms.select-advanced wire:key='{{ $departmentId }}' class="flex-1" model="studyProgramId" name="studyProgramId" label="Pilih Progran Studi">
+                <!-- Pilih Program Studi -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Program Studi</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->studyPrograms as $studyProgram)
-                            <option value="{{ $studyProgram->id }}" {{ $studyProgram->id == $studyProgramId ? 'selected' : '' }}>{{ $studyProgram->study_program }}</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="studyProgram-radio-{{ $studyProgram->id }}"
+                                        name="studyProgramId"
+                                        value="{{ $studyProgram->id }}"
+                                        wire:model.live="studyProgramId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $studyProgram->study_program }}</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
+                    </ul>
+                </section>
 
-                    <x-forms.select-advanced class="flex-1" model="academicYearId" name="academicYearId" label="Pilih Tahun Ajaran">
+                <!-- Pilih Tahun Ajaran -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Tahun Ajaran</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->academicYears as $academicYear)
-                            <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academicYearId ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="academicYear-radio-{{ $academicYear->id }}"
+                                        name="academicYearId"
+                                        value="{{ $academicYear->id }}"
+                                        wire:model.live="academicYearId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even ? 'Genap' : 'Ganjil' }})</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
+                    </ul>
+                </section>
 
-                    <x-forms.select-advanced wire:key='{{ $academicYearId }}' class="flex-1" model="semesterId" name="semesterId" label="Pilih Semester">
+                <!-- Pilih Semester -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Semester</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->semesters as $semester)
-                            <option value="{{ $semester->id }}" {{ $semester->id == $semesterId ? 'selected' : '' }}>{{ $semester->semester }}</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="semester-radio-{{ $semester->id }}"
+                                        name="semesterId"
+                                        value="{{ $semester->id }}"
+                                        wire:model.live="semesterId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $semester->semester }}</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
+                    </ul>
+                </section>
 
-                    <div class="col-span-2">
+
+
+                    <section>
                         <x-tables.datatable>
                             <thead>
                                 <tr>
@@ -73,12 +141,12 @@
                                 @endforeach
                             </tbody>
                         </x-tables.datatable>
-                    </div>
+                    </section>
 
                     <div class="text-center md:col-span-2">
                         <x-buttons.fill type="submit" class="w-full md:max-w-xs">Simpan</x-buttons.fill>
                     </div>
-                </div>
+
             </div>
         </form>
     </div>

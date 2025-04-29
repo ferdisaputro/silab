@@ -27,38 +27,113 @@
                 Data Mata Kuliah Semester
             </x-text.page-title>
         </div>
-        <form x-on:submit.prevent="submitHandler">
-            <div class="space-y-5">
-                <div class="flex flex-col gap-4 md:flex-row">
-                    <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="departmentId" name="departmentId" label="Pilih Jurusan" wire:key='{{ now() }}'>
-                        @foreach ($this->departments as $department)
-                            <option value="{{ $department->id }}" {{ $department->id == $departmentId ? 'selected' : '' }}>{{ $department->department }}</option>
-                        @endforeach
-                    </x-forms.select-advanced>
 
-                    <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="studyProgramId" name="studyProgramId" label="Pilih Progran Studi" wire:key='{{ now() }}'>
+        <form x-on:submit.prevent="submitHandler">
+            {{-- <hr> --}}
+            <div class="space-y-8">
+                <hr>
+                <!-- Pilih Jurusan -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Jurusan</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        @foreach ($this->departments as $department)
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="department-radio-{{ $department->id }}"
+                                        name="departmentId"
+                                        value="{{ $department->id }}"
+                                        wire:model.live="departmentId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $department->department }}</span>
+                                </label>
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
+
+                <!-- Pilih Program Studi -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Program Studi</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->studyPrograms as $studyProgram)
-                            <option value="{{ $studyProgram->id }}" {{ $studyProgram->id == $studyProgramId ? 'selected' : '' }}>{{ $studyProgram->study_program }}</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="studyProgram-radio-{{ $studyProgram->id }}"
+                                        name="studyProgramId"
+                                        value="{{ $studyProgram->id }}"
+                                        wire:model.live="studyProgramId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $studyProgram->study_program }}</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
-                </div>
-                <div class="flex flex-col gap-4 md:flex-row">
-                    <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="academicYearId" name="academicYearId" label="Pilih Tahun Ajaran" wire:key='{{ now() }}'>
+                    </ul>
+                </section>
+
+                <!-- Pilih Tahun Ajaran -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Tahun Ajaran</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->academicYears as $academicYear)
-                            <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academicYearId ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="academicYear-radio-{{ $academicYear->id }}"
+                                        name="academicYearId"
+                                        value="{{ $academicYear->id }}"
+                                        wire:model.live="academicYearId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even ? 'Genap' : 'Ganjil' }})</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
-                    <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="semesterId" name="semesterId" label="Pilih Semester" wire:key='{{ now() }}'>
+                    </ul>
+                </section>
+
+                <!-- Pilih Semester -->
+                <section>
+                    <h5 class="text-xl font-semibold text-center mb-3">Pilih Semester</h5>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3 bg-white border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @foreach ($this->semesters as $semester)
-                            <option value="{{ $semester->id }}" {{ $semester->id == $semesterId ? 'selected' : '' }}>{{ $semester->semester }}</option>
+                            <li class="border rounded-lg p-2">
+                                <label class="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="semester-radio-{{ $semester->id }}"
+                                        name="semesterId"
+                                        value="{{ $semester->id }}"
+                                        wire:model.live="semesterId"
+                                        class="form-radio text-blue-600"
+                                    >
+                                    <span>{{ $semester->semester }}</span>
+                                </label>
+                            </li>
                         @endforeach
-                    </x-forms.select-advanced>
-                    <x-forms.input wire:model.live.debounce='totalGroup' name="totalGroup" label="Jumlah Golongan" type="number" class="flex-1" />
-                </div>
-                <div>
-                    <div class="text-right">
-                        <x-buttons.outline class="mt-5 mb-5" color="purple" x-on:click="addCourseState = true">Pilih Data Mata Kuliah</x-buttons.outline>
+                    </ul>
+                </section>
+
+                <!-- Input & Pilih Mata Kuliah -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                    <div>
+                        <x-forms.input wire:model.live.debounce='totalGroup' name="totalGroup" label="Jumlah Golongan" type="number" />
                     </div>
+                    <div class="text-right">
+                        <x-buttons.outline color="purple" x-on:click="addCourseState = true">
+                            Pilih Data Mata Kuliah
+                        </x-buttons.outline>
+                    </div>
+                </section>
+
+                <!-- Tabel Mata Kuliah -->
+                <section>
                     <x-tables.datatable>
                         <thead>
                             <tr>
@@ -71,26 +146,29 @@
                         <tbody>
                             @foreach ($this->selectedCoursesList as $index => $course)
                                 <tr wire:key='{{ $loop->iteration }}'>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration }}</td>
+                                    <td class="font-medium">{{ $loop->iteration }}</td>
                                     <td>{{ $course->code }}</td>
                                     <td>{{ $course->course }}</td>
                                     <td>
                                         @if ($course->is_active)
-                                            <x-badges.fill color="blue" class="px-2.5 py-1.5">Aktif</x-badges.fill>
+                                            <x-badges.fill color="blue">Aktif</x-badges.fill>
                                         @else
-                                            <x-badges.fill color="yellow" class="px-2.5 py-1.5">Non Aktif</x-badges.fill>
+                                            <x-badges.fill color="yellow">Non Aktif</x-badges.fill>
                                         @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </x-tables.datatable>
-                </div>
+                </section>
+
+                <!-- Tombol Submit -->
                 @if ($this->selectedCoursesList->count())
                     <div class="text-center">
                         <x-buttons.fill type="submit" class="w-full max-w-xs">Tambah</x-buttons.fill>
                     </div>
                 @endif
+
             </div>
         </form>
     </div>
