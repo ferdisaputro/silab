@@ -15,8 +15,12 @@ class SemesterCourse extends Model
     {
         return $this->belongsTo(Course::class);
     }
-
-    
+    public function studyProgram(){
+        return $this->belongsTo(StudyProgram::class);
+    }
+    public function semester(){
+        return $this->belongsTo(Semester::class);
+    }
 
     public function courseInstructor()
     {

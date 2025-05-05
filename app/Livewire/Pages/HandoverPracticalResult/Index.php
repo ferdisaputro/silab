@@ -16,17 +16,17 @@ class Index extends Component
     public $handOverOrderByDirection = 'asc';
     public $selectedLab;
 
-    // #[Computed()]
-    // public function handOvers() {
-    //     return PracticumResultHandover::when($this->handOverOrderBy && $this->handOverOrderByDirection, function ($query) {
-    //                     $query->orderBy($this->handOverOrderBy, $this->handOverOrderByDirection);
-    //                 })
-    //                 ->where('laboratory_id', $this->selectedLab)
-    //                 // ->with('staffBorrower', 'staffBorrower.user')
-    //                 ->paginate($this->handOverPerPage);
-    //                 // where('columnName', 'like', "%$this->equipmentLoanFilter%")
-    //                 // ->orderBy($this->equipmentLoanOrderBy, $this->equipmentLoanOrderByDirection)
-    // }
+    #[Computed()]
+    public function handOvers() {
+        return PracticumResultHandover::when($this->handOverOrderBy && $this->handOverOrderByDirection, function ($query) {
+                        $query->orderBy($this->handOverOrderBy, $this->handOverOrderByDirection);
+                    })
+                    ->where('laboratory_id', $this->selectedLab)
+                    ->with('courseInstructor','courseInstructor.semesterCourse')
+                    ->paginate($this->handOverPerPage);
+                    // where('columnName', 'like', "%$this->equipmentLoanFilter%")
+                    // ->orderBy($this->equipmentLoanOrderBy, $this->equipmentLoanOrderByDirection)
+    }
 
     #[Computed()]
     public function laboratories() {

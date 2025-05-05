@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\StaffStatus;
+use Database\Factories\PracticeResultHandoverFactory;
 use Illuminate\Support\Str;
 
 use Illuminate\Database\Seeder;
@@ -35,6 +36,9 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             EquipmentLoanSeeder::class,
             UnitSeeder::class,
+            semesterCourseSeeder::class,
+            courseInstructorSeeder::class,
+            serahTerimaSeeder::class,
         ]);
     }
 }
