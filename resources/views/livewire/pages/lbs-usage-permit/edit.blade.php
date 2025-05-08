@@ -7,38 +7,41 @@
                 </x-text.page-title>
             </div>
 
-            <div x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
-                <x-alerts.outline class="mb-5" color="purple" message="Yang bertandatangan dibawah ini, saya :" />
+            <div wire:init="set('isStaff', 1)" x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
+                <x-alerts.outline class="mb-5" color="purple" message="Informasi Peminjam" />
                 <div class="px-5 space-y-5">
                     <div class="text-center">
-                        <x-buttons.outline color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
+                        <x-buttons.outline wire:click="set('isStaff', 1)" color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
                         <x-buttons.fill color="purple" x-show="isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.fill>
 
-                        <x-buttons.outline color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
+                        <x-buttons.outline wire:click="set('isStaff', 0)" color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
                         <x-buttons.fill color="blue" x-show="isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.fill>
                     </div>
 
                     <div>
-                        <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
-                            <x-forms.select class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Pegawai">
-                                <option value="key1">test1</option>
-                                <option value="key2">test2</option>
-                                <option value="key3">test3</option>
-                                <option value="key4">test4</option>
-                            </x-forms.select>
+                        <div>
+                            @if ($equipmentLoan->is_staff)
+                                <div class="flex flex-wrap gap-4">
+                                    <x-forms.select-advanced disabled wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" name="staff" label="Pilih Pegawai">
+                                        @foreach ($staffs as $staffData)
+                                            <option value="{{ $staffData->id {{-- this is staff id --}} }}" {{ $staffData->id == $equipmentLoan->staff_id? "selected" : '' }}>{{ $staffData->user->name }}</option>
+                                        @endforeach
+                                    </x-forms.select-advanced>
+                                </div>
+                            @else
+                                <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row">
+                                    <x-forms.input wire:model.live.debounce="nim" class="flex-1 md:min-w-[20rem]" name="nim" label="NIM" />
+                                    <x-forms.input wire:model.live.debounce="name" class="flex-1 md:min-w-[20rem]" name="name" label="Nama" />
+                                    <x-forms.input wire:model.live.debounce="groupClass" class="flex-1 md:min-w-[20rem]" name="groupClass" label="Golongan/Kelompok" />
+                                    <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="mentor" name="mentor" label="Pilih Dosen Pembimbing">
+                                        @foreach ($lecturers as $lecturer)
+                                            <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $equipmentLoan->staff_id_mentor? "selected" : '' }}>{{ $lecturer->user->name }}</option>
+                                        @endforeach
+                                    </x-forms.select-advanced>
+                                </div>
+                            @endif
                         </div>
 
-                        <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row" x-show="!isStaff" x-transition>
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="nim" label="NIM" />
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="nama" label="Nama" />
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="golongan_kelompok" label="Golongan/Kelompok" />
-                            <x-forms.select class="flex-1 md:min-w-[20rem]" name="dosen_pembimbing" label="Pilih Dosen Pembimbing">
-                                <option value="key1">test1</option>
-                                <option value="key2">test2</option>
-                                <option value="key3">test3</option>
-                                <option value="key4">test4</option>
-                            </x-forms.select>
-                        </div>
                     </div>
                 </div>
             </div>

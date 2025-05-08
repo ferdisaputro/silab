@@ -25,7 +25,7 @@ class LbsUsagePermitFactory extends Factory
 
             'staff_id' => null,
             'staff_id_mentor' => null,
-            'study_program_id' => null,
+            // 'study_program_id' => null,
             'laboratory_id' => $this->faker->numberBetween(1,12),
             'lab_member_id' => null,
         ];

@@ -29,7 +29,7 @@ class Index extends Component
         return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
     }
     public function mount(){
-        $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()->id : null;
+        $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()?->id : null;
     }
     public function render()
     {

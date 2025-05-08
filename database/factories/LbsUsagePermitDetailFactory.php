@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AcademicYear;
 use App\Models\LbsUsagePermitDetail;
 use App\Models\LbsUsagePermit;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,7 +22,7 @@ class LbsUsagePermitDetailFactory extends Factory
             'lab_item_id' => 1, // Ganti sesuai ID yang tersedia atau pakai factory jika kamu sudah buat
             'unit_id' => null,
             'stock_card_id' => null,
-            'laboratory_id' => $this->faker->numberBetween(1,12)
+            // 'academic_year_id' => AcademicYear::inRandomOrder()->first()?->id ?? AcademicYear::factory(),
         ];
     }
 }

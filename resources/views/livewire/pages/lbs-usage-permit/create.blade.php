@@ -1,20 +1,21 @@
 <x-container>
-    <form>
+    <form x-on:submit.prevent="submitHandler" x-data="createEqLoan()">
         <div class="p-5 space-y-10 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
                 <x-text.page-title>
-                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi{{ $laboratoryId }}
+                    Form Permohonan Menggunakan Fasilitas LBS Rekayasa Sistem Informasi
+                    {{-- {{ $laboratoryId }} --}}
                 </x-text.page-title>
             </div>
 
-            <div x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
-                <x-alerts.outline class="mb-5" color="purple" message="Yang bertandatangan dibawah ini, saya :" />
+            <div wire:init="set('isStaff', 1)" x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
+                <x-alerts.outline class="mb-5" color="purple" message="Informasi Peminjam" />
                 <div class="px-5 space-y-5">
                     <div class="text-center">
-                        <x-buttons.outline color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
+                        <x-buttons.outline wire:click="set('isStaff', 1)" color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
                         <x-buttons.fill color="purple" x-show="isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.fill>
 
-                        <x-buttons.outline color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
+                        <x-buttons.outline wire:click="set('isStaff', 0)" color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
                         <x-buttons.fill color="blue" x-show="isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.fill>
                     </div>
 
@@ -43,7 +44,7 @@
 
             <div class="space-y-4">
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
-                <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5" date-rangepicker>
+                <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5">
                     {{-- <div class="flex gap-2"> --}}
                         <!-- Start Date Picker -->
                         <x-forms.input
@@ -122,11 +123,11 @@
                                         wire:model.live.debounce='selectedItems.{{ $index }}.qty'
                                         name="selectedItems.{{ $index }}.qty"
                                         label="jumlah" /></div>
-                            <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="academicYearId" name="academicYearId" label="Pilih Tahun Ajaran" wire:key='{{ now() }}'>
+                            {{-- <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="academic_year" name="academic_year" label="Pilih Tahun Ajaran" wire:key='{{ now() }}'>
                                 @foreach ($this->academicYears as $academicYear)
-                                    <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academicYearId ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
+                                    <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academic_year ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
                                 @endforeach
-                            </x-forms.select-advanced>
+                            </x-forms.select-advanced> --}}
 
                             <x-forms.input class="flex-1 min-w-24" wire:model='items.{{ $index }}.keterangan' name="items.{{ $index }}.keterangan" label="Keterangan" />
 
@@ -148,8 +149,8 @@
                 </div>
             </div>
 
-            <div class="text-center">
-                <x-buttons.fill class="w-full max-w-xs" wire:click="create">
+            <div x-data="createLbsPermit" class="text-center">
+                <x-buttons.fill type="submit" class="w-full max-w-xs" @click="submitHandler">
                     Buat Ijin Penggunaan
                 </x-buttons.fill>
             </div>
@@ -157,3 +158,43 @@
         </div>
     </form>
 </x-container>
+
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('createLbsPermit', () => {
+                return {
+                    submitHandler() {
+                        // Menampilkan SweetAlert konfirmasi
+                        swal.fire({
+                            title: 'Buat Izin Penggunaan',
+                            text: 'Pastikan data sudah benar sebelum menyimpan.',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                // Jika "Ya" dipilih, lakukan aksi pengiriman data ke backend
+                                const result = await $wire.create(); // Ini memanggil metode create dari Livewire
+
+                                // Setelah proses selesai, cek apakah data berhasil disimpan
+                                if (result.status === 'success') {
+                                    swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
+                                        $wire.redirectToIndex(); // Arahkan ke halaman index
+                                    });
+                                } else {
+                                    swal.fire('Gagal', 'Data Izin Laboratorium Gagal Ditambahkan: ' + result.message, 'error');
+                                }
+                            } else {
+                                swal.fire('Dibatalkan', 'Proses peminjaman dibatalkan.', 'info');
+                            }
+                        });
+                    }
+                }
+            });
+        </script>
+    @endscript
+@endPushOnce
+

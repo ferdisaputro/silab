@@ -3,7 +3,8 @@
         <div class="flex items-center justify-between">
             <div>
                 <x-text.page-title>
-                    Tabel Ijin Penggunaan LBS {{$selectedLab}}
+                    Tabel Ijin Penggunaan LBS
+                    {{-- {{$selectedLab}} --}}
                 </x-text.page-title>
                 <x-forms.select
                         class="mt-3 ml-2"
@@ -17,7 +18,7 @@
             </div>
             <div>
                 <a href="{{ route('lbs-usage-permit.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
-                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Ijin Penggunaan</x-buttons.fill>
+                    <x-buttons.fill title="Tambah Ijin Pengguna" color="purple">Tambah Ijin Penggunaan</x-buttons.fill>
                 </a>
             </div>
         </div>
@@ -56,7 +57,7 @@
                             </td>
                             <td class="flex flex-wrap justify-center gap-2 text-center">
                                 <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
-                                {{-- <a href="{{ route('lbs-usage-permit.edit') }}" wire:navigate> --}}
+                                <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($lbs->id)]) }}" wire:navigate>
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
                                 <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
