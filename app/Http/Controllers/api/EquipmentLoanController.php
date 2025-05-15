@@ -59,9 +59,45 @@ class EquipmentLoanController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
+
+    // how to send data into update function. (example)
+
+    // http url
+    // localhost:8000/api/peminjaman/16
+
+    // http header
+    // headers: {
+    //   'Authorization': 'Bearer $token', // you need to add the bearer token. to get the $token, you can reference into flutter "AuthProvider". You sould found "token" variables. that variable store authorization token that you could use to access this function.
+    //   'Accept': 'application/json',
+    // },
+
+    // http body
+    // {
+    //     // only if the returner is staff
+    //         "is_staff": true,
+    //         "staffReturner": 5,
+    //         "return_date": "16/05/2025", //d/m/Y
+    //         "return_time": "14:30" //H:i
+
+    //     // if the returner is student
+    //         "is_staff": false,
+    //         "returnerNim": "220411100123",
+    //         "returnerName": "Ahmad Fajar",
+    //         "returnerGroupClass": "TI-3B",
+    //         "return_date": "16/05/2025", //d/m/Y
+    //         "return_time": "14:30", //H:i
+    //         "loan_detail_items": [
+    //             {
+    //                 "loanDetailId": 60,
+    //                 "returnQty": 3
+    //             },
+    //             {
+    //                 "loanDetailId": 61,
+    //                 "returnQty": 3
+    //             }
+    //         ]
+    //     }
     public function update(Request $request, EquipmentLoan $equipmentLoan)
     {
         // return response()->json([
