@@ -40,8 +40,8 @@ class BorrowReturn extends Component
     public $returnDate;
     #[Validate('required')] // DATETIME for return date, required
     public $returnTime;
-    #[Validate('required|integer|exists:lab_members,id')] // BIGINT(20), required, foreign key
-    public $labMemberReturn;
+    // #[Validate('required|integer|exists:lab_members,id')] // BIGINT(20), required, foreign key
+    // public $labMemberReturn;
 
     // variables if the one who returning is staff
     #[Validate('required_if:isStaff,1')] // BIGINT(20), nullable, foreign key
@@ -99,9 +99,8 @@ class BorrowReturn extends Component
 
             $loanDetailItems = collect($this->loanDetailItems);
             foreach ($this->equipmentLoan->loanDetails as $loanDetail) {
-                // dump($loanDetailItems->firstWhere('loanDetailId', $loanDetail->id));
                 $returnStockCard = StockCard::create([
-                    'qty' => $loanDetail->qty,
+                    'qty' => $loanDetailItems->firstWhere('loanDetailId', $loanDetail->id)['returnQty'],
                     'stock' => $loanDetail->labItem->stock,
                     'is_stock_in' => 1,
                     'description' => $loanDetail->description,
@@ -149,7 +148,7 @@ class BorrowReturn extends Component
         try {
             $this->id = Crypt::decrypt($id);
             $this->equipmentLoan = EquipmentLoan::find($this->id)->load('mentor', 'staffBorrower', 'loanDetails');
-            $this->labMemberReturn = Auth::user()->staff->id;
+            // $this->labMemberReturn = Auth::user()->staff->id;
             $this->loanDetailItems = $this->equipmentLoan->loanDetails->map(function($detail) {
                 return [
                     'loanDetailId' => $detail->id,

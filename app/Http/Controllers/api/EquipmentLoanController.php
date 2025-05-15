@@ -81,18 +81,17 @@ class EquipmentLoanController extends Controller
                 $equipmentLoan->returner_group_class = $request->returnerGroupClass;
             }
             $equipmentLoan->return_date = Carbon::createFromFormat('d/m/Y H:i', $request->return_date." ".$request->return_time)->toDateTimeString();
-            $equipmentLoan->lab_member_id_return = Auth::user()->id;
+            $equipmentLoan->lab_member_id_return = Auth::user()->labMembers->firstWhere('laboratory_id', $equipmentLoan->laboratory_id)->id;
             $equipmentLoan->status = 2;
 
-            // $equipmentLoan->save();
+            $equipmentLoan->save();
 
             $returnStockCards = [];
 
             $loanDetailItems = collect($request->loan_detail_items);
             foreach ($equipmentLoan->loanDetails as $loanDetail) {
-                // dump($loanDetailItems->firstWhere('loanDetailId', $loanDetail->id));
                 $returnStockCard = StockCard::create([
-                    'qty' => $loanDetail->qty,
+                    'qty' => $loanDetailItems->firstWhere('loanDetailId', $loanDetail->id)['returnQty'],
                     'stock' => $loanDetail->labItem->stock,
                     'is_stock_in' => 1,
                     'description' => $loanDetail->description,
@@ -112,19 +111,20 @@ class EquipmentLoanController extends Controller
                 $loanDetail->labItem->save();
             }
 
-            return response()->json([
-                $equipmentLoan->load('loanDetails'),
-                $request->all,
-                Auth::user()
-            ]);
+            // return response()->json([
+            //     $equipmentLoan->load('loanDetails'),
+            //     $request->all,
+            //     $returnStockCards,
+            //     Auth::user(),
+            // ]);
 
             // dd($this->equipmentLoan);
 
-            // DB::commit();
-            // return response()->json([
-            //     'status' => "success",
-            //     'message' => "Laporan peminjaman alat praktikum berhasil diubah"
-            // ]);
+            DB::commit();
+            return response()->json([
+                'status' => "success",
+                'message' => "Laporan peminjaman alat praktikum berhasil diubah"
+            ]);
             DB::rollback();
         } catch (\Exception $e) {
             DB::rollback();

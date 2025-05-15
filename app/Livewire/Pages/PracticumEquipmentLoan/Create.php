@@ -44,8 +44,8 @@ class Create extends Component
     public $borrowingDate;
     #[Validate('required')]
     public $borrowingTime;
-    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
-    public $labMemberIdBorrow;
+    // #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    // public $labMemberIdBorrow;
 
     // #[Validate('required|boolean')] // TINYINT(1) for boolean (0 or 1)
     // public $isReturnerStaff;
@@ -197,7 +197,7 @@ class Create extends Component
         }
         $decrypted = Crypt::decrypt($id);
         $this->laboratoryId = $decrypted;
-        $this->labMemberIdBorrow = Auth::user()->staff->id;
+        // $this->labMemberIdBorrow = Auth::user()->staff->id;
         $this->code = Str::random(8);
     }
 
