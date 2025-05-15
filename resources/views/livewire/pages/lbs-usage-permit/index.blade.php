@@ -41,20 +41,14 @@
                             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->lbsUsage->perPage() * ($this->lbsUsage->currentPage() - 1)) }}</td>
                             <td>
                                 @if ($lbs->is_staff == 1)
-                                    {{ $lbs->name }}
+                                    {{ $lbs->staffBorrower->user->id }} - {{ $lbs->staffBorrower->user->name }}
                                 @else
                                     {{ $lbs->nim }} - {{ $lbs->name }}
                                 @endif
                             </td>
-                            <td>{{ $lbs->start_date }}</td>
-                            <td>{{ $lbs->end_date }}</td>
-                            <td>
-                                @if ($lbs->status == 1)
-                                    belum selesai
-                                @else
-                                    Selesai
-                                @endif
-                            </td>
+                            <td>{{ $lbs->start_date}}<d>
+                            <td>{{ $lbs->end_date}}</td>
+                            <td>{{ $lbs->status == 1? "Sedang dipinjam" : "Telah Kembali" }}</td>
                             <td class="flex flex-wrap justify-center gap-2 text-center">
                                 <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
                                 <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($lbs->id)]) }}" wire:navigate>

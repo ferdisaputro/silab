@@ -9,7 +9,7 @@
             </div>
 
             <div wire:init="set('isStaff', 1)" x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
-                <x-alerts.outline class="mb-5" color="purple" message="Informasi Peminjam" />
+                <x-alerts.outline class="mb-5" color="purple" message="Informasi Permohonan Menggunakan Fasilitas LBS" />
                 <div class="px-5 space-y-5">
                     <div class="text-center">
                         <x-buttons.outline wire:click="set('isStaff', 1)" color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
@@ -30,7 +30,7 @@
 
                         <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row" x-show="!isStaff" x-transition>
                             <x-forms.input class="flex-1 md:min-w-[20rem]" name="nim" label="NIM" />
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="nama" label="Nama" />
+                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="name" label="Nama" />
                             <x-forms.input class="flex-1 md:min-w-[20rem]" name="golongan_kelompok" label="Golongan/Kelompok" />
                             <x-forms.select-advanced wire:key='{{ now() }}' model="mentor" class="flex-1 md:min-w-[20rem]" name="mentor" label="Pilih Dosen Pembimbing">
                                 @foreach ($lecturers as $lecturer)
@@ -57,7 +57,11 @@
                             datepicker />
 
                         <!-- Start Time Picker -->
-                        <x-forms.timepicker wire:init="startingTime = '{{ date('H:i', time()) }}'" id="start_time" wire:model="startingTime"></x-forms.timepicker>
+                        <x-forms.timepicker
+                            wire:init="startingTime = '{{ date('H:i', time()) }}'"
+                            id="start_time"
+                            wire:model="startingTime">
+                        </x-forms.timepicker>
                     {{-- </div> --}}
 
                     <!-- 'To' Divider -->
@@ -77,7 +81,11 @@
                             datepicker />
 
                         <!-- End Time Picker -->
-                        <x-forms.timepicker wire:init="endingTime = '{{ date('H:i', time()) }}'" id="end_time" wire:model="endingTime"></x-forms.timepicker>
+                        <x-forms.timepicker
+                            wire:init="endingTime = '{{ date('H:i', time()) }}'"
+                            id="end_time"
+                            wire:model="endingTime">
+                        </x-forms.timepicker>
                 </div>
 
             </div>
@@ -103,19 +111,20 @@
                                 </x-forms.select>
 
                             <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
-                                <div
-                                        wire:key='{{ $selectedItems[$index]['item']?? now() }}'
+                                    <div
+                                        wire:key='{{ $selectedItems[$index]['item'] ?? now() }}'
                                         wire:init="set('selectedItems.{{ $index }}.stock', {{
-                                            $this->labItems->find($selectedItems[$index]['item'])?
-                                                $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
+                                                $this->labItems->find($selectedItems[$index]['item']) ?
+                                                    $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
                                         }})"
                                     >
                                         <x-forms.input
-                                        class="flex-1 md:flex-none md:max-w-20"
-                                        wire:model='selectedItems.{{ $index }}.stock'
-                                        label="Stok"
-                                        disabled="true" />
+                                            class="flex-1 md:flex-none md:max-w-20"
+                                            wire:model='selectedItems.{{ $index }}.stock'
+                                            label="Stok"
+                                            disabled="true" />
                                     </div>
+
                                     <x-forms.input
                                         type="number"
                                         class="flex-1 md:flex-none md:max-w-20"
@@ -150,7 +159,9 @@
             </div>
 
             <div x-data="createLbsPermit" class="text-center">
-                <x-buttons.fill type="submit" class="w-full max-w-xs" @click="submitHandler">
+                <x-buttons.fill type="submit" class="w-full max-w-xs"
+                @click="submitHandler"
+                >
                     Buat Ijin Penggunaan
                 </x-buttons.fill>
             </div>
@@ -180,16 +191,13 @@
                                 const result = await $wire.create(); // Ini memanggil metode create dari Livewire
 
                                 // Setelah proses selesai, cek apakah data berhasil disimpan
-                                if (result.status === 'success') {
+                                if (result.original.status === 'success') {
                                     swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
                                         $wire.redirectToIndex(); // Arahkan ke halaman index
                                     });
                                 } else {
-                                    swal.fire('Gagal', 'Data Izin Laboratorium Gagal Ditambahkan: ' + result.message, 'error');
+                                    swal.fire('Gagal', 'Data Izin Laboratorium Gagal Ditambahkan: ' + result.original.message, 'error');
                                 }
-                            } else {
-                                swal.fire('Dibatalkan', 'Proses peminjaman dibatalkan.', 'info');
-                            }
                         });
                     }
                 }

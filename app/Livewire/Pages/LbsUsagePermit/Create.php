@@ -38,7 +38,7 @@ class Create extends Component
 
     // variables if isStaff is false
     #[Validate('required_if:isStaff,0|max:255')] // VARCHAR(255) for the name
-    public $name;
+    public $nama;
     #[Validate('required_if:isStaff,0|max:12')] // NIM field, optional, VARCHAR(255)
     public $nim;
     #[Validate('required_if:isStaff,0|max:255')] // Group class, optional, VARCHAR(255)
@@ -54,6 +54,7 @@ class Create extends Component
     // #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
     // public $labMemberIdStart;
 
+     #[Validate('nullable|integer|exists:lab_members,id')]
     public$labMemberId;
 
     // variables for ending
@@ -119,7 +120,7 @@ class Create extends Component
         $data['end_date'] = Carbon::createFromFormat('d/m/Y H:i', $this->endingDate . " " . $this->endingTime)->toDateTimeString();
         $data['status'] = 1;
         $data['laboratory_id'] = $this->laboratoryId;
-        $data['lab_member_id'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
+        $data['lab_member_id_borrow'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
 
         if ($this->isStaff) {
             $data['is_staff'] = 1;
@@ -127,7 +128,7 @@ class Create extends Component
         } else {
             $data['is_staff'] = 0;
             $data['nim'] = $this->nim;
-            $data['name'] = $this->name;
+            $data['name'] = $this->nama;
             $data['group_class'] = $this->groupClass;
             $data['staff_id_mentor'] = $this->mentor;
         }
@@ -138,9 +139,9 @@ class Create extends Component
                 'stock' => $item['stock'],
                 'is_stock_in' => 0,
                 'description' => $item['description'] ?? null,
-                'lbs_usage_permit_id' => 1, // placeholder sementara
+                'lbs_usage_permit_id' => $lbsUsagePermit?? 1, // placeholder sementara
                 'lab_item_id' => $item['item'],
-                'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
+                'lab_member_id_borrow' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
             ];
         });
 

@@ -28,4 +28,8 @@ class Laboratory extends Model
     public function equipmentLoans() {
         return $this->hasMany(EquipmentLoan::class);
     }
+
+    public function lbsUsagePermit() {
+        return $this->hasMany(LbsUsagePermit::class);
+    }
 }

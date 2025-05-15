@@ -13,31 +13,43 @@ return new class extends Migration
     {
         Schema::create('lbs_usage_permits', function (Blueprint $table) {
             $table->id();
+
             $table->string('code',12)->nullable();
-            $table->boolean('is_staff');
+
+            $table->foreignId('staff_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('staff_id_returner')->nullable()->constrained(table: 'staff', column: 'id')->onDelete('SET NULL');
+            $table->boolean('is_staff')->nullable();
+            $table->boolean('is_returner_staff')->nullable();
+
             $table->string('name')->nullable();
             $table->string('nim')->nullable();
+            $table->string('group_class')->nullable()->comment('golongan_kelompok');
+
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
 
-            $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('staff_id_mentor')->nullable()->constrained()->nullOnDelete();
-
+            // $table->foreignId('staff_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('staff_id_mentor')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
             // $table->foreignId('study_program_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('laboratory_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('lab_member_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('laboratory_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('lab_member_id_borrow')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
+            $table->foreignId('lab_member_id_return')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
             $table->timestamps();
         });
 
         Schema::create('lbs_usage_permit_details', function (Blueprint $table) {
             $table->id();
-            $table->string('code',12)->nullable();
+            // $table->string('code',12)->nullable();
             $table->integer('qty');
-            $table->foreignId('lbs_usage_permit_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('lab_item_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('stock_card_id')->nullable()->constrained()->nullOnDelete();
+            $table->integer('return_qty')->nullable();
+            $table->string('description')->nullable();
+            $table->tinyInteger('status')->nullable()->comment('1 => complete, 2 => incomplete');
+            $table->foreignId('lbs_usage_permit_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('lab_item_id')->constrained()->onDelete('CASCADE');
+            // $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('stock_card_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->foreignId('stock_card_id_return')->nullable()->constrained(table: 'stock_cards', column: 'id')->onDelete('SET NULL');
             // $table->foreignId('academic_year_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

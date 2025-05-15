@@ -20,10 +20,10 @@ class LbsUsagePermitDetail extends Model
     ];
 
     // Relasi ke master/permit
-    public function permitDetails()
-    {
-        return $this->belongsTo(LbsUsagePermit::class, 'lbs_usage_permit_id');
-    }
+    // public function permitDetails()
+    // {
+    //     return $this->belongsTo(LbsUsagePermit::class, 'lbs_usage_permit_id');
+    // }
 
     public function labItem()
     {

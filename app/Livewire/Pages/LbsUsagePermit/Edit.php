@@ -23,6 +23,15 @@ class Edit extends Component
 {
     // #[Validate('required|string|max:12')] // VARCHAR(12) for unique code
     // public $code;
+    #[Validate('required|boolean')] // TINYINT(1) for boolean (0 or 1)
+    public $isStaff;
+    // variables if isStaff is true
+    #[Validate('required_if:isStaff,1')] // BIGINT(20), nullable, foreign key
+    public $staff; // selected staff id
+
+    // variables if the one who returning is staff
+    #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
+    public $staffIdReturner;
 
     // variables if isStaff is false
     #[Validate('required_if:isStaff,0|max:255')] // VARCHAR(255) for the name
@@ -34,13 +43,26 @@ class Edit extends Component
     #[Validate('nullable|integer|exists:staff,id|required_if:isStaff,0')]
     public $mentor; // selected staff id for mentor
 
-    // variables if the one who returning is staff
-    #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
-    public $staffIdReturner;
+    // variables for starting
+    #[Validate('required')] // DATETIME for starting date
+    public $startingDate;
+    #[Validate('required')]
+    public $startingTime;
+    // #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    // public $labMemberIdStart;
+
+     #[Validate('nullable|integer|exists:lab_members,id')]
+    public$labMemberId;
+
+    // variables for ending
+    #[Validate('required')] // DATETIME for ending date
+    public $endingDate;
+    #[Validate('required')]
+    public $endingTime;
 
     public $id;
-    public $type;
-    public $LbsUsage;
+    public $pageType;
+    public $lbsUsagePermit;
 
     #[Validate([
         'selectedItems.*.item' => 'required',
@@ -84,10 +106,10 @@ class Edit extends Component
     }
 
     public function edit() {
-        $this->LbsUsage->nim = $this->nim;
-        $this->LbsUsage->name = $this->name;
-        $this->LbsUsage->group_class = $this->groupClass;
-        $this->LbsUsage->staff_id_mentor = $this->mentor;
+        $this->lbsUsagePermit->nim = $this->nim;
+        $this->lbsUsagePermit->name = $this->name;
+        $this->lbsUsagePermit->group_class = $this->groupClass;
+        $this->lbsUsagePermit->staff_id_mentor = $this->mentor;
 
         $stockCards = null;
 
@@ -95,8 +117,8 @@ class Edit extends Component
             DB::beginTransaction();
 
             // update the LbsUsage
-            if ($this->LbsUsage->isDirty('nim', 'name', 'group_class', 'staff_id_mentor')) {
-                $this->LbsUsage->save();
+            if ($this->lbsUsagePermit->isDirty('nim', 'name', 'group_class', 'staff_id_mentor')) {
+                $this->lbsUsagePermit->save();
             }
 
             // create stockCards for the deleted  item
@@ -105,28 +127,29 @@ class Edit extends Component
                 $stockCardDatas = [];
                 foreach ($this->deleteItemList as $item) {
                     $stockCardDatas[] = [
-                        'qty' => $this->LbsUsage->loanDetails->firstWhere('lab_item_id', $item['item'])->qty,
+                        'qty' => $item['qty'],
                         'stock' => $item['stock'],
-                        'is_stock_in' => 1,
-                        'description' => 'stock in from deleted item in labItem(canceled loan item)',
+                        'is_stock_in' => 0,
+                        'description' => $item['description'] ?? null,
+                        'lbs_usage_permit_id' => $lbsUsagePermit?? 1, // placeholder sementara
                         'lab_item_id' => $item['item'],
-                        'lab_member_id' => Auth::user()->staff->id,
+                        'lab_member_id_borrow' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
                     ];
                 }
                 $stockCards = StockCard::insert($stockCardDatas);
 
 
                 // updating the stock in labItem based on deleted LoanDetail
-                $deletedLoanDetails = LabItem::whereIn('id', collect($stockCardDatas)->pluck('lab_item_id'))->get()->load('item');
-                foreach ($deletedLoanDetails as $deletedLoanItem) {
-                    $deletedLoanItem->update([
-                        'stock' => $deletedLoanItem->stock + collect($stockCardDatas)->firstWhere('lab_item_id', $deletedLoanItem->id)['qty']
+                $deletedLbsDetails = LabItem::whereIn('id', collect($stockCardDatas)->pluck('lab_item_id'))->get()->load('item');
+                foreach ($deletedLbsDetails as $deletedLbsItem) {
+                    $deletedLbsItem->update([
+                        'stock' => $deletedLbsItem->stock + collect($stockCardDatas)->firstWhere('lab_item_id', $deletedLbsItem->id)['qty']
                     ]);
                 }
 
 
                 // deleting the LbsUsageDetails based on $deletedLoanItems
-                $qeLoanDetail = $this->LbsUsage->loanDetails->whereIn('lab_item_id', collect($this->deleteItemList)->pluck('item'))->each(function ($LbsUsageDetail) {
+                $LbsUsageDetail = $this->lbsUsagePermit->details->whereIn('lab_item_id', collect($this->deleteItemList)->pluck('item'))->each(function ($LbsUsageDetail) {
                     $LbsUsageDetail->stockCard->delete();
                     $LbsUsageDetail->delete();
                 });
@@ -136,11 +159,13 @@ class Edit extends Component
             }
 
             foreach ($this->selectedItems as $item) {
-                $LbsDetail = $this->LbsUsage->details->firstWhere('lab_item_id', $item['item']);
+                $LbsDetail = $this->lbsUsagePermit->details->firstWhere('lab_item_id', $item['item']);
 
                 // if ($loanDetail && $loanDetail->stockCard) {
-                if ($LbsDetail) {
-                    $LbsDetail->stockCard->qty = $item['qty'];
+                if ($LbsDetail && $LbsDetail->stockCard) {
+                    $oldQty = $LbsDetail->stockCard->qty;
+
+                    $LbsDetail->stockCard->update(['qty' => $item['qty']]);
 
                     $LbsDetail->update([
                         'qty' => $item['qty'],
@@ -148,7 +173,7 @@ class Edit extends Component
                     ]);
 
                     $LbsDetail->labItem->update([
-                        'stock' => $LbsDetail->stockCard->stock - $item['qty']
+                        'stock' => $LbsDetail->labItem->stock + ($oldQty - $item['qty']) // koreksi stok dengan selisih qty
                     ]);
                 } else {
                     $stockCard = StockCard::create([
@@ -157,12 +182,12 @@ class Edit extends Component
                         'is_stock_in' => 0,
                         'description' => $item['description'],
                         'lab_item_id' => $item['item'],
-                        'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->LbsUsage->laboratory_id)->id,
+                        'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->lbsUsagePermit->laboratory_id)->id,
                     ]);
                     $createdLbsDetail = LbsUsagePermitDetail::create([
                         'qty' => $item['qty'],
                         'description' => $item['description'],
-                        'lbs_usage_permit_id' => $this->LbsUsage->id,
+                        'lbs_usage_permit_id' => $this->lbsUsagePermit->id,
                         'lab_item_id' => $item['item'],
                         'stock_card_id' => $stockCard->id,
                     ]);
@@ -175,7 +200,7 @@ class Edit extends Component
             DB::commit();
             return response()->json([
                 'status' => "success",
-                'message' => "Laporan peminjaman alat praktikum berhasil diubah"
+                'message' => "Laporan ijin penggunaan LBS berhasil diubah"
             ]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -197,22 +222,23 @@ class Edit extends Component
         try {
             $this->id = Crypt::decrypt($id);
             // $this->laboratoryId = Crypt::decrypt($labId);
-            // $this->pageType = $type;
-            $eqLoan = LbsUsagePermit::find($this->id)->load('mentor', 'staffBorrower', 'loanDetails');
-            $this->name = $eqLoan->name;
-            $this->nim = $eqLoan->nim;
-            $this->groupClass = $eqLoan->group_class;
-            $this->mentor = $eqLoan->staff_id_mentor;
-            $this->LbsUsage = $eqLoan;
+            $this->pageType = $type;
+            $lbs = LbsUsagePermit::find($this->id)->load('staffMentor', 'staffBorrower', 'details.labItem', 'details.unit', 'details.stockCard', 'laboratory.labItems.item');
+            $this->name = $lbs->name;
+            $this->nim = $lbs->nim;
+            $this->groupClass = $lbs->group_class;
+            $this->mentor = $lbs->staff_id_mentor;
+            $this->lbsUsagePermit = $lbs;
 
-            $this->selectedItems = $eqLoan->loanDetails->map(function($detail) {
+            $this->selectedItems = $lbs->details->map(function($detail) {
                 return [
                     'item' => $detail->lab_item_id,
                     'qty' => $detail->qty,
-                    'stock' => $detail->stockCard->stock,
+                    'stock' => $detail->stockCards ? $detail->stockCards->stock : 0, // safe fallback to 0
                     'description' => $detail->description,
                 ];
             });
+
 
         } catch (DecryptException $e) {
             return response()->json("error");

@@ -31,28 +31,47 @@ class LbsUsagePermit extends Model
     }
 
     // Relasi opsional lainnya (misal ke User, Staff, dll)
-    public function staff()
-    {
-        return $this->belongsTo(User::class, 'staff_id');
-    }
+    // public function staff()
+    // {
+    //     return $this->belongsTo(User::class, 'staff_id');
+    // }
 
     public function staffMentor()
     {
-        return $this->belongsTo(User::class, 'staff_id_mentor');
+        return $this->belongsTo(Staff::class, 'staff_id_mentor', 'id');
     }
 
     // public function studyProgram()
     // {
     //     return $this->belongsTo(StudyProgram::class);
     // }
+    public function memberBorrow()
+    {
+        return $this->belongsTo(LabMember::class, 'lab_member_id_borrow', 'id');
+    }
+
+    public function memberReturn()
+    {
+        return $this->belongsTo(LabMember::class, 'lab_member_id_return', 'id');
+    }
+
+    public function staffBorrower()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
+    }
+
+    public function staffReturner()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id_returner', 'id');
+    }
 
     public function laboratory()
     {
         return $this->belongsTo(Laboratory::class);
     }
 
-    public function labMember()
-    {
-        return $this->belongsTo(LabMember::class);
-    }
+    // public function labMember()
+    // {
+    //     return $this->belongsTo(LabMember::class);
+    // }
 }

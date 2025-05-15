@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\AcademicYear;
 use App\Models\LbsUsagePermitDetail;
-use App\Models\LbsUsagePermit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LbsUsagePermitDetailFactory extends Factory
@@ -14,15 +13,15 @@ class LbsUsagePermitDetailFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => $this->faker->bothify('DET-#######'),
-            'qty' => $this->faker->numberBetween(1, 10),
-
-            // Pastikan kamu punya data terkait atau set null dulu jika belum
-            'lbs_usage_permit_id' => LbsUsagePermit::inRandomOrder()->first()?->id ?? LbsUsagePermit::factory(),
-            'lab_item_id' => 1, // Ganti sesuai ID yang tersedia atau pakai factory jika kamu sudah buat
-            'unit_id' => null,
-            'stock_card_id' => null,
-            // 'academic_year_id' => AcademicYear::inRandomOrder()->first()?->id ?? AcademicYear::factory(),
+            // 'code'=>$this->faker->word,
+            'qty'=>$this->faker->numberBetween(1,100),
+            'return_qty'=>$this->faker->numberBetween(0,100),
+            'description'=>$this->faker->sentence,
+            'status'=>$this->faker->randomElement([1,2]),
+            // 'lbs_usage_permit_id'
+            'lab_item_id'=>mt_rand(1,10),
+            'stock_card_id'=>null,
+            'stock_card_id_return'=>null
         ];
     }
 }
