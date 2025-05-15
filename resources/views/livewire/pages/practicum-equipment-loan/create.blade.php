@@ -51,7 +51,7 @@
                                 value="{{ date('d/m/Y', strtotime(now())) }}"
                                 wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                                 class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
-                        <x-forms.timepicker wire:init="borrowingTime = '{{ date('H:i', time()) }}'" id="borrow_time" wire:model="borrowingTime"></x-forms.timepicker>
+                        <x-forms.timepicker wire:init="borrowingTime = '{{ date('H:i', time()) }}'" id="borrow_time" wire:model="borrowingTime" name="borrowingTIme"></x-forms.timepicker>
                         </div>
                         <x-forms.input
                             value="{{ Auth::user()->name }}"
