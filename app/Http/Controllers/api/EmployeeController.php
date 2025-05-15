@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Staff;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return response()->json(User::get());
+        return response()->json(Staff::with('user', 'staffStatus')->get());
     }
 
     /**

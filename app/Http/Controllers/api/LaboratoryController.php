@@ -13,7 +13,19 @@ class LaboratoryController extends Controller
      */
     public function index()
     {
-        return response()->json(Laboratory::get());
+        $laboratories = Laboratory::get()->load( 'members', 'members.staff.user', 'labItems');
+        $laboratories = $laboratories->each(function ($laboratory) {
+            $laboratory->formatedHeadOfLab = $laboratory->members->map(function ($member) {
+                return [
+                    'id' => $member->id,
+                    'is_lab_leader' => $member->is_lab_leader,
+                    'staff_id' => $member->staff_id,
+                    'laboratory_id' => $member->laboratory_id,
+                    'name' => $member->staff->user->name,
+                ];
+            });
+        });
+        return response()->json($laboratories);
     }
 
     /**

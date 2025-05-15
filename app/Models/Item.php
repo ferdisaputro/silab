@@ -15,6 +15,11 @@ class Item extends Model
         return $this->belongsTo(Unit::class, 'unit_id');
     }
 
+    public function itemType()
+    {
+        return $this->belongsTo(ItemType::class);
+    }
+
     public function labItems() {
         return $this->hasMany(LabItem::class);
     }

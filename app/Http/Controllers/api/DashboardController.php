@@ -10,12 +10,14 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index() {
-        return response()->json([
-            'technicians' => Staff::where('staff_status_id', 3)->get(),
-            'lecturers' => Staff::where('staff_status_id', 1)->get(),
-            'administrators' => Staff::where('staff_status_id', 2)->get(),
-            'active_staff' => Staff::where('status', 1)->count(),
-            'equipment_loan' => EquipmentLoan::get(),
-        ]);
+        $staff = Staff::get();
+        $equipmentLoans = EquipmentLoan::get();
+
+        $dashboardData = [
+            'total_staff_active' => $staff->where('status', 1)->count(),
+            'total_staff_nonactive' => $staff->where('status', 0)->count(),
+            'equipment_loans' => $equipmentLoans,
+        ];
+        return response()->json($dashboardData);
     }
 }

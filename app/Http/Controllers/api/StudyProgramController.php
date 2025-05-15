@@ -13,7 +13,18 @@ class StudyProgramController extends Controller
      */
     public function index()
     {
-        return response()->json(StudyProgram::get());
+        $studyPrograms = StudyProgram::get()->load( 'headOfStudyPrograms','headOfStudyPrograms.staff.user','department');
+        $studyPrograms = $studyPrograms->each(function ($studyProgram) {
+            $studyProgram->formatedHeadOfStudyPrograms = $studyProgram->headOfStudyPrograms->map(function ($headOfStudyProgram) {
+                return [
+                    'id' => $headOfStudyProgram->id,
+                    'staff_id' => $headOfStudyProgram->staff_id,
+                    'study_program_id' => $headOfStudyProgram->study_program_id,
+                    'name' => $headOfStudyProgram->staff->user->name,
+                ];
+            });
+        });
+        return response()->json($studyPrograms);
     }
 
     /**
