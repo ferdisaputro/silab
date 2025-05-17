@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class Create extends Component
 {
-    public $id;
+    // public $id;
     public $selectedLab;
 
     #[Validate('required|string|max:12')] // VARCHAR(12) for unique code
@@ -38,13 +38,16 @@ class Create extends Component
 
     // variables if isStaff is false
     #[Validate('required_if:isStaff,0|max:255')] // VARCHAR(255) for the name
-    public $nama;
+    public $name;
     #[Validate('required_if:isStaff,0|max:12')] // NIM field, optional, VARCHAR(255)
     public $nim;
     #[Validate('required_if:isStaff,0|max:255')] // Group class, optional, VARCHAR(255)
     public $groupClass;
-    #[Validate('nullable|integer|exists:staff,id|required_if:isStaff,0')]
-    public $mentor; // selected staff id for mentor
+    #[Validate('required_if:isStaff,0|integer|exists:staff,id|nullable')]
+    public $mentor;
+
+    // #[Validate('nullable|integer|exists:staff,id|required_if:isStaff,0')]
+    // public $mentor; // selected staff id for mentor
 
     // variables for starting
     #[Validate('required')] // DATETIME for starting date
@@ -103,12 +106,14 @@ class Create extends Component
     }
 
     public function removeItem($index) {
-        unset($this->selectedItems[$index]);
+        array_splice($this->selectedItems, $index, 1);
     }
+
 
     #[Computed()]
     public function labItems() {
-        return Laboratory::find($this->laboratoryId?? null)->labItems->load('item');
+        $lab = Laboratory::find($this->laboratoryId);
+        return $lab ? $lab->labItems->load('item') : collect();
     }
 
     public function create()
@@ -128,7 +133,7 @@ class Create extends Component
         } else {
             $data['is_staff'] = 0;
             $data['nim'] = $this->nim;
-            $data['name'] = $this->nama;
+            $data['name'] = $this->name;
             $data['group_class'] = $this->groupClass;
             $data['staff_id_mentor'] = $this->mentor;
         }
@@ -148,9 +153,12 @@ class Create extends Component
         try {
             DB::beginTransaction();
 
-            $stockCardsResult = Auth::user()->labMembers->firstWhere("laboratory_id", $this->laboratoryId)->stockCards()->createMany($stockCards);
+            $stockCardsResult = Auth::user()->labMembers
+                ->firstWhere("laboratory_id", $this->laboratoryId)
+                ->stockCards()
+                ->createMany($stockCards);
 
-            $lbsUsagePermit = LbsUsagePermit::create($data);
+            $lbsUsagePermit = LbsUsagePermit::create($data); // ⬅️ BUAT DULU
 
             $lbsUsageDetail = collect($this->selectedItems)->map(function ($item) use ($lbsUsagePermit, $stockCardsResult) {
                 return [
@@ -162,7 +170,7 @@ class Create extends Component
                 ];
             });
 
-            $lbsUsageDetailResult = $lbsUsagePermit->details()->createMany($lbsUsageDetail);
+            $lbsUsageDetailResult= $lbsUsagePermit->details()->createMany($lbsUsageDetail);
 
             foreach ($this->selectedItems as $item) {
                 $labItem = LabItem::find($item['item']);
@@ -179,12 +187,13 @@ class Create extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e); // Akan menampilkan error detail ke layar
+            dd($e); // Untuk debugging
             return [
                 'status' => 'error',
                 'message' => $e->getMessage()
             ];
         }
+
     }
 
 
@@ -199,16 +208,17 @@ class Create extends Component
 
     public function mount($id)
     {
-
+        // dd($id);
         if (Gate::allows('isALabMember', Auth::user())) {
             abort(404);
         }
 
-        $decrypted = Crypt::decrypt($id);  // Decrypt the id here
+        $decrypted = Crypt::decrypt($id);
         $this->laboratoryId = $decrypted;
-        $this->labMemberId= Auth::user()->staff->id;
+        $this->labMemberId = Auth::user()->staff->id;
         $this->code = Str::random(8);
     }
+
 
 
     public function render()
@@ -216,6 +226,7 @@ class Create extends Component
         return view('livewire.pages.lbs-usage-permit.create', [
             'lecturers' => Staff::with('user')->where('staff_status_id', 1)->get(), //dosen
             'staffs' => Staff::with('user')->get(), //staff
+            // 'labItems' => LabItem::with('item')->get(),
             ]);
     }
 }

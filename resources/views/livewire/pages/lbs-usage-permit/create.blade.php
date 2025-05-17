@@ -1,5 +1,5 @@
 <x-container>
-    <form x-on:submit.prevent="submitHandler" x-data="createEqLoan()">
+    <form x-on:submit.prevent="submitHandler" x-data="createLbsPermit()">
         <div class="p-5 space-y-10 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between">
                 <x-text.page-title>
@@ -29,9 +29,9 @@
                         </div>
 
                         <div class="flex flex-col flex-wrap justify-center gap-4 md:flex-row" x-show="!isStaff" x-transition>
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="nim" label="NIM" />
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="name" label="Nama" />
-                            <x-forms.input class="flex-1 md:min-w-[20rem]" name="golongan_kelompok" label="Golongan/Kelompok" />
+                            <x-forms.input class="flex-1 md:min-w-[20rem]" wire:model="nim" name="nim" label="NIM" />
+                            <x-forms.input class="flex-1 md:min-w-[20rem]" wire:model="name" name="name" label="Nama" />
+                            <x-forms.input class="flex-1 md:min-w-[20rem]" wire:model="groupClass" name="groupClass" label="Golongan/Kelompok" />
                             <x-forms.select-advanced wire:key='{{ now() }}' model="mentor" class="flex-1 md:min-w-[20rem]" name="mentor" label="Pilih Dosen Pembimbing">
                                 @foreach ($lecturers as $lecturer)
                                     <option value="{{ $lecturer->id {{-- this is staff id --}} }}" {{ $lecturer->id == $mentor? "selected" : '' }}>{{ $lecturer->user->name }}</option>
@@ -94,61 +94,64 @@
                 <x-alerts.outline class="mb-5" color='teal' message="Adapun Sarana dan Prasarana yang saya perlukan selama kegiatan Tugas Akhir/Penelitian adalah sebagai berikut :" />
                 <div class="px-5 space-y-4">
                     @foreach ($selectedItems as $index => $item)
-                        <div class="flex flex-col flex-wrap gap-4 md:flex-row">
+                        <div class="flex flex-col flex-wrap gap-4 md:flex-row" wire:key="selected-item-{{ $index }}">
                             <x-forms.select class="flex-1 min-w-24"
-                                    wire:model.live.debounce='selectedItems.{{ $index }}.item'
-                                    name="selectedItems.{{ $index }}.item"
-                                    label="Pilih Barang"
-                                >
-                                    @foreach ($this->labItems as $labItem)
-                                        <option
-                                            value="{{ $labItem->id }}"
-                                            {{ $labItem->id == $selectedItems[$index]['item']? "selected" : '' }}
-                                        >
-                                            {{ $labItem->item->item_name }}
-                                        </option>
-                                    @endforeach
-                                </x-forms.select>
+                                wire:model.live.debounce='selectedItems.{{ $index }}.item'
+                                name="selectedItems.{{ $index }}.item"
+                                label="Pilih Barang"
+                            >
+                                @foreach ($this->labItems as $labItem)
+                                    <option
+                                        value="{{ $labItem->id }}"
+                                        {{ $labItem->id == $selectedItems[$index]['item']? "selected" : '' }}
+                                    >
+                                        {{ $labItem->item->item_name }}
+                                    </option>
+                                @endforeach
+                            </x-forms.select>
 
                             <div class="flex flex-1 gap-4 min-w-24 md:flex-none">
-                                    <div
-                                        wire:key='{{ $selectedItems[$index]['item'] ?? now() }}'
-                                        wire:init="set('selectedItems.{{ $index }}.stock', {{
-                                                $this->labItems->find($selectedItems[$index]['item']) ?
-                                                    $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
-                                        }})"
+                                <div
+                                    wire:key='{{ $selectedItems[$index]['item']?? now() }}'
+                                    wire:init="set('selectedItems.{{ $index }}.stock', {{
+                                        $this->labItems->find($selectedItems[$index]['item'])?
+                                             $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
+                                    }})"
                                     >
                                         <x-forms.input
-                                            class="flex-1 md:flex-none md:max-w-20"
-                                            wire:model='selectedItems.{{ $index }}.stock'
-                                            label="Stok"
-                                            disabled="true" />
-                                    </div>
-
-                                    <x-forms.input
-                                        type="number"
                                         class="flex-1 md:flex-none md:max-w-20"
-                                        max="{{ (String) $selectedItems[$index]['stock'] }}"
-                                        wire:model.live.debounce='selectedItems.{{ $index }}.qty'
-                                        name="selectedItems.{{ $index }}.qty"
-                                        label="jumlah" /></div>
-                            {{-- <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1" model="academic_year" name="academic_year" label="Pilih Tahun Ajaran" wire:key='{{ now() }}'>
-                                @foreach ($this->academicYears as $academicYear)
-                                    <option value="{{ $academicYear->id }}" {{ $academicYear->id == $academic_year ? 'selected' : '' }}>{{ $academicYear->start_year }} / {{ $academicYear->end_year }} ({{ $academicYear->is_even? "Genap" : "Ganjil" }})</option>
-                                @endforeach
-                            </x-forms.select-advanced> --}}
+                                        wire:model='selectedItems.{{ $index }}.stock'
+                                        label="Stok"
+                                        disabled="true" />
+                                </div>
 
-                            <x-forms.input class="flex-1 min-w-24" wire:model='items.{{ $index }}.keterangan' name="items.{{ $index }}.keterangan" label="Keterangan" />
+                                <x-forms.input
+                                    type="number"
+                                    class="flex-1 md:flex-none md:max-w-20"
+                                    max="{{ $selectedItems[$index]['stock'] ?? 0 }}"
+                                    min="1"
+                                    wire:model.debounce.500ms="selectedItems.{{ $index }}.qty"
+                                    name="selectedItems.{{ $index }}.qty"
+                                    label="Jumlah"
+                                />
+                            </div>
+
+                            <x-forms.input
+                                class="flex-1 min-w-24"
+                                wire:model="selectedItems.{{ $index }}.keterangan"
+                                name="selectedItems.{{ $index }}.keterangan"
+                                label="Keterangan"
+                            />
 
                             <div class="flex justify-end gap-2">
                                 @if (count($selectedItems) > 1)
-                                    <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
+                                    <x-buttons.outline wire:click.prevent="removeItem({{ $index }})" color="yellow" title="Hapus item">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </x-buttons.outline>
                                 @endif
 
-                                @if ($loop->iteration == 1)
-                                    <x-buttons.outline wire:click='addItem' color="blue">
+                                @if ($loop->last)
+                                    <x-buttons.outline wire:click.prevent="addItem" color="blue" title="Tambah item">
                                         <i class="fa-solid fa-plus"></i>
                                     </x-buttons.outline>
                                 @endif
@@ -156,12 +159,11 @@
                         </div>
                     @endforeach
                 </div>
+
             </div>
 
-            <div x-data="createLbsPermit" class="text-center">
-                <x-buttons.fill type="submit" class="w-full max-w-xs"
-                @click="submitHandler"
-                >
+            <div class="text-center">
+                <x-buttons.fill type="submit" class="w-full max-w-xs" >
                     Buat Ijin Penggunaan
                 </x-buttons.fill>
             </div>
@@ -170,39 +172,36 @@
     </form>
 </x-container>
 
-
 @pushOnce('scripts')
     @script
         <script>
-            Alpine.data('createLbsPermit', () => {
-                return {
-                    submitHandler() {
-                        // Menampilkan SweetAlert konfirmasi
-                        swal.fire({
-                            title: 'Buat Izin Penggunaan',
-                            text: 'Pastikan data sudah benar sebelum menyimpan.',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonText: 'Ya',
-                            cancelButtonText: 'Batal',
-                        }).then(async res => {
-                            if (res.isConfirmed) {
-                                // Jika "Ya" dipilih, lakukan aksi pengiriman data ke backend
-                                const result = await $wire.create(); // Ini memanggil metode create dari Livewire
-
-                                // Setelah proses selesai, cek apakah data berhasil disimpan
-                                if (result.original.status === 'success') {
-                                    swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
-                                        $wire.redirectToIndex(); // Arahkan ke halaman index
-                                    });
-                                } else {
-                                    swal.fire('Gagal', 'Data Izin Laboratorium Gagal Ditambahkan: ' + result.original.message, 'error');
-                                }
-                        });
-                    }
+            Alpine.data('createLbsPermit', () => ({
+                isStaff: true,
+                isStaffSelected: true,
+                isStudentSelected: false,
+                submitHandler() {
+                    swal.fire({
+                        title: 'Buat Izin Penggunaan',
+                        text: 'Pastikan data sudah benar sebelum menyimpan.',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Batal',
+                    }).then(async res => {
+                        if (res.isConfirmed) {
+                            try {
+                                await $wire.create();
+                                swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
+                                    $wire.redirectToIndex();
+                                });
+                            } catch (e) {
+                                swal.fire('Error', e.message, 'error');
+                            }
+                        }
+                    });
                 }
-            });
+            }))
         </script>
+
     @endscript
 @endPushOnce
-

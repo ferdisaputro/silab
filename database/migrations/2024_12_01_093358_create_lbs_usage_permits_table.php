@@ -22,15 +22,18 @@ return new class extends Migration
             $table->boolean('is_returner_staff')->nullable();
 
             $table->string('name')->nullable();
+            $table->string('returner_name')->nullable();
             $table->string('nim')->nullable();
+            $table->string('returner_nim')->nullable();
             $table->string('group_class')->nullable()->comment('golongan_kelompok');
+            $table->string('returner_group_class')->nullable()->comment('kembali_golongan_kelompok');
 
             $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->dateTime('end_date')->nullable();
             $table->tinyInteger('status')->comment('1 => on loan, 2 => returned');
 
             // $table->foreignId('staff_id')->nullable()->constrained()->onDelete('SET NULL');
-            $table->foreignId('staff_id_mentor')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');
+            $table->foreignId('staff_id_mentor')->nullable()->constrained(table: 'staff', column: 'id')->onDelete('SET NULL');
             // $table->foreignId('study_program_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('laboratory_id')->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId('lab_member_id_borrow')->nullable()->constrained(table: 'lab_members', column: 'id')->onDelete('SET NULL');

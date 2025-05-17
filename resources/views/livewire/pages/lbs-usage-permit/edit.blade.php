@@ -61,7 +61,8 @@
                     <x-forms.timepicker
                         {{-- disabled  --}}
                         id="start_time"
-                        value="{{ date('H:i', strtotime($lbsUsagePermit->start_date)) }}">
+                        value="{{ date('H:i', strtotime($lbsUsagePermit->start_date)) }}"
+                        timepicker>
                     </x-forms.timepicker>
                     <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
                         to
@@ -75,16 +76,18 @@
                     <x-forms.timepicker
                         {{-- disabled --}}
                         id="end_time"
-                        value="{{ date('H:i', strtotime($lbsUsagePermit->end_date)) }}">
+                        value="{{ date('H:i', strtotime($lbsUsagePermit->end_date)) }}"
+                        timepicker>
                     </x-forms.timepicker>
                 </div>
             </div>
 
             <div class="space-y-5">
                 <x-alerts.outline class="mb-5" color='teal' message="Adapun Sarana dan Prasarana yang saya perlukan selama kegiatan Tugas Akhir/Penelitian adalah sebagai berikut :" />
-                <div class="px-5 space-y-4">
+                <div class="px-5 space-y-5">
                     @foreach ($selectedItems as $index => $item)
-                        <div class="flex flex-[1.3] gap-4">
+                        <div class="flex flex-row flex-wrap gap-4 mt-2">
+                            <div class="flex flex-[1.3] gap-4">
                                 <x-forms.select :disabled="!isset($item['new'])? true : false" class="flex-1 min-w-24"
                                     wire:model.live.debounce='selectedItems.{{ $index }}.item'
                                     name="selectedItems.{{ $index }}.item"
@@ -127,6 +130,7 @@
                                         label="jumlah" />
                                 </div>
                             </div>
+                        </div>
                     @endforeach
                 </div>
             </div>

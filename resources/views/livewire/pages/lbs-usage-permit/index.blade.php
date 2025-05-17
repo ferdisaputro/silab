@@ -1,4 +1,4 @@
-<x-container>
+<x-container x-data="detailLbsUsagePermit()">
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <div>
@@ -24,7 +24,7 @@
         </div>
 
         <div>
-            <x-tables.datatable :data="$this->lbsUsage" eventTarget="equipmentLoan" id="tabel-equipmentLoan">
+            <x-tables.datatable :data="$this->lbsUsage" eventTarget="LbsUsage" id="tabel-LbsUsage">
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>
@@ -54,7 +54,7 @@
                                 <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($lbs->id)]) }}" wire:navigate>
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>
-                                <x-badges.outline title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
+                                <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($lbs->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                             </td>
                         </tr>
                     @endforeach
@@ -63,3 +63,38 @@
         </div>
     </div>
 </x-container>
+
+@pushOnce('scripts')
+    @script
+        <script>
+            Alpine.data('detailLbsUsagePermit', () => {
+                return {
+                    detailPracticumLbsUsageState: false,
+                    showDetailPracticumEquipmentLoan (id) {
+                        $wire.dispatch('initDetailPracticumLbsUsage', {id: id});
+                        this.detailPracticumLbsUsageState = true;
+                    },
+                    deleteLaboratory(key) {
+                        swal.fire({
+                            title: `Hapus Data`,
+                            text: `Apakah Anda yakin ingin menghapus Perijinan Lbs?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Batal',
+                        }).then(async res => {
+                            if (res.isConfirmed) {
+                                result = await $wire.delete(key);
+                                if (result.original.status !== 'error') {
+                                    swal.fire('Berhasil', 'Data Peminjaman Berhasil Dihapus', 'success')
+                                    $wire.$refresh() //refresh component from the parent of this component wich is index
+                                } else
+                                    swal.fire('Gagal', 'Data Gagal Dihapus: ' + result.original.message, 'error')
+                            }
+                        })
+                    }
+                }
+            })
+        </script>
+    @endscript
+@endpushOnce
