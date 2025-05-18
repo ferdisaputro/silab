@@ -28,10 +28,10 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('item_name');
-            $table->string('item_code',32);
+            $table->string('item_code',32)->nullable();
             $table->integer('quantity');
-            $table->string('specification');
-            $table->string('description');
+            $table->string('specification')->nullable();
+            $table->string('description')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('item_type_id')->nullable()->constrained()->nullOnDelete();

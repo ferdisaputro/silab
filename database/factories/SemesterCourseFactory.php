@@ -19,7 +19,7 @@ class SemesterCourseFactory extends Factory
     public function definition(): array
     {
         return [
-            'study_program_id' => $this->faker->numberBetween(1, 15), // Range ID 1-15
+            'study_program_id' => $this->faker->numberBetween(1, 11), // Range ID 1-15
             'semester_id' => $this->faker->numberBetween(1, 15), // Range ID 1-15
             'course_id' => $this->faker->numberBetween(1, 15), // Range ID 1-15
             'user_id' => $this->faker->numberBetween(1, 15), // Range ID 1-15

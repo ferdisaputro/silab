@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('isALabMember', function($user) {
+        Gate::define('isNotALabMember', function($user) {
             return $user->labMembers->count() <= 0;
         });
 

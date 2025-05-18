@@ -27,20 +27,18 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StaffStatusesSeeder::class,
             PermissionSeeder::class,
-            // RolesSeeder::class,
             StaffSeeder::class,
             DepartmentSeeder::class,
             AcademicYearSeeder::class,
             CourseSeeder::class,
             LaboratoriumSeeder::class,
             ItemSeeder::class,
-            EquipmentLoanSeeder::class,
-            UnitSeeder::class,
-            SemesterCourseSeeder::class,
-            CourseInstructorSeeder::class,
-            PracticumReadinessSeeder::class,
-            ItemLossOrDamageSeeder::class,
-            LbsSeeder::class,
+            // EquipmentLoanSeeder::class,
+            // SemesterCourseSeeder::class,
+            // CourseInstructorSeeder::class,
+            // PracticumReadinessSeeder::class,
+            // ItemLossOrDamageSeeder::class,
+            // LbsSeeder::class,
         ]);
     }
 }

@@ -31,13 +31,13 @@ class LaboratoriumSeeder extends Seeder
 
         $laboratories = DB::table('laboratories')->get();
 
-        foreach ($laboratories as $laboratory) {
-            LabMember::factory(mt_rand(1, 5))->create([
-                'is_lab_leader' => \Faker\Factory::create()->randomElement([true, false]),
-                'is_active' => 1,
-                'laboratory_id' => $laboratory->id,
-                'staff_id' => \Faker\Factory::create()->numberBetween(1, 10),
-            ]);
-        }
+        // foreach ($laboratories as $laboratory) {
+        //     LabMember::factory(mt_rand(1, 5))->create([
+        //         'is_lab_leader' => \Faker\Factory::create()->randomElement([true, false]),
+        //         'is_active' => 1,
+        //         'laboratory_id' => $laboratory->id,
+        //         'staff_id' => \Faker\Factory::create()->numberBetween(1, 10),
+        //     ]);
+        // }
     }
 }
