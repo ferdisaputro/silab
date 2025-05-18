@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <x-text.page-title>
-                    Tabel Serah Terima Hasil & Sisa Praktikum
+                    Tabel Serah Terima Hasil & Sisa Praktikum{{ $selectedLab }}
                 </x-text.page-title>
 
                 {{-- Pilihan Lab di bawah judul --}}
@@ -32,7 +32,7 @@
         </div>
 
         <div>
-            <x-tables.datatable id="tabel-practicumHandOver">
+            <x-tables.datatable eventTarget="handOver" id="tabel-practicumHandOver">
                 <thead>
                     <tr>
                         <th># <i class="fa-solid fa-sort ms-2"></i></th>
@@ -42,10 +42,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"></td>
-                        <td></td>
-                        <td></td>
+                    {{-- @dump($this->handOvers) --}}
+                    @foreach ($this->handOvers as $handOver)
+                    <tr wire:key='{{ $loop->iteration + ($this->handOvers->perPage() * ($this->handOvers->currentPage() - 1)) }}'>
+                        <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->iteration + ($this->handOvers->perPage() * ($this->handOvers->currentPage() - 1)) }}</td>
+                        <td>{{ $handOver->courseInstructor->semesterCourse->course->course }}</td>
+                        <td>{{ $handOver->courseInstructor->staff_id }}</td>
                         <td class="flex flex-wrap gap-2 text-center">
                             <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow">
                                 <i class="fa-regular fa-print fa-lg"></i>
@@ -60,6 +62,7 @@
                             </x-badges.outline>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </x-tables.datatable>
         </div>
