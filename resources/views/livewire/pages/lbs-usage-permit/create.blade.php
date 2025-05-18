@@ -44,7 +44,7 @@
 
             <div class="space-y-4">
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
-                <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5">
+                <div class="relative flex flex-col justify-center gap-2 px-5 md:flex-row md:gap-7">
                     {{-- <div class="flex gap-2"> --}}
                         <!-- Start Date Picker -->
                         <x-forms.input
@@ -60,12 +60,13 @@
                         <x-forms.timepicker
                             wire:init="startingTime = '{{ date('H:i', time()) }}'"
                             id="start_time"
+                            name="startingTime"
                             wire:model="startingTime">
                         </x-forms.timepicker>
                     {{-- </div> --}}
 
                     <!-- 'To' Divider -->
-                    <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
+                    <span class="text-center md:absolute md:left-1/2 md:top-3 md:-translate-x-1/2">
                         to
                     </span>
 
@@ -84,6 +85,7 @@
                         <x-forms.timepicker
                             wire:init="endingTime = '{{ date('H:i', time()) }}'"
                             id="end_time"
+                            name="endingTime"
                             wire:model="endingTime">
                         </x-forms.timepicker>
                 </div>
