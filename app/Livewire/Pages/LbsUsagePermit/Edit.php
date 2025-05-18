@@ -182,7 +182,8 @@ class Edit extends Component
                         'is_stock_in' => 0,
                         'description' => $item['description'],
                         'lab_item_id' => $item['item'],
-                        'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->lbsUsagePermit->laboratory_id)->id,
+                        'lab_member_id_borrow' => Auth::user()->labMembers->where('laboratory_id', $this->laboratoryId)->value('id'),
+
                     ]);
                     $createdLbsDetail = LbsUsagePermitDetail::create([
                         'qty' => $item['qty'],
@@ -234,10 +235,11 @@ class Edit extends Component
                 return [
                     'item' => $detail->lab_item_id,
                     'qty' => $detail->qty,
-                    'stock' => $detail->stockCards ? $detail->stockCards->stock : 0, // safe fallback to 0
+                    'stock' => optional($detail->stockCard)->stock ?? 0,
                     'description' => $detail->description,
                 ];
-            });
+            })->toArray(); // <--- tambahkan ini
+
 
 
         } catch (DecryptException $e) {

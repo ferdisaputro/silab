@@ -113,7 +113,7 @@
                                                 ($lbsUsagePermit->laboratory->labItems->find($selectedItems[$index]['item'])?
                                                     $lbsUsagePermit->laboratory->labItems->find($selectedItems[$index]['item'])->stock : '0')
                                             : ($lbsUsagePermit->details->firstWhere('lab_item_id', $selectedItems[$index]['item'])?
-                                                $lbsUsagePermit->loanDetails->firstWhere('lab_item_id', $selectedItems[$index]['item'])->stockCard->stock : '0')
+                                                $lbsUsagePermit->details->firstWhere('lab_item_id', $selectedItems[$index]['item'])->stockCard->stock : '0')
 
                                         }})"
                                     >
@@ -181,6 +181,7 @@
                                 const result = await $wire.edit()
                                 if (result.original.status == 'success') {
                                     swal.fire('Berhasil', 'Data Ijin Penggunaan LBS Berhasil Diubah', 'success')
+                                        $wire.redirectToIndex()
                                 } else
                                     swal.fire('Gagal', 'Data Ijin Penggunaan LBS Gagal Diubah :'+ result.original.message, 'error')
                             }
