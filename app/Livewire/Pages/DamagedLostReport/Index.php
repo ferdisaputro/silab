@@ -8,6 +8,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -79,12 +80,11 @@ class Index extends Component
         }
     }
 
-    public function mount() {
-
-    }
-
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
         return view('livewire.pages.damaged-lost-report.index');
     }
 }

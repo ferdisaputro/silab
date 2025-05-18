@@ -86,20 +86,21 @@ class Index extends Component
     }
 
     public function mount(){
-        if (Gate::allows('isALabMember', Auth::user())) {
-            abort(404);
-        }
         $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()->id : null;
     }
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
+
         // Update status otomatis sebelum render data
         LbsUsagePermit::where('status', 1)
             ->where('end_date', '<', Carbon::now())
             ->update(['status' => 2]);
 
-        return view('livewire.pages.lbs-usage-permit.index',
-        ['lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
+        return view('livewire.pages.lbs-usage-permit.index', [
+            'lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
         ]);
     }
 }

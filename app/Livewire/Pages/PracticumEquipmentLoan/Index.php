@@ -93,7 +93,7 @@ class Index extends Component
     public function render()
     {
         if (Gate::allows('isNotALabMember', Auth::user())) {
-            abort(404);
+            return view('components.not-a-lab-member-exception');
         }
         return view('livewire.pages.practicum-equipment-loan.index', [
             'lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
