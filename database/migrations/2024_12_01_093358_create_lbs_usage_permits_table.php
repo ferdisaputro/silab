@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nim');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->tinyInteger('status');
 
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('staff_id_mentor')->nullable()->constrained()->nullOnDelete();

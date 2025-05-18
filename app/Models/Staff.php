@@ -20,4 +20,9 @@ class Staff extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function status()
+{
+    return $this->belongsTo(StaffStatus::class, 'staff_status_id');
+}
 }
