@@ -15,4 +15,9 @@ class AcademicYear extends Model
     {
         return $this->hasMany(Semester::class);
     }
+
+    // public function permitDetails()
+    // {
+    //     return $this->hasMany(LbsUsagePermitDetail::class);
+    // }
 }

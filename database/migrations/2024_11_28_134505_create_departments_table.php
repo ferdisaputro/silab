@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('code', 8)->nullable();
-            $table->string('department', 64);
+            $table->string('department', 100);
             $table->foreignId('user_id')->nullable()->constrained("users", "id")->nullOnDelete();
             $table->timestamps();
         });
