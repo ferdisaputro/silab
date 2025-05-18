@@ -4,13 +4,13 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\ItemLossOrDamage;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\StaffStatus;
 use Illuminate\Support\Str;
-
 use Illuminate\Database\Seeder;
+
+use App\Models\ItemLossOrDamage;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             CourseInstructorSeeder::class,
             PracticumReadinessSeeder::class,
             ItemLossOrDamageSeeder::class,
+            LbsSeeder::class,
         ]);
     }
 }

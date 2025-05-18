@@ -1,18 +1,21 @@
 <?php
 
+// database/seeders/LbsUsagePermitSeeder.php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\LbsUsagePermit; // ini yang dipanggil, MODEL-nya
+use App\Models\LbsUsagePermit;
+use App\Models\LbsUsagePermitDetail;
 
 class LbsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // ini baru benar
-        LbsUsagePermit::factory()->count(10)->create();
+        LbsUsagePermit::factory(10)->create()->each(function($lbsusage) {
+            LbsUsagePermitDetail::factory(mt_rand(1, 10))->create([
+                'lbs_usage_permit_id' => $lbsusage->id
+            ]);
+        });
     }
 }
