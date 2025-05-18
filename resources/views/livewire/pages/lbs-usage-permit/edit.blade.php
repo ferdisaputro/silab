@@ -83,9 +83,11 @@
             </div>
 
             <div class="space-y-5">
-                <x-alerts.outline class="mb-5" color='teal' message="Adapun Sarana dan Prasarana yang saya perlukan selama kegiatan Tugas Akhir/Penelitian adalah sebagai berikut :" />
+                <x-alerts.outline class="mb-5" color='teal' message="Alat yang dipinjam" />
                 <div class="px-5 space-y-5">
                     @foreach ($selectedItems as $index => $item)
+                    <div>
+                        <span class="text-sm" wire:key='{{ $index }}'>Barang {{ $index + 1 }}</span>
                         <div class="flex flex-row flex-wrap gap-4 mt-2">
                             <div class="flex flex-[1.3] gap-4">
                                 <x-forms.select :disabled="!isset($item['new'])? true : false" class="flex-1 min-w-24"
@@ -111,7 +113,7 @@
                                                 ($lbsUsagePermit->laboratory->labItems->find($selectedItems[$index]['item'])?
                                                     $lbsUsagePermit->laboratory->labItems->find($selectedItems[$index]['item'])->stock : '0')
                                             : ($lbsUsagePermit->details->firstWhere('lab_item_id', $selectedItems[$index]['item'])?
-                                                $lbsUsagePermit->details->firstWhere('lab_item_id', $selectedItems[$index]['item'])->stockCard->stock : '0')
+                                                $lbsUsagePermit->loanDetails->firstWhere('lab_item_id', $selectedItems[$index]['item'])->stockCard->stock : '0')
 
                                         }})"
                                     >
@@ -130,7 +132,24 @@
                                         label="jumlah" />
                                 </div>
                             </div>
+
+                            <div class="flex flex-1 gap-4">
+                                <x-forms.input class="flex-1 min-w-24" wire:model.live.debounce='selectedItems.{{ $index }}.description' name="selectedItems.{{ $index }}.description" label="Keterangan" />
+
+                                <div class="flex justify-end gap-2">
+                                    <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </x-buttons.outline>
+
+                                    @if ($loop->iteration == 1)
+                                        <x-buttons.outline wire:click='addItem' color="blue">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </x-buttons.outline>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
+                    </div>
                     @endforeach
                 </div>
             </div>

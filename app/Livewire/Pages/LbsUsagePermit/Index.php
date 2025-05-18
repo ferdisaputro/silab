@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages\LbsUsagePermit;
 
+use Carbon\Carbon; // tambahkan ini di atas
 use App\Models\Laboratory;
 use App\Models\Staff;
 use App\Models\LbsUsagePermit;
@@ -27,7 +28,18 @@ class Index extends Component
                     ->where('laboratory_id', $this->selectedLab)
                     ->with('staffBorrower', 'staffBorrower.user')
                     ->paginate($this->LbsUsagePerPage);
+
+        // Lakukan pengecekan dan update status
+        foreach ($usages as $usage) {
+            if ($usage->status == 1 && Carbon::now()->greaterThan(Carbon::parse($usage->end_date))) {
+                $usage->status = 2;
+                $usage->save(); // <== SIMPAN KE DATABASE
+            }
+        }
+
+        return $usages;
     }
+
     #[Computed()]
     public function laboratories() {
         return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
@@ -81,6 +93,11 @@ class Index extends Component
     }
     public function render()
     {
+        // Update status otomatis sebelum render data
+        LbsUsagePermit::where('status', 1)
+            ->where('end_date', '<', Carbon::now())
+            ->update(['status' => 2]);
+
         return view('livewire.pages.lbs-usage-permit.index',
         ['lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
         ]);

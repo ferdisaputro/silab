@@ -12,17 +12,24 @@ class LbsUsagePermit extends Model
     protected $fillable = [
         'code',
         'is_staff',
+        'is_returner_staff',
         'name',
+        'returner_name',
         'nim',
+        'returner_nim',
+        'group_class',
+        'returner_group_class',
         'start_date',
         'end_date',
         'status',
         'staff_id',
+        'staff_id_returner',
         'staff_id_mentor',
-        // 'study_program_id',
         'laboratory_id',
-        'lab_member_id',
+        'lab_member_id_borrow',
+        'lab_member_id_return',
     ];
+
 
     // Relasi ke detail
     public function details()
