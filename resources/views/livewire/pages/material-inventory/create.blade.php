@@ -1,6 +1,5 @@
 <div>
     <x-text.page-title class="mb-5">Tambah Bahan Laboratorium </x-text.page-title>
-
 {{-- x-data="tambahPegawai" x-on:submit.prevent="tambah" --}}
     <form x-data="createLabItem" x-on:submit.prevent="submitHandler" class="space-y-4">
         <div class="flex gap-4">

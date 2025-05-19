@@ -125,7 +125,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('kesiapan-baprak')->group(function() {
         Route::get('/', PracticumMaterialReadinessIndex::class)
             ->name('prac-mat-ready');
-        Route::get('/tambah', PracticumMaterialReadinessCreate::class)
+        Route::get('/tambah/{id}', PracticumMaterialReadinessCreate::class)
             ->name('prac-mat-ready.create');
         Route::get('/{id}/ubah', PracticumMaterialReadinessEdit::class)
             ->name('prac-mat-ready.edit');
@@ -157,7 +157,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('serah-terima-praktikum')->group(function() {
         Route::get('/', HandoverPracticalResultIndex::class)
             ->name('handover-practical-result');
-        Route::get('/tambah', HandoverPracticalResultCreate::class)
+        Route::get('/tambah/{id}', HandoverPracticalResultCreate::class)
             ->name('handover-practical-result.create');
         Route::get('/{id}/edit', HandoverPracticalResultEdit::class)
             ->name('handover-practical-result.edit');
@@ -166,7 +166,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix('ijin-penggunaan-lbs')->group(function() {
         Route::get('/', LbsUsagePermitIndex::class)
             ->name('lbs-usage-permit');
-        Route::get('/tambah', LbsUsagePermitCreate::class)
+        Route::get('/tambah/{id}', LbsUsagePermitCreate::class)
             ->name('lbs-usage-permit.create');
         Route::get('/{id}/edit', LbsUsagePermitEdit::class)
             ->name('lbs-usage-permit.edit');

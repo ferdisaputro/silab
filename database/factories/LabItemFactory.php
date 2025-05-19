@@ -20,7 +20,7 @@ class LabItemFactory extends Factory
             'code' => $this->faker->regexify('[A-Z]{2}[0-9]{8}'),
             'description' => $this->faker->text,
             'stock' => $this->faker->numberBetween(1, 50),
-            'laboratory_id' => $this->faker->numberBetween(1, 4),
+            'laboratory_id' => $this->faker->numberBetween(1, 7),
             'item_id' => $this->faker->numberBetween(1, 20),
             'is_active' => true,
         ];

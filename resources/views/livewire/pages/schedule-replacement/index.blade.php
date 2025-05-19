@@ -69,6 +69,7 @@
             Alpine.data('schedule', () => {
                 return {
                     deleteScheduleReplacement(key) {
+                        console.log("Key yang diterima:", key);
                         swal.fire({
                             title: `Hapus Data`,
                             text: `Apakah Anda yakin ingin menghapus penggantian jadwal?`,

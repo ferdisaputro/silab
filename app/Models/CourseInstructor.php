@@ -10,5 +10,15 @@ class CourseInstructor extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    public function practicumReadiness(){
+        return $this->hasMany(PracticumReadiness::class);
+    }
+    public function semesterCourse(){
+        return $this->belongsTo(SemesterCourse::class);
+    }
+    public function studyPrograms(){
+        return $this->belongsTo(StudyProgram::class);
+    }
 
+    protected $fillable =['semester_course_id','staff_id','user_id'];
 }

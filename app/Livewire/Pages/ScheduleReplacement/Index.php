@@ -63,13 +63,13 @@ class Index extends Component
 
     public function mount() {
         $this->authorize("hasPermissionTo", 'penggantian-praktek-list|penggantian-praktek-create|penggantian-praktek-edit|penggantian-praktek-delete');
-        if (Gate::allows('isALabMember', Auth::user())) {
-            abort(404);
-        }
     }
 
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
         return view('livewire.pages.schedule-replacement.index');
     }
 }

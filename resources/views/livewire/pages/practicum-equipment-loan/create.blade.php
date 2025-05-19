@@ -119,24 +119,28 @@
                             </div>
 
                             <div class="flex flex-1 gap-4">
-                                <x-forms.input class="flex-1 min-w-24" wire:model.live.debounce='selectedItems.{{ $index }}.description' name="selectedItems.{{ $index }}.description" label="Keterangan" />
+                                <x-forms.input
+                                    class="flex-1 min-w-24"
+                                    wire:model.live.debounce='selectedItems.{{ $index }}.description'
+                                    name="selectedItems.{{ $index }}.description"
+                                    label="Keterangan" />
 
-                                <div class="flex justify-end gap-2">
-                                    @if (count($selectedItems) > 1)
-                                        <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </x-buttons.outline>
-                                    @endif
+                                    <div class="flex justify-end gap-2">
+                                        @if (count($selectedItems) > 1)
+                                            <x-buttons.outline wire:click='removeItem({{ $index }})' color="yellow">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </x-buttons.outline>
+                                        @endif
 
-                                    @if ($loop->iteration == 1)
-                                        <x-buttons.outline wire:click='addItem' color="blue">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </x-buttons.outline>
-                                    @endif
+                                        @if ($loop->iteration == 1)
+                                            <x-buttons.outline wire:click='addItem' color="blue">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </x-buttons.outline>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>

@@ -32,7 +32,7 @@ return new class extends Migration
             $table->foreignId('practicum_readiness_id')->constrained()->cascadeOnDelete();
             $table->foreignId('lab_item_id')->constrained()->cascadeOnDelete();
             $table->foreignId('stock_card_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('unit_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

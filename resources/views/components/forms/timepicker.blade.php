@@ -19,12 +19,12 @@
                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
            </svg>
        </div>
-       <input 
-         {{ $attributes->whereStartsWith('wire') }} 
+       <input
+         {{ $attributes->whereStartsWith('wire') }}
          @if($disabled) disabled @endif
-         type="time" id="{{ $id }}" 
+         type="time" id="{{ $id }}"
          value="{{ $value }}"
-         class="{{ $height }} block px-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-1 focus:ring-primaryTeal focus:border-primaryTeal peer @error($name) bg-red-50 border-red-500 text-red-900 placeholder-red-600 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror" 
+         class="{{ $height }} block px-4 w-full text-sm bg-transparent disabled:bg-primaryGrey rounded-lg border border-gray-200 appearance-none dark:border-gray-600 dark:focus:border-primaryLightTeal focus:outline-none focus:ring-1 focus:ring-primaryTeal focus:border-primaryTeal peer @error($name) bg-red-50 border-red-500 text-red-900 placeholder-red-600 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500 @enderror"
          min="{{ $min }}" max="{{ $max }}" />
    </div>
    <div>

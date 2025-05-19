@@ -87,14 +87,14 @@ class Index extends Component
 
     public function mount() {
         $this->authorize('hasPermissionTo', 'bonalat-list|bonalat-create|bonalat-edit|bonalat-delete');
-        if (Gate::allows('isALabMember', Auth::user())) {
-            abort(404);
-        }
         $this->selectedLab = $this->laboratories()->first()? $this->laboratories()->first()->id : null;
     }
 
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
         return view('livewire.pages.practicum-equipment-loan.index', [
             'lecturers' => Staff::where('staff_status_id', 1)->with('user')->get(), //dosen
         ]);
