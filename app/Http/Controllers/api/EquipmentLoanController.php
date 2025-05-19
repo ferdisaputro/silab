@@ -23,7 +23,7 @@ class EquipmentLoanController extends Controller
      */
     public function index()
     {
-        return response()->json(EquipmentLoan::with('staffBorrower', 'staffReturner', 'loanDetails')->get());
+        return response()->json(EquipmentLoan::with('staffBorrower.user', 'staffReturner.user', 'loanDetails')->get());
     }
 
     /**
@@ -47,9 +47,7 @@ class EquipmentLoanController extends Controller
      */
     public function show(EquipmentLoan $equipmentLoan)
     {
-        return response()->json([
-            'equipment_loan' => $equipmentLoan->load('loanDetails', 'memberBorrow.staff.user', 'memberReturn.staff.user', 'mentor.user', 'staffBorrower.user', 'staffReturner.user')
-        ]);
+        return response()->json($equipmentLoan->load('loanDetails.labItem.item', 'memberBorrow.staff.user', 'memberReturn.staff.user', 'mentor.user', 'staffBorrower.user', 'staffReturner.user'));
     }
 
     /**

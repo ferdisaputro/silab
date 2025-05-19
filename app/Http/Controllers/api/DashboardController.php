@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $dashboardData = [
             'total_staff_active' => $staff->where('status', 1)->count(),
             'total_staff_nonactive' => $staff->where('status', 0)->count(),
-            'equipment_loans' => $equipmentLoans,
+            'equipment_loans' => $equipmentLoans->load('staffBorrower.user', 'mentor.user'),
         ];
         return response()->json($dashboardData);
     }
