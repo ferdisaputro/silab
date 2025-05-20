@@ -72,13 +72,13 @@
                     <div class="flex gap-4">
                         <x-forms.input
                                 wire:model.live.debounce="realSchedule"
-                                class="flex-1" name="realSchedule" label="Tanggal Peminjaman" datepicker />
+                                class="flex-1" name="realSchedule" label="Tanggal Asli" datepicker />
                         <x-forms.timepicker id="realScheduleTime" name="realScheduleTime" wire:model="realScheduleTime"></x-forms.timepicker>
                     </div>
                     <div class="flex gap-4">
                         <x-forms.input
                                 wire:model.live.debounce="replacementSchedule"
-                                class="flex-1" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
+                                class="flex-1" name="replacementSchedule" label="Tanggal Pengganti" datepicker />
                         <x-forms.timepicker id="replacementScheduleTime" name="replacementScheduleTime" wire:model="replacementScheduleTime"></x-forms.timepicker>
                     </div>
                 </div>

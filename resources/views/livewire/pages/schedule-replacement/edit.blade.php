@@ -67,7 +67,7 @@
                         <x-forms.input
                             wire:model.live.debounce="replacementSchedule"
                             class="flex-1" value="{{ $replacementSchedule }}" name="replacementSchedule" label="Tanggal Peminjaman" datepicker />
-                        <x-forms.timepicker id="replacementScheduleTime" value="{{ $replacementSchedule }}" name="replacementScheduleTime" wire:model="replacementScheduleTime"></x-forms.timepicker>
+                        <x-forms.timepicker id="replacementScheduleTime" name="replacementScheduleTime" wire:model="replacementScheduleTime"></x-forms.timepicker>
                     </div>        
                 </div>
 

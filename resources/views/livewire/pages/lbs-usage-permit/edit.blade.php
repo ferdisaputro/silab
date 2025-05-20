@@ -52,32 +52,34 @@
                 <x-alerts.outline class="mb-5" color="green" message="Bermaksud akan melaksanakan kegiatan Tugas Akhir/Penelitian yang dimulai :" />
                 <div class="relative justify-center flex flex-col md:flex-row gap-2 md:gap-7 px-5" >
 
-                     <x-forms.input value="{{ date('d/m/Y', strtotime($lbsUsagePermit->start_date)) }}"
-                        {{-- disabled  --}}
+                    <x-forms.input value="{{ date('d/m/Y', strtotime($lbsUsagePermit->start_date)) }}"
                         class="flex-1"
+                        wire:model='startingDate'
                         name="startingDate"
                         label="Tanggal Mulai"
                         datepicker />
-                    <x-forms.timepicker
-                        {{-- disabled  --}}
+                    <x-forms.timepicker id="startingTime" value="{{ date('d/m/Y', strtotime($lbsUsagePermit->start_date)) }}" name="startingTime" wire:model="startingTime"></x-forms.timepicker>
+                    {{-- <x-forms.timepicker
                         id="start_time"
-                        value="{{ date('H:i', strtotime($lbsUsagePermit->start_date)) }}"
-                        timepicker>
-                    </x-forms.timepicker>
+                        name="startingTime"
+                        wire:model="startingTime"
+                        value="{{ date('H:m', strtotime($lbsUsagePermit->start_date)) }}">
+                    </x-forms.timepicker> --}}
                     <span class="md:absolute md:left-1/2 text-center md:top-3 md:-translate-x-1/2">
                         to
                     </span>
-                    <x-forms.input value="{{ date('d/m/Y', strtotime($lbsUsagePermit->end_date)) }}"
-                        {{-- disabled --}}
+                    <x-forms.input 
+                        value="{{ date('d/m/Y H:m', strtotime($lbsUsagePermit->end_date)) }}"
                         class="flex-1"
+                        wire:model='endingDate'
                         name="endingDate"
                         label="Tanggal Selesai"
                         datepicker />
                     <x-forms.timepicker
-                        {{-- disabled --}}
                         id="end_time"
-                        value="{{ date('H:i', strtotime($lbsUsagePermit->end_date)) }}"
-                        timepicker>
+                        name="endingTime"
+                        wire:model="endingTime"
+                        value="{{ date('H:m', strtotime($lbsUsagePermit->end_date)) }}">
                     </x-forms.timepicker>
                 </div>
             </div>
@@ -154,7 +156,7 @@
                 </div>
             </div>
 
-            <div x-data="createLbsPermit" class="text-center">
+            <div class="text-center">
                 <x-buttons.fill type="submit" class="w-full max-w-xs" @click="submitHandler">
                     Simpan Perubahan
                 </x-buttons.fill>

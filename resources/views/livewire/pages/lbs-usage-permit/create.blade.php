@@ -192,10 +192,14 @@
                     }).then(async res => {
                         if (res.isConfirmed) {
                             try {
-                                await $wire.create();
-                                swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
-                                    $wire.redirectToIndex();
-                                });
+                                const result = await $wire.create()
+                                if (result.status = 'success') {
+                                    swal.fire('Berhasil', 'Data Izin Laboratorium Berhasil Disimpan', 'success').then(() => {
+                                        $wire.redirectToIndex();
+                                    });
+                                } else {
+                                    swal.fire('gagal', 'Terjadi error', 'error');
+                                }
                             } catch (e) {
                                 swal.fire('Error', e.message, 'error');
                             }

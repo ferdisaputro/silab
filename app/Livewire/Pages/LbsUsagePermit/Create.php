@@ -57,8 +57,8 @@ class Create extends Component
     // #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
     // public $labMemberIdStart;
 
-     #[Validate('nullable|integer|exists:lab_members,id')]
-    public$labMemberId;
+    //  #[Validate('nullable|integer|exists:lab_members,id')]
+    public $labMemberId;
 
     // variables for ending
     #[Validate('required')] // DATETIME for ending date
@@ -182,12 +182,12 @@ class Create extends Component
 
             return [
                 'status' => 'success',
-                'message' => 'Peminjaman alat praktikum berhasil dibuat.'
+                'message' => 'Ijin Penggunaan LBS berhasil dibuat.'
             ];
 
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
-            dd($e); // Untuk debugging
             return [
                 'status' => 'error',
                 'message' => $e->getMessage()
@@ -209,7 +209,7 @@ class Create extends Component
     public function mount($id)
     {
         // dd($id);
-        if (Gate::allows('isALabMember', Auth::user())) {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
             abort(404);
         }
 

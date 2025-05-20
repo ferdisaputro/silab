@@ -16,6 +16,7 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use App\Models\LbsUsagePermit;
 use App\Models\LbsUsagePermitDetail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -52,7 +53,7 @@ class Edit extends Component
     // public $labMemberIdStart;
 
      #[Validate('nullable|integer|exists:lab_members,id')]
-    public$labMemberId;
+    public $labMemberId;
 
     // variables for ending
     #[Validate('required')] // DATETIME for ending date
@@ -110,6 +111,10 @@ class Edit extends Component
         $this->lbsUsagePermit->name = $this->name;
         $this->lbsUsagePermit->group_class = $this->groupClass;
         $this->lbsUsagePermit->staff_id_mentor = $this->mentor;
+        $this->lbsUsagePermit->start_date = Carbon::createFromFormat('d/m/Y H:i', $this->startingDate." ".$this->startingTime)->toDateTimeString();
+        $this->lbsUsagePermit->end_date = Carbon::createFromFormat('d/m/Y H:i', $this->endingDate." ".$this->endingTime)->toDateTimeString();
+        // $this->lbsUsagePermit->start_date = $this->startingDate." ".$this->startingTime;
+        // $this->lbsUsagePermit->end_date = $this->endingDate." ".$this->endingTime;
 
         $stockCards = null;
 
@@ -117,7 +122,7 @@ class Edit extends Component
             DB::beginTransaction();
 
             // update the LbsUsage
-            if ($this->lbsUsagePermit->isDirty('nim', 'name', 'group_class', 'staff_id_mentor')) {
+            if ($this->lbsUsagePermit->isDirty('nim', 'name', 'group_class', 'staff_id_mentor', 'start_date', 'end_date')) {
                 $this->lbsUsagePermit->save();
             }
 
@@ -217,7 +222,7 @@ class Edit extends Component
     }
 
     public function mount($id, $type = "edit") {
-        if (Gate::allows('isALabMember', Auth::user())) {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
             abort(404);
         }
         try {
@@ -230,6 +235,10 @@ class Edit extends Component
             $this->groupClass = $lbs->group_class;
             $this->mentor = $lbs->staff_id_mentor;
             $this->lbsUsagePermit = $lbs;
+            $this->startingDate = date('d/m/Y', strtotime($lbs->start_date));
+            $this->endingDate = date('d/m/Y', strtotime($lbs->end_date));
+            $this->startingTime = date('H:i', strtotime($lbs->start_date));
+            $this->endingTime = date('H:i', strtotime($lbs->end_date));
 
             $this->selectedItems = $lbs->details->map(function($detail) {
                 return [
