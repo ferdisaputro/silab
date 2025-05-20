@@ -208,14 +208,14 @@
                         </div>
                     </li>
                 @endif
-                @can('deliver-pangajuan-alat-list')
+                {{-- @can('deliver-pangajuan-alat-list')
                     <li>
                         <a href="#" wire:navigate class="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                             <span class="text-center w-7"><i class="fa-solid fa-square-check"></i></span>
                             <span :class="!isMinimize? 'max-w-40 ms-3 text-wrap' : 'max-w-0 text-nowrap'" class="flex-1 overflow-hidden transition-all">Deliver Pengajuan Alat ACC -</span>
                         </a>
                     </li>
-                @endcan
+                @endcan --}}
 
                 @can('kesiapan-praktek-list')
                     <li>
