@@ -7,7 +7,8 @@
                 name="editItemId"
                 label="Pilih Bahan"
                 key="editItemId"
-                wire:model.live.debounce="editItemId">
+                disabled
+                wire:model="editItemId">
                 @foreach ($items as $item)
                 <option value="{{ $item->id }}" {{ $item->id == $materialName ? 'selected' : '' }}>
                     {{ ucfirst($item->item_name) }}
@@ -18,7 +19,7 @@
                 name="editStock"
                 label="Jumlah"
                 key="editStock"
-                wire:model.live.debounce="editStock"/>
+                wire:model="editStock"/>
         </div>
 
         <div class="text-center">

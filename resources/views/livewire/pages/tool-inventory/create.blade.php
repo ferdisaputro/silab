@@ -2,7 +2,7 @@
     <x-text.page-title class="mb-5">Tambah Alat Laboratorium</x-text.page-title>
     <form x-data="createLabTool" x-on:submit.prevent="submitHandler" class="space-y-4">
         <div class="flex gap-4">
-            <x-forms.select class="flex-1"
+            {{-- <x-forms.select class="flex-1"
                 name="tool_id"
                 label="Pilih Alat"
                 key="tool_id"
@@ -10,7 +10,16 @@
                 @foreach ($items as $item)
                     <option value="{{ $item->id }}">{{ ucfirst($item->item_name) }}</option>
                 @endforeach
-            </x-forms.select>
+            </x-forms.select> --}}
+            <x-forms.select-advanced 
+                class="flex-1 md:min-w-[20rem] md:max-w-lg" 
+                model="tool_id" 
+                name="tool_id" 
+                label="Pilih Alat">
+                @foreach ($items as $item)
+                    <option value="{{ $item->id {{-- this is staff id --}} }}" {{ $item->id == $tool_id? "selected" : '' }}>{{ $item->item_name }}</option>
+                @endforeach
+            </x-forms.select-advanced>
 
             <x-forms.input class="w-full max-w-40"
                 name="jumlah"

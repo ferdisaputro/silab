@@ -4,7 +4,7 @@
     <form x-data="createLabItem" x-on:submit.prevent="submitHandler" class="space-y-4">
         <div class="flex gap-4">
             {{-- <x-forms.input class="flex-1" name="kode_jurusan" label="Kode Jurusan" /> --}}
-            <x-forms.select class="flex-1"
+            {{-- <x-forms.select class="flex-1"
                 name="item_id"
                 label="Pilih Bahan"
                 key="item_id"
@@ -12,7 +12,17 @@
                 @foreach ($items as $item)
                     <option value="{{ $item->id }}">{{ ucfirst($item->item_name) }}</option>
                 @endforeach
-            </x-forms.select>
+            </x-forms.select> --}}
+            <x-forms.select-advanced 
+                {{-- wire:key='{{ now() }}'  --}}
+                class="flex-1 md:min-w-[20rem] md:max-w-lg" 
+                model="item_id" 
+                name="item_id" 
+                label="Pilih Bahan">
+                @foreach ($items as $item)
+                    <option value="{{ $item->id {{-- this is staff id --}} }}" {{ $item->id == $item_id? "selected" : '' }}>{{ $item->item_name }}</option>
+                @endforeach
+            </x-forms.select-advanced>
             <x-forms.input class="w-full max-w-40"
                 name="jumlah"
                 label="Jumlah"
