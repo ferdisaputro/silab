@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use App\Models\ScheduleReplacement;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Crypt;
@@ -33,6 +34,7 @@ class Index extends Component
         return ScheduleReplacement::when($this->scheduleOrderBy && $this->scheduleOrderByDirection, function ($query) {
                         $query->orderBy($this->scheduleOrderBy, $this->scheduleOrderByDirection);
                     })
+                    ->whereIn('laboratory_id', Laboratory::onlyActiveUserMember()->get()->pluck('id'))
                     ->paginate($this->schedulePerPage);
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Laboratory extends Model
 {
@@ -31,5 +32,9 @@ class Laboratory extends Model
 
     public function lbsUsagePermit() {
         return $this->hasMany(LbsUsagePermit::class);
+    }
+
+    public function scopeOnlyActiveUserMember($query) {
+        return $query->whereIn('id', Auth::user()->labMembers->where('is_active', 1)->pluck('laboratory_id'));
     }
 }

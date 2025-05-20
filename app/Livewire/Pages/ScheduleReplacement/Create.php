@@ -47,7 +47,7 @@ class Create extends Component
     public $selectedLaboratory;
     #[Computed()]
     public function laboratories() {
-        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
+        return Laboratory::onlyActiveUserMember()->get();
     }
 
     #[Computed()]
@@ -106,6 +106,7 @@ class Create extends Component
             'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id,
             'course_id' => $this->selectedCourse,
             'staff_id' => $this->selectedLecturer,
+            'laboratory_id' => $this->selectedLaboratory,
         ];
 
         try {

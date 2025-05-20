@@ -53,7 +53,7 @@ class Edit extends Component
     public $selectedLaboratory;
     #[Computed()]
     public function laboratories() {
-        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
+        return Laboratory::onlyActiveUserMember()->get();
     }
 
     #[Computed()]

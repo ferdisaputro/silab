@@ -42,7 +42,7 @@ class Index extends Component
 
     #[Computed()]
     public function laboratories() {
-        return Laboratory::whereIn('id', Auth::user()->labMembers->pluck('laboratory_id'))->get();
+        return Laboratory::onlyActiveUserMember()->get();
     }
 
     public function delete($key) {

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -42,7 +43,7 @@ class Index extends Component
 
     #[Computed()]
     public function laboratories(){
-        $laboratories = Laboratory::whereIn("id", Auth::user()->labMembers->pluck('laboratory_id'))->get();
+        $laboratories = Laboratory::onlyActiveUserMember()->get();
         return $laboratories;
     }
 
@@ -83,6 +84,9 @@ class Index extends Component
 
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
         return view('livewire.pages.material-inventory.index');
     }
 }

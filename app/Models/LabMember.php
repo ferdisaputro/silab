@@ -29,4 +29,8 @@ class LabMember extends Model
     {
         return $this->hasMany(StockCard::class);
     }
+
+    public function scopeOnlyActive($query) {
+        return $query->where('is_active', 1);
+    }
 }

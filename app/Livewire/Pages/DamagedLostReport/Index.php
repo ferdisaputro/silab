@@ -34,7 +34,7 @@ class Index extends Component
     }
     #[Computed()]
     public function laboratories() {
-        return Laboratory::whereIn('id', values: Auth::user()->labMembers->pluck('laboratory_id'))->get();
+        return Laboratory::onlyActiveUserMember()->get();
     }
 
     #[Computed()]
