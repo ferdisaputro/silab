@@ -16,6 +16,7 @@ class Create extends Component
     public $code;
     #[Validate("required|min:3")]
     public $department;
+    #[Validate("required")]
     public $headOfDepartment; // id of staff
 
     public function create() {

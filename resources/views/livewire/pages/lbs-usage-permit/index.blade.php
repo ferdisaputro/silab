@@ -50,7 +50,9 @@
                             <td>{{ $lbs->end_date}}</td>
                             <td>{{ $lbs->status == 1? "Belum selesai" : "Selesai" }}</td>
                             <td class="flex flex-wrap justify-center gap-2 text-center">
-                                <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                <a href="{{ route('print.lbs-usage-permit', Crypt::encrypt($lbs->id)) }}">
+                                    <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                </a>
                                 <a href="{{ route('lbs-usage-permit.edit', ['id' => Crypt::encrypt($lbs->id)]) }}" wire:navigate>
                                     <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
                                 </a>

@@ -76,6 +76,11 @@ class LbsUsagePermit extends Model
     {
         return $this->belongsTo(Laboratory::class);
     }
+    
+    public function mentor()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id_mentor', 'id');
+    }
 
     // public function labMember()
     // {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EquipmentLoan;
 use App\Models\ItemLossOrDamage;
 use App\Models\LabMember;
+use App\Models\LbsUsagePermit;
 use App\Models\ScheduleReplacement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -80,5 +81,26 @@ class PrintController extends Controller
 
         $pdf = Pdf::loadView('print.damaged-loss-report', ['report' => $report])->setPaper('a4', 'portrait')->setWarnings(false);
         return $pdf->download($date."#BAPKehilangan#".$report->name.".pdf");
+    }
+
+    public function lbsUsagePermit($key) {
+        $permit = LbsUsagePermit::findOrFail(decrypt($key));
+        $permit->start = Carbon::parse($permit->start_date)->translatedFormat('d F Y');
+        $permit->end = Carbon::parse($permit->end_date)->translatedFormat('d F Y');
+        $permit->headOfDepartmentName = $permit->laboratory->department->headOfDepartments->firstWhere('is_active', 1)->staff->user->name;
+        $permit->headOfDepartmentCode = $permit->laboratory->department->headOfDepartments->firstWhere('is_active', 1)->staff->user->code;
+
+        $date = date('YmdHis');
+
+        $data = [
+            'name' => $permit->is_staff? $permit->staffBorrower->user->name : $permit->name,
+            'code' => $permit->is_staff? $permit->staffBorrower->user->code: $permit->nim,
+            'permit' => $permit
+        ];
+
+        // dd($data);
+
+        $pdf = Pdf::loadView('print.lbs-usage-permit', $data)->setPaper('a4', 'portrait')->setWarnings(false);
+        return $pdf->download($date."#IjinPenggunaanLBS#".$permit->name.".pdf");
     }
 }

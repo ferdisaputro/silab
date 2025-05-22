@@ -183,6 +183,7 @@ Route::prefix('print')->name('print.')->group(function() {
     Route::get('equipment-loan/{key}', [PrintController::class, 'equipmentLoan'])->name('equipment-loan');
     Route::get('schedule-replacement/{key}', [PrintController::class, 'scheduleReplacement'])->name('schedule-replacement');
     Route::get('damaged-loss-report/{key}', [PrintController::class, 'damagedLossReport'])->name('damaged-loss-report');
+    Route::get('lbs-usage-permit/{key}', [PrintController::class, 'lbsUsagePermit'])->name('lbs-usage-permit');
 });
 
 require __DIR__.'/auth.php';

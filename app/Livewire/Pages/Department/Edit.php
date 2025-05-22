@@ -18,6 +18,7 @@ class Edit extends Component
     public $editCode;
     #[Validate('required|min:3')]
     public $editDepartment;
+    #[Validate("required")]
     public $editHeadOfDepartment;
 
     #[On('initEditDepartment')]
