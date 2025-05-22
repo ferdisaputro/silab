@@ -85,7 +85,7 @@ class Edit extends Component
                     $query->where('staff_status_id', 1);
                 })->update(['is_active' => 0]);
             } else {
-                $laboratory->members()->update(['is_lab_leader' => 0]);
+                $laboratory->members()->update(['is_lab_leader' => 0, 'is_active' => 0]);
             }
 
             if ($laboratory->isDirty(['code', 'name', 'isActive', 'acronym', 'color', 'department_id'])) {
