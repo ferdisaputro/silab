@@ -19,6 +19,7 @@
                     </div>
 
                     <div>
+                        @dump($errors->all())
                         <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
                             <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="staff" name="staff" label="Pilih Pegawai">
                                 @foreach ($staffs as $staffData)
@@ -51,7 +52,7 @@
                                 value="{{ date('d/m/Y', strtotime(now())) }}"
                                 wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                                 class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
-                        <x-forms.timepicker wire:init="borrowingTime = '{{ date('H:i', time()) }}'" id="borrow_time" wire:model="borrowingTime"></x-forms.timepicker>
+                        <x-forms.timepicker name="borrowingTime" wire:init="borrowingTime = '{{ date('H:i', time()) }}'" id="borrow_time" wire:model="borrowingTime"></x-forms.timepicker>
                         </div>
                         <x-forms.input
                             value="{{ Auth::user()->name }}"

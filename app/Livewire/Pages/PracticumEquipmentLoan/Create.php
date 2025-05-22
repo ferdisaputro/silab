@@ -42,7 +42,7 @@ class Create extends Component
     public $borrowingDate;
     #[Validate('required')]
     public $borrowingTime;
-    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
     public $labMemberIdBorrow;
 
     // #[Validate('required|boolean')] // TINYINT(1) for boolean (0 or 1)
@@ -105,11 +105,8 @@ class Create extends Component
     }
 
     public function create() {
-        // dump(
-        //     $this->borrowingDate." ".$this->borrowingTime,
-        //     Carbon::createFromFormat('d/m/Y H:i', $this->borrowingDate." ".$this->borrowingTime)->toDateTimeString()
-        // );
-        // return;
+        // dd($this->labMemberIdBorrow);
+        
         $this->validate();
         $data = [];
         $data['code'] = $this->code;

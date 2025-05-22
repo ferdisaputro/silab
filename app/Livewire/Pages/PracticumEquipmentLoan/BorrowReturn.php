@@ -40,7 +40,7 @@ class BorrowReturn extends Component
     public $returnDate;
     #[Validate('required')] // DATETIME for return date, required
     public $returnTime;
-    #[Validate('required|integer|exists:lab_members,id')] // BIGINT(20), required, foreign key
+    #[Validate('required|integer|exists:staff,id')] // BIGINT(20), required, foreign key
     public $labMemberReturn;
 
     // variables if the one who returning is staff

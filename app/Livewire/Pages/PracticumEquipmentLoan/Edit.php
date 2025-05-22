@@ -39,7 +39,7 @@ class Edit extends Component
     public $staffIdReturner;
 
     public $id;
-        public $pageType;
+    public $pageType;
     public $equipmentLoan;
 
 

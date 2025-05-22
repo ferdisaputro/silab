@@ -82,7 +82,9 @@
                                                 <x-badges.outline x-on:click="deleteLaboratory('{{ Crypt::encrypt($eqLoan->id) }}')" title="Hapus" class="px-2.5 py-1.5" color="red"><i class="fa-regular fa-trash-can fa-lg"></i></x-badges.outline>
                                             @endcan
                                         @endif
-                                        <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                        <a href="{{ route('print.equipment-loan', Crypt::encrypt($eqLoan->id)) }}">
+                                            <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                        </a>
                                     </div>
                                 </td>
                             @endcan

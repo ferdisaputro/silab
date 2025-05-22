@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PrintController;
+use App\Http\Controllers\TestPrint;
 use App\Livewire\Pages\Homepage;
 use App\Livewire\Pages\Role\Edit;
 use App\Livewire\Pages\Role\Index;
@@ -7,7 +9,6 @@ use App\Livewire\Pages\Role\Create;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Item\Index as ItemIndex;
 use App\Livewire\Pages\Unit\Index as UnitIndex;
-use App\Livewire\Pages\Item\Create as ItemCreate;
 use App\Livewire\Pages\Course\Index as CourseIndex;
 use App\Livewire\Pages\Employee\Index as EmployeeIndex;
 use App\Livewire\Pages\Semester\Index as SemesterIndex;
@@ -175,6 +176,11 @@ Route::middleware(["auth"])->group(function() {
     Route::view('profile', 'profile')
         ->middleware(['auth'])
         ->name('profile');
+});
+
+
+Route::prefix('print')->name('print.')->group(function() {
+    Route::get('equipment-loan/{key}', [PrintController::class, 'equipmentLoan'])->name('equipment-loan');
 });
 
 require __DIR__.'/auth.php';
