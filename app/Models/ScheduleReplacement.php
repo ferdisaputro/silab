@@ -15,7 +15,7 @@ class ScheduleReplacement extends Model
     public function course(){
         return $this->belongsTo(Course::class);
     }
-    public function head_of_study_program(){
+    public function headOfStudyProgram(){
         return $this->belongsTo(HeadOfStudyProgram::class);
     }
     public function lecturer() {

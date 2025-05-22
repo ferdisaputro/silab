@@ -71,7 +71,9 @@
                             </td>
 
                             <td class="flex flex-wrap gap-2 text-center">
-                                <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                <a href="{{ route('print.damaged-loss-report', Crypt::encrypt($lossDam->id)) }}">
+                                    <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                </a>
                                 <x-badges.outline x-on:click="showConfirmationDamagedLostReport('{{ Crypt::encrypt($lossDam->id) }}')" title="Konfirmasi Penerimaan Penggantian Kerusakan/Kehilangan" class="px-2.5 py-1.5" color="blue"><i class="fa-solid fa-square-check fa-lg"></i></x-badges.outline>
                                 @if ($lossDam->status == 1)
                                 <x-badges.outline x-on:click="showEditDamagedLostReport('{{ Crypt::encrypt($lossDam->id)}}')" title="Ubah" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>

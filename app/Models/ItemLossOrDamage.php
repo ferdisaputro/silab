@@ -11,6 +11,15 @@ class ItemLossOrDamage extends Model
     public function LossDamageDetail(){
         return $this->hasMany(ItemLossOrDamageDetail::class);
     }
+
+    public function laboratory() {
+        return $this->belongsTo(Laboratory::class);
+    }
+
+    public function labMember() {
+        return $this->belongsTo(LabMember::class);
+    }
+
     protected $fillable = [
         'code',
         'name',

@@ -97,12 +97,19 @@ class Create extends Component
         $this->validate();
         $headOfStudyProgram = StudyProgram::find($this->selectedStudyProgram)->headOfStudyPrograms->firstWhere('is_active', 1);
 
+        if (!isset($headOfStudyProgram->id)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Studi program belum memiliki ketua'
+            ]);
+        }
+
         $data = [
             'code' => Str::random(8),
             'practicum_event' => $this->practicumEvent,
             'real_schedule' => Carbon::createFromFormat('d/m/Y H:i', $this->realSchedule." ".$this->realScheduleTime)->toDateTimeString(),
             'replacement_schedule' => Carbon::createFromFormat('d/m/Y H:i', $this->replacementSchedule." ".$this->replacementScheduleTime)->toDateTimeString(),
-            'head_of_study_program_id' => isset($headOfStudyProgram->id)? $headOfStudyProgram->id : null,
+            'head_of_study_program_id' => $headOfStudyProgram->id,
             'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->selectedLaboratory)->id,
             'course_id' => $this->selectedCourse,
             'staff_id' => $this->selectedLecturer,

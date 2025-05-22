@@ -43,7 +43,9 @@
                             <td>{{ $schedule->lecturer->user->name }}</td>
                             @can(['penggantian-praktek-edit', 'penggantian-praktek-delete'])
                                 <td class="flex flex-wrap justify-center gap-2 text-center">
-                                    <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    <a href="{{ route('print.schedule-replacement', Crypt::encrypt($schedule->id)) }}">
+                                        <x-badges.outline title="Print" class="px-2.5 py-1.5" color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    </a>
                                     @can('penggantian-praktek-edit')
                                         <a href="{{ route('schedule-replacement.edit', ['id' => Crypt::encrypt($schedule->id)]) }}" wire:navigate>
                                             <x-badges.outline title="Edit" class="px-2.5 py-1.5" color="teal"><i class="fa-regular fa-pen-to-square fa-lg"></i></x-badges.outline>
