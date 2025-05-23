@@ -26,7 +26,6 @@
                         </x-forms.select-advanced>
 
                         <div class="flex flex-1 gap-4">
-
                             <x-forms.select-advanced
                                 wire:key="{{ now() }}"
                                 model="selectedAcademicYear"
@@ -53,6 +52,8 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- @dump($errors->all()) --}}
 
                 <div class="space-y-4">
                     <div class="flex gap-4">
@@ -90,9 +91,9 @@
                             class="flex-1"
                             name="selectedAcademicWeek"
                             label="Pilih Minggu">
-                            @foreach ($this->academicWeeks as $academyweek )
-                                <option value="{{ $academyweek->id }}" {{ $academyweek->id == $selectedAcademicWeek? "selected" : "" }}>
-                                    {{ $academyweek->week_number }}</option>
+                            @foreach ($this->academicWeeks as $academic_week )
+                                <option value="{{ $academic_week->id }}" {{ $academic_week->id == $selectedAcademicWeek? "selected" : "" }}>
+                                    {{ $academic_week->week_number }}</option>
                             @endforeach
                         </x-forms.select-advanced>
 
@@ -100,7 +101,7 @@
                             wire:model.live.debounce="borrowingDate"
                             value="{{ date('d/m/Y', strtotime(now())) }}"
                             wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
-                            class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                            class="flex-1" name="borrowingDate" label="Tanggal" datepicker />
 
                         <x-forms.select
                             wire:model.live.debounce='recomendation'
@@ -115,12 +116,9 @@
                                         4 => "Ditunda"
                                     ];
                                 @endphp
-                                @foreach ($Recomendations as $recomendation)
-                                    @if (isset($recommendationTexts[$recomendation->id]))
-                                        <option value="{{ $recomendation->id }}">
-                                            {{ $recommendationTexts[$recomendation->id] }}
-                                        </option>
-                                    @endif
+                                {{-- <option></option> --}}
+                                @foreach ($recommendationTexts as $key => $text)
+                                    <option value="{{ $key }}">{{ $text }}</option>
                                 @endforeach
                         </x-forms.select>
                     </div>

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class PracticumReadinessDetail extends Model
+class practicumLeftOver extends Model
 {
     use HasFactory;
 
-    public function labItem()
-    {
+    protected $table = 'practicum_leftover';
+
+    public function labItem(){
         return $this->belongsTo(LabItem::class);
     }
     public function stockCard() {
@@ -20,9 +21,9 @@ class PracticumReadinessDetail extends Model
     protected $fillable = [
         'code',
         'qty',
-        'description',
-        'practicum_readiness_id',
         'lab_item_id',
-        'stock_card_id'
+        'stock_card_id',
+        'practicum_result_leftover_handover_id',
+        'unit_id',
     ];
 }

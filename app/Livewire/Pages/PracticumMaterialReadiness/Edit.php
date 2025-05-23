@@ -5,22 +5,30 @@ namespace App\Livewire\Pages\PracticumMaterialReadiness;
 use App\Models\AcademicWeek;
 use App\Models\AcademicYear;
 use App\Models\Course;
+use App\Models\LabItem;
 use App\Models\Laboratory;
 use App\Models\PracticumReadiness;
 use App\Models\PracticumReadinessDetail;
 use App\Models\Semester;
 use App\Models\SemesterCourse;
 use App\Models\Staff;
+use App\Models\StockCard;
 use App\Models\StudyProgram;
+use Carbon\Carbon;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class Edit extends Component
 {
-    public $selectedRecomendation;
+    public $code;
+    public $pracMat;
+    public $recomendations;
     public $borrowingDate;
     public $id;
     // #[Validate('required|exists:study_programs,id')]
@@ -66,91 +74,154 @@ class Edit extends Component
 public function mount($id) {
     try {
         $this->id = Crypt::decrypt($id);
-        $pracMat = PracticumReadiness::find($this->id)->load('courseInstructor','semesterCourse','academicWeek','pracMacs','laboratory');
+        $pracMat = PracticumReadiness::find($this->id)->load('courseInstructor','semesterCourse.semester.academicYear','staff.user','academicWeek','pracMacs','pracMacs.labItem','laboratory');
+        // dd($this->recomendations = $pracMat->recomendation);
         $this->Laboratory_id = $pracMat->laboratory_id;
         $this->selectedStudyProgram = $pracMat->semesterCourse->study_program_id;
-        $this->selectedAcademicYear = $pracMat->semesterCourse->academicYear->id ?? null;
+        $this->selectedAcademicYear = $pracMat->semesterCourse->semester->academicYear->id;
         $this->selectedSemester = $pracMat->semesterCourse->semester_id;
-        $this->selectedCourse = $pracMat->courseInstructor->course_id;
-        $this->selectedLecturer = $pracMat->courseInstructor->staff_id;
+        $this->selectedCourse = $pracMat->semesterCourse->course->id;
+        $this->selectedLecturer = $pracMat->staff->user->id?? "-";
         $this->selectedAcademicWeek = $pracMat->academic_week_id;
-        $this->borrowingDate = $pracMat->borrowing_date ? date('d/m/Y', strtotime($pracMat->borrowing_date)) : now()->format('d/m/Y');
-        $this->selectedRecomendation = $pracMat->recomendation_id; // ganti sesuai kolom rekomendasi di database
+        $this->borrowingDate = Carbon::parse($pracMat->date)->format('d/m/Y');
+        $this->recomendations = $pracMat->recomendation;
+        $this->pracMatUpdate = $pracMat;
+        $this->code = Str::random(8);
 
-        // Isi Alat dan Bahan
-        $this->selectedItems = [];
-        foreach ($pracMat->pracMacs as $pracMac) {
-            $this->selectedItems[] = [
-                'item' => $pracMac->lab_item_id,
-                'stock' => $pracMac->labItem->stock ?? 0,
-                'qty' => $pracMac->qty,
-                'description' => $pracMac->description,
+        $this->selectedItems = $pracMat->pracMacs->map(function($item) {
+            return [
+                // 'id' => $item->id,
+                'item' => $item->lab_item_id,
+                'qty' => $item->qty,
+                'stock' => $item->stockCard->stock,
+                'description' => $item->description,
             ];
-        }
-        } catch (DecryptException $e) {
+        })->toArray();
+
+
+        } catch (DecryptException) {
             return response()->json("error");
         }
     }
+
+    public $pracMatUpdate;
+    protected function getSemesterCourse(){
+        $semesterCourse = SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ]);
+        return $semesterCourse;
+    }
     public function edit()
 {
-    // Validasi data jika diperlukan
-    $this->validate([
-        'semester_course_id' => 'required|exists:study_programs,id',
-        'academic_week_id' => 'required|exists:academic_years,id',
-        'seme' => 'required|exists:semesters,id',
-        'selectedCourse' => 'required|exists:courses,id',
-        'selectedLecturer' => 'required|exists:staff,id',
-        'selectedAcademicWeek' => 'required|exists:academic_weeks,id',
-        'date' => 'required|date',
-        'selectedRecomendation' => 'required|in:1,2,3,4',
-        'selectedItems' => 'array',
-    ]);
+    // dd( $this->getSemesterCourse()->id);
 
-    // Mencari data Praktikum Readiness berdasarkan id
-    $pracMat = PracticumReadiness::find($this->id);
+    // dd($this->selectedItems);
+    $this->pracMatUpdate->recomendation = $this->recomendations;
+    $this->pracMatUpdate->date = Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->format('Y-m-d');
+    $this->pracMatUpdate->staff_id = $this->selectedLecturer?? null;
+    $this->pracMatUpdate->academic_week_id = $this->selectedAcademicWeek;
+    $this->pracMatUpdate->semester_course_id = $this->getSemesterCourse()->id;
+    $this->pracMatUpdate->course_instructor_id = $this->getSemesterCourse()->courseInstructor->id;
+    // dd($this->recomendations);
+    try {
+        DB::beginTransaction();
+        $this->pracMatUpdate->save();
+        // dd($this->deleteItemList);
 
-    // Update data utama praktikum readiness
-    $pracMat->recomendation = $this->selectedRecomendation;
-    $pracMat->date = \Carbon\Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->format('Y-m-d');
-    $pracMat->course_instructor_id = $this->selectedLecturer;
-    $pracMat->semester_course_id = $this->selectedSemester;
-    $pracMat->staff_id = $this->selectedLecturer;
-    $pracMat->lab_member_id = $this->selectedLabMember;  // Tambahkan input untuk lab_member jika diperlukan
-    $pracMat->laboratory_id = $this->selectedLaboratory;  // Tambahkan input untuk laboratory jika diperlukan
-    $pracMat->academic_week_id = $this->selectedAcademicWeek;
+        if (count($this->deleteItemList) > 0) {
+            // creating the stockCards
+            $stockCardDatas = [];
+            foreach ($this->deleteItemList as $item) {
+                $stockCardDatas[] = [
+                    'qty' => $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item'])->qty,
+                    'stock' => $item['stock'],
+                    'is_stock_in' => 1,
+                    'description' => 'stock in from deleted item in labItem(canceled loan item)',
+                    'lab_item_id' => $item['item'],
+                    'lab_member_id' => Auth::user()->staff->id,
+                ];
+            }
+            $stockCards = StockCard::insert($stockCardDatas);
 
-    // Simpan data Praktikum Readiness
-    $pracMat->save();
 
-    // Mengupdate atau menyimpan data praktikum readiness detail
-    foreach ($this->selectedItems as $item) {
-        PracticumReadinessDetail::updateOrCreate(
-            ['id' => $item['id'] ?? null],  // Jika ada id, update data
-            [
-                'code' => $item['code'],
-                'qty' => $item['qty'],
-                'description' => $item['description'],
-                'practicum_readiness_id' => $pracMat->id,  // Relasikan dengan practicum readiness yang baru
-                'lab_item_id' => $item['item'],  // Pastikan ada item_id yang valid
-                'stock_card_id' => $item['stock_card_id'],  // Pastikan ada stock_card_id yang valid
-                'unit_id' => $item['unit_id'] ?? null,  // Jika unit_id tidak ada, bisa null
-            ]
-        );
+            // updating the stock in labItem based on deleted LoanDetail
+            $deletedPracMacs = LabItem::whereIn('id', collect($stockCardDatas)->pluck('lab_item_id'))->get()->load('item');
+            foreach ($deletedPracMacs as $deletedPracMacsItem) {
+                $deletedPracMacsItem->update([
+                    'stock' => $deletedPracMacsItem->stock + collect($stockCardDatas)->firstWhere('lab_item_id', $deletedPracMacsItem->id)['qty']
+                ]);
+            }
+
+
+            // deleting the equipmentLoanDetails based on $deletedLoanItems
+            $qeLoanDetail = $this->pracMatUpdate->pracMacs->whereIn('lab_item_id', collect($this->deleteItemList)->pluck('item'))->each(function ($pracMatDetail) {
+                $pracMatDetail->stockCard->delete();
+                $pracMatDetail->delete();
+            });
+        }
+
+        foreach ($this->selectedItems as $item) {
+            $pracMacsDetail = $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item']);
+
+            // if ($loanDetail && $loanDetail->stockCard) {
+            if ($pracMacsDetail) {
+                $pracMacsDetail->stockCard->qty = $item['qty'];
+
+                $pracMacsDetail->update([
+                    'qty' => $item['qty'],
+                    'description' => $item['description']
+                ]);
+
+                $pracMacsDetail->labItem->update([
+                    'stock' => $pracMacsDetail->stockCard->stock - $item['qty']
+                ]);
+            } else {
+                $stockCard = StockCard::create([
+                    'qty' => $item['qty'],
+                    'stock' => $item['stock'],
+                    'is_stock_in' => 0,
+                    'description' => $item['description'],
+                    'lab_item_id' => $item['item'],
+                    'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->pracMatUpdate->laboratory_id)->id,
+                ]);
+                $createdPracMacsDetail = PracticumReadinessDetail::create([
+                    // 'code' => $this->code,
+                    'qty' => $item['qty'],
+                    'description' => $item['description'],
+                    'practicum_readiness_id' => $this->pracMatUpdate->id,
+                    'lab_item_id' => $item['item'],
+                    'stock_card_id' => $stockCard->id,
+                ]);
+
+                $createdPracMacsDetail->labItem->update([
+                    'stock' => $createdPracMacsDetail->labItem->stock - $createdPracMacsDetail->qty
+                ]);
+            }
+        }
+        DB::commit();
+            return response()->json([
+                'status' => "success",
+                'message' => "Laporan peminjaman alat praktikum berhasil diubah"
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Data Kesiapan Bahan Praktikum berhasil diperbarui.'
-    ]);
-}
-
+    public $deleteItemList = [];
 
     public $selectedItems = [
         [
             'item' => '',
-            'stok' => '', // stok
+            'stock' => '', // stok
             'qty' => '', // jumlah
-            'keterangan' => '', // keterangan
+            'description' => '', // keterangan
         ]
     ];
 
@@ -158,22 +229,31 @@ public function mount($id) {
     public function addItem() {
         $this->selectedItems[] = [
             'item' => '',
-            'stok' => '',
+            'stock' => '',
             'qty' => '',
-            'keterangan' => '',
+            'description' => '',
+            'is_new' => true
         ];
     }
 
     public function removeItem($index) {
+        $this->deleteItemList[] = $this->selectedItems[$index];
         unset($this->selectedItems[$index]);
-        $this->selectedItems = array_values($this->selectedItems); // reindex biar rapi
+        if (count($this->selectedItems) == 0) {
+            $this->selectedItems = [];
+            $this->addItem();
+        }
+        // $this->selectedItems = array_values($this->selectedItems); // reindex biar rapi
     }
 
+    public function redirectToIndex() {
+        $this->redirectRoute('prac-mat-ready', navigate: true);
+    }
 
     public function render()
     {
         return view('livewire.pages.practicum-material-readiness.edit',[
-            'recomendations' => PracticumReadiness::all()
+            // 'recomendations' => PracticumReadiness::all()
         ]);
     }
 }

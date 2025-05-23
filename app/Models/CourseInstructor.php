@@ -19,6 +19,9 @@ class CourseInstructor extends Model
     public function studyPrograms(){
         return $this->belongsTo(StudyProgram::class);
     }
+    public function staff(){
+        return $this->belongsTo(Staff::class);
+    }
 
     protected $fillable =['semester_course_id','staff_id','user_id'];
 }

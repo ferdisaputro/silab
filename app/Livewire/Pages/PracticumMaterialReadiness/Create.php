@@ -30,21 +30,17 @@ class Create extends Component
     // ======== Praticum_Readiness =======\
     #[Validate('required')]
     public $recomendation;
-    #[Validate ('required')]
-    public $course_instructor_id;
-    #[Validate ('required')]
-    public $seme;
     #[Validate('required|string|max:12')] // VARCHAR(12) for unique code
     public $code;
-    #[Validate('required')] // DATETIME for borrowing date
+    #[Validate('required')]
     public $borrowingDate;
     #[Validate('required|integer|exists:laboratories,id')] // BIGINT(20), foreign key, not null
     public $laboratoryId;
 
-    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
     public $labMemberIdBorrow;
 
-    #[Validate('required|exists:staff,id')]
+    #[Validate('exists:staff,id')]
     public $selectedLecturer;
 
 
@@ -97,34 +93,31 @@ class Create extends Component
                                 ->where('semester_id',$this->selectedSemester)
                                 ->where('course_id',$this->selectedCourse)->first()->id;
     }
-        protected function getSemesterCourseId(){
-            $semesterCourses = SemesterCourse::firstOrCreate([
+        protected function getSemesterCourse(){
+            $semesterCourse = SemesterCourse::firstWhere([
                 'semester_id' => $this->selectedSemester,
                 'study_program_id' => $this->selectedStudyProgram,
                 'course_id' => $this->selectedCourse
             ]);
-            return $semesterCourses->id;
-        }
-        protected function getCourseInstructorId(){
-            $semesterCourseId = $this->getSemesterCourseId();
-
-            $courseInstructorId = CourseInstructor::firstOrCreate([
-                'semester_course_id' => $semesterCourseId,
-                'staff_id' => $this->selectedLecturer,
-                'user_id' => Auth::user()->id,
-            ]);
-            return $courseInstructorId->id;
+            return $semesterCourse;
         }
 
     public function create() {
-
+        $this->validate();
         $data = [];
+        if ($this->getSemesterCourse()->courseInstructor) {
+            $data['course_instructor_id'] = $this->getSemesterCourse()->courseInstructor->id;
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Matakuliah ini belum memiliki dosen pengampu.'
+            ]);
+        }
         $data['recomendation'] = $this->recomendation;
         $data['date'] = Carbon::createFromFormat('d/m/Y', time: $this->borrowingDate)->toDateTimeString();
-        $data['course_instructor_id'] = $this->getCourseInstructorId();
         // dd($this->semesterCourse(), $data['course_instructor_id']);
-        $data['semester_course_id'] = $this->getSemesterCourseId();
-        $data['staff_id'] = $this->selectedLecturer;
+        $data['semester_course_id'] = $this->getSemesterCourse()->id;
+        $data['staff_id'] = $this->selectedLecturer?? null;
         $data['lab_member_id'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
         $data['laboratory_id'] = $this->laboratoryId;
         $data['academic_week_id'] = $this->selectedAcademicWeek;
@@ -136,7 +129,7 @@ class Create extends Component
                 'stock' => $item['stock'],
                 'is_stock_in' => 0,
                 'description' => $item['description']?? null,
-                'practicum_readiness_id' => $practicum_readiness_id?? 1, // ?? 1 just temp data
+                // 'practicum_readiness_id' => $practicum_readiness_id?? 1, // ?? 1 just temp data
                 'lab_item_id' => $item['item'],
                 'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id,
             ];
@@ -154,7 +147,7 @@ class Create extends Component
                     'code' => $this->code,
                     'qty' => $item['qty'],
                     'description' => $item['description']?? null,
-                    'practicum_readiness_id' => $practicum_readiness_id->id, //  just temp data
+                    // 'practicum_readiness_id' => $practicum_readiness_id->id, //  just temp data
                     'lab_item_id' => $item['item'],
                     'stock_card_id' => $stockCardsResult->firstWhere('lab_item_id', $item['item'])->id,
                 ];

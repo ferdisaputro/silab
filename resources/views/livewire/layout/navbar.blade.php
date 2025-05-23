@@ -31,7 +31,6 @@ new class extends Component
 
             <!-- Settings Dropdown -->
             <div class="flex items-center ms-6">
-                <div>ada bug di bagian penampilan lab item dimana itu hanya menampilkan alat dan bahan namun tidak dengan hasil uji praktek</div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
 
