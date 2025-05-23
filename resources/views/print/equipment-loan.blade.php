@@ -138,7 +138,7 @@
             </div>
 
             <div class="column" style="text-align:left; float: left; width: 50%;font-size:16px;line-height: 18px; margin-top:20px; padding-left:100px;">
-                <div>Jember,  {{$equipmentLoan->borrowing_date }}</div>
+                <div>Jember,  {{ $borrowingDate }}</div>
                 <div>Pemohon,</div>
                 <div style="margin-top: 50px;"><u>{{ $name }}</u></div>
                 <div>{{ $code }}</div>

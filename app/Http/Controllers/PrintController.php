@@ -51,6 +51,7 @@ class PrintController extends Controller
             'equipmentLoan' => $equipmentLoan,
             'returnerName' => $returnerName,
             'returnerCode' => $returnerCode,
+            'borrowingDate' => Carbon::parse($equipmentLoan->borrowing_date)->translatedFormat('l, d F Y')
         ];
 
         $date = date('YmdHis');
