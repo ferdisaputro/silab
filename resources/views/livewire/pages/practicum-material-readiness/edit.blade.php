@@ -3,7 +3,7 @@
     <div class="p-5 space-y-7 bg-white shadow-lg rounded-xl">
         <div class="flex items-center justify-between">
             <x-text.page-title>
-                Laporan Kesiapan Bahan Praktikum {{ $id }}
+                Laporan Kesiapan Bahan Praktikum
             </x-text.page-title>
         </div>
 
@@ -15,7 +15,7 @@
                         {{-- wire:model="selectedStudyProgram" --}}
                         model="selectedStudyProgram"
                         class="flex-1"
-                        name="prodi"
+                        name="selectedStudyProgram"
                         label="Pilih Program Studi">
                         @foreach ($this->studyPrograms as $studyProgram)
                             <option value="{{ $studyProgram->id }}"
@@ -30,7 +30,7 @@
                             wire:key="{{ now() }}"
                             model="selectedAcademicYear"
                             class="flex-1"
-                            name="tahun_ajaran"
+                            name="selectedAcademicYear"
                             label="Pilih Tahun Ajaran">
                             @foreach ($this->academicYears as $academicYear)
                                 <option value="{{ $academicYear->id }}"
@@ -44,7 +44,7 @@
                             wire:key="{{ now() }}"
                             model="selectedSemester"
                             class="flex-1"
-                            name="semester"
+                            name="selectedSemester"
                             label="Pilih Semester">
                             @foreach ($this->semesters as $semester)
                                 <option value="{{ $semester->id }}"
@@ -63,7 +63,7 @@
                         wire:key="{{ now() }}"
                         class="flex-1"
                         model="selectedCourse"
-                        name="mata_kuliah"
+                        name="selectedCourse"
                         label="Pilih Mata Kuliah">
                         @foreach ($this->Courses as $course )
                             <option value="{{ $course->id }}" {{ $course->id == $selectedCourse? 'selected' : '' }}>
@@ -76,7 +76,7 @@
                     <x-forms.select-advanced
                         class="flex-1"
                         model="selectedLecturer"
-                        name="dosen"
+                        name="selectedLecturer"
                         label="Pilih Dosen">
                         @foreach ($this->lecturers as $lecturer)
                                 <option value="{{ $lecturer->id }}" {{ $lecturer->id == $selectedLecturer? "selected" : "" }}>
@@ -93,7 +93,7 @@
                         wire:key="{{ now() }}"
                         class="flex-1"
                         model="selectedAcademicWeek"
-                        name="minggu"
+                        name="selectedAcademicWeek"
                         label="Pilih Minggu">
                         @foreach ($this->academicWeeks as $academicWeek)
                             <option value="{{ $academicWeek->id }}" {{ $academicWeek->id == $selectedAcademicWeek? "selected" : "" }}>
@@ -104,14 +104,14 @@
 
                     <x-forms.input
                         wire:model.live.debounce="borrowingDate"
-                        value="{{ date('d/m/Y', strtotime(now())) }}"
+                        value="{{ $this->borrowingDate }}"
                         wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
                         class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
-
-                    <x-forms.select
+                        {{-- @dump($recomendations) --}}
+                        <x-forms.select
                         wire:model.live.debounce='recomendations'
                         class="flex-1"
-                        name="recomendation"
+                        name="recomendations"
                         label="Rekomendasi Dosen">
                         @php
                             $recommendationTexts = [
@@ -121,14 +121,11 @@
                                 4 => "Ditunda"
                             ];
                         @endphp
-                        @foreach ($recomendations as $recomendation)
-                            @if (isset($recommendationTexts[$recomendation->id]))
-                                <option value="{{ $recomendation->id }}">
-                                    {{ $recommendationTexts[$recomendation->id] }}
-                                </option>
-                            @endif
+                        @foreach ($recommendationTexts as $key => $text)
+                            <option value="{{ $key }}" {{ $key == $recomendations? "selected": "" }}>{{ $text }}</option>
                         @endforeach
                     </x-forms.select>
+
                 </div>
             </div>
         </div>
@@ -138,10 +135,11 @@
             <div class="space-y-4">
                 @foreach ($selectedItems as $index => $item)
                 <div>
-                    <span class="text-sm">Alat dan Bahan {{ $index + 1 }}</span>
                     <div class="flex flex-row flex-wrap gap-4 mt-2">
                         <div class="flex flex-[1.3] gap-4">
+                            {{-- @if (!empty($item['is_new'])) --}}
                             <x-forms.select
+                                :disabled="!isset($item['is_new'])? true : false"
                                 class="flex-1 min-w-24"
                                 wire:model.live='selectedItems.{{ $index }}.item'
                                 name="selectedItems.{{ $index }}.item"
@@ -161,15 +159,19 @@
                                 <div
                                     wire:key='{{ $selectedItems[$index]['item']?? now() }}'
                                     wire:init="set('selectedItems.{{ $index }}.stock', {{
-                                        $this->labItems->find($selectedItems[$index]['item'])?
-                                        $this->labItems->find($selectedItems[$index]['item'])->stock : '0'
+                                        isset($item['is_new'])?
+                                            ($pracMatUpdate->laboratory->labItems->find($selectedItems[$index]['item'])?
+                                                $pracMatUpdate->laboratory->labItems->find($selectedItems[$index]['item'])->stock : '0')
+                                        : ($pracMatUpdate->pracMacs->firstWhere('lab_item_id', $selectedItems[$index]['item'])?
+                                            $pracMatUpdate->pracMacs->firstWhere('lab_item_id', $selectedItems[$index]['item'])->stockCard->stock : '0')
+
                                     }})"
                                 >
                                     <x-forms.input
                                     class="flex-1 md:flex-none md:max-w-20"
                                     wire:model='selectedItems.{{ $index }}.stock'
                                     label="Stok"
-                                    disabled="true" />
+                                    disabled/>
                                 </div>
                                 <x-forms.input
                                     type="number"

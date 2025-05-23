@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('item_code',32);
             $table->integer('quantity');
             $table->string('specification');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('item_type_id')->nullable()->constrained()->nullOnDelete();

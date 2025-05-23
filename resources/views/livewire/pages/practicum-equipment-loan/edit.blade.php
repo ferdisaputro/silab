@@ -106,6 +106,7 @@
                                         label="Stok"
                                         disabled="true" />
                                     </div>
+
                                     <x-forms.input
                                         type="number"
                                         class="flex-1 md:flex-none md:max-w-20"

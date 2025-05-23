@@ -25,6 +25,10 @@ class PracticumReadiness extends Model
     {
         return $this->belongsTo(Laboratory::class);
     }
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 
     protected $fillable = ['recomendation','date','course_instructor_id','semester_course_id','staff_id','lab_member_id','laboratory_id','academic_week_id'];
 }
