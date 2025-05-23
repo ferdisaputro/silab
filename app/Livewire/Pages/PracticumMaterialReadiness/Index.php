@@ -47,13 +47,6 @@ class Index extends Component
                     ->paginate($this->PMRPerPage);
                     // ->orderBy($this->permissionOrderBy, $this->permissionOrderByDirection)
     }
-    // where('recomendation', 'like', "%$this->practicumMaterialReadinessFilter()%")
-
-    // #[Computed()]
-    // public function laboratories(){
-    //     $laboratories = PracticumReadiness::whereIn("id", Auth::user()->labMembers->pluck('laboratory_id'))->get();
-    //     return $laboratories;
-    // }
 
     public function delete($key) {
         $id = Crypt::decrypt($key);
@@ -63,11 +56,11 @@ class Index extends Component
 
             $PracMat = PracticumReadiness::find($id);
 
-                // foreach ($PracMat->pracMacs as $pracMatDetail) {
-                //     $pracMatDetail->labItem->stock = $pracMatDetail->labItem->stock + $pracMatDetail->qty;
-                //     $pracMatDetail->labItem->save();
-                //     $pracMatDetail->stockCard->delete();
-                // }
+                foreach ($PracMat->pracMacs as $pracMatDetail) {
+                    $pracMatDetail->labItem->stock = $pracMatDetail->labItem->stock + $pracMatDetail->qty;
+                    $pracMatDetail->labItem->save();
+                    $pracMatDetail->stockCard->delete();
+                }
                 // dd($pracMatDetail);
 
                 $PracMat->delete();
@@ -76,10 +69,10 @@ class Index extends Component
 
                 DB::commit();
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Jurusan berhasil dihapus',
-                ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Jurusan berhasil dihapus',
+            ]);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([

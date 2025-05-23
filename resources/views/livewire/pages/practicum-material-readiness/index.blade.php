@@ -13,13 +13,15 @@
                     wire:model.live='selectedLab'
                 >
                     @foreach ($this->laboratories as $lab)
-                        <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>{{ $lab->code }} - {{ $lab->name }}</option>
+                        <option value="{{ $lab->id }}" {{ $lab->id == $selectedLab? "selected" : "" }}>
+                            {{ $lab->code }} - {{ $lab->name }}</option>
                     @endforeach
                 </x-forms.select>
             </div>
             <div>
                 <a href="{{ route('prac-mat-ready.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
-                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">Tambah Peminjaman</x-buttons.fill>
+                    <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">
+                        Tambah Peminjaman</x-buttons.fill>
                 </a>
             </div>
         </div>
@@ -57,10 +59,10 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                <x-badges.outline
+                                {{-- <x-badges.outline
                                     title="cetak"
                                     class="px-2.5 py-1.5"
-                                    color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline> --}}
                                 <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($PracMat->id)]) }}" wire:navigate>
                                     <x-badges.outline
                                         title="Edit"
@@ -87,7 +89,7 @@
             Alpine.data('PracMat', () => {
                 return {
                     deleteKesiapan(key) {
-                        console.log("Key yang diterima:", key);
+                        // console.log("Key yang diterima:", key);
                         swal.fire({
                             title: `Hapus Data`,
                             text: `Apakah Anda yakin ingin menghapus Kesiapan bahan?`,
@@ -112,75 +114,3 @@
     @endscript
 @endpushOnce
 
-{{-- @pushOnce('scripts')
-    @script
-        <script>
-            Alpine.data('PracMat',() => {
-                return{
-                    deleteKesiapan(key) {
-                    swal.fire({
-                        title: `Hapus Data`,
-                        text: `Apakah Anda yakin ingin menghapus Kesiapan Bahan?`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Ya',
-                        cancelButtonText: 'Batal',
-                    }).then(async res => {
-                        if (res.isConfirmed) {
-                            result = await $wire.delete(key);
-                            if (result.original.status !== 'error') {
-                                console.log("Response dari Livewire:", result);
-                                swal.fire('Berhasil', 'Data Kesiapan Bahan Berhasil Dihapus', 'success')
-                                $wire.$refresh() //refresh component from the parent of this component wich is index
-                            } else
-                                swal.fire('Gagal', 'Data Kesiapan Bahan Gagal Dihapus: ' + result.original.message, 'error')
-                        }
-                    })
-                }
-                }
-            })
-
-                // console.log(key);
-        </script>
-    @endscript
-@endpushOnce --}}
-
-
-{{-- @pushOnce('scripts')
-    @script
-        <script>
-            Alpine.data('detailPracMatReady', () => {
-                return {
-                    detailPracMatReadyState: false,
-                    showDetailPracMatReady (id) {
-                        $wire.dispatch('initDetailPracMatReady', {id: id});
-                        this.detailPracMatReadyState = true;
-                    }
-                }
-            })
-
-            Alpine.data('editPracMatReady', () => {
-                return {
-                    editPracMatReadyState: false,
-                    showEditPracMatReady (id) {
-                        $wire.dispatch('initEditPracMatReady', {id: id});
-                        this.editPracMatReadyState = true;
-                    }
-                }
-            })
-        </script>
-    @endscript
-@endpushOnce --}}
-    {{-- <div>
-        <x-modals.modal identifier="createPracMatReadyState" max_width="max-w-xl">
-            <livewire:pages.practicum-material-readiness.create />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="editPracMatReadyState" max_width="max-w-xl">
-            <livewire:pages.practicum-material-readiness.edit />
-        </x-modals.modal>
-
-        <x-modals.modal identifier="detailPracMatReadyState" max_width="max-w-4xl">
-            <livewire:pages.practicum-material-readiness.detail />
-        </x-modals.modal>
-    </div> --}}
