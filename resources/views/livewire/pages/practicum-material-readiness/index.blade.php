@@ -59,10 +59,10 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                <x-badges.outline
+                                {{-- <x-badges.outline
                                     title="cetak"
                                     class="px-2.5 py-1.5"
-                                    color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline>
+                                    color="yellow"><i class="fa-regular fa-print fa-lg"></i></x-badges.outline> --}}
                                 <a href="{{ route('prac-mat-ready.edit', ['id' => Crypt::encrypt($PracMat->id)]) }}" wire:navigate>
                                     <x-badges.outline
                                         title="Edit"

@@ -128,7 +128,7 @@ public function mount($id) {
     try {
         DB::beginTransaction();
         $this->pracMatUpdate->save();
-        dd($this->deleteItemList);
+        // dd($this->deleteItemList);
 
         if (count($this->deleteItemList) > 0) {
             // creating the stockCards

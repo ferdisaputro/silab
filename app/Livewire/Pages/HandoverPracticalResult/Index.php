@@ -8,6 +8,7 @@ use App\Models\PracticumResultHandover;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -72,6 +73,9 @@ class Index extends Component
     }
     public function render()
     {
+        if (Gate::allows('isNotALabMember', Auth::user())) {
+            return view('components.not-a-lab-member-exception');
+        }
         return view('livewire.pages.handover-practical-result.index');
     }
 }

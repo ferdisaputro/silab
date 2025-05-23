@@ -37,7 +37,7 @@ class Create extends Component
     #[Validate('required|integer|exists:laboratories,id')] // BIGINT(20), foreign key, not null
     public $laboratoryId;
 
-    #[Validate('nullable|integer|exists:lab_members,id')] // BIGINT(20), nullable, foreign key
+    #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
     public $labMemberIdBorrow;
 
     #[Validate('exists:staff,id')]
@@ -105,9 +105,16 @@ class Create extends Component
     public function create() {
         $this->validate();
         $data = [];
+        if ($this->getSemesterCourse()->courseInstructor) {
+            $data['course_instructor_id'] = $this->getSemesterCourse()->courseInstructor->id;
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Matakuliah ini belum memiliki dosen pengampu.'
+            ]);
+        }
         $data['recomendation'] = $this->recomendation;
         $data['date'] = Carbon::createFromFormat('d/m/Y', time: $this->borrowingDate)->toDateTimeString();
-        $data['course_instructor_id'] = $this->getSemesterCourse()->courseInstructor->id;
         // dd($this->semesterCourse(), $data['course_instructor_id']);
         $data['semester_course_id'] = $this->getSemesterCourse()->id;
         $data['staff_id'] = $this->selectedLecturer?? null;
