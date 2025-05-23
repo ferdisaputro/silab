@@ -106,7 +106,7 @@
                         wire:model.live.debounce="borrowingDate"
                         value="{{ $this->borrowingDate }}"
                         wire:init="borrowingDate = '{{ date('d/m/Y', strtotime(now())) }}'"
-                        class="flex-1" name="borrowingDate" label="Tanggal Peminjaman" datepicker />
+                        class="flex-1" name="borrowingDate" label="Tanggal" datepicker />
                         {{-- @dump($recomendations) --}}
                         <x-forms.select
                         wire:model.live.debounce='recomendations'
