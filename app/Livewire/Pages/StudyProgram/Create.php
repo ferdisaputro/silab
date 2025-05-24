@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
-    #[Validate("required|min:3|unique:study_programs|max:8")]
+    #[Validate("required|min:3|unique:study_programs|max:32")]
     public $code;
     #[Validate("required|min:3")]
     public $studyProgram;
