@@ -19,7 +19,6 @@
                     </div>
 
                     <div>
-                        @dump($errors->all())
                         <div class="flex flex-wrap gap-4" x-show="isStaff" x-transition>
                             <x-forms.select-advanced wire:key='{{ now() }}' class="flex-1 md:min-w-[20rem] md:max-w-lg" model="staff" name="staff" label="Pilih Pegawai">
                                 @foreach ($staffs as $staffData)
