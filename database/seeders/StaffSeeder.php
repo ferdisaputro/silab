@@ -189,5 +189,11 @@ class StaffSeeder extends Seeder
 
         $defaultUser->assignRole(Role::find(1));
         $teknisi->assignRole(Role::find(1));
+
+        // User::factory(20)->create()->each(function($user) {
+        //     Staff::factory(1)->create([
+        //         'user_id' => $user->id
+        //     ]);
+        // });
     }
 }

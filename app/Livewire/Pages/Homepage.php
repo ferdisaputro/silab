@@ -27,6 +27,7 @@ class Homepage extends Component
     // public function itemTypes() {
     //     return ItemType::with('items')->all();
     // }
+
     public function render()
     {
         $laboratories = null;
