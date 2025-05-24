@@ -3,7 +3,7 @@
         <div x-data="Object.assign({itemMasterState: false})">
             <div>
                 <x-modals.modal max_width="max-w-3xl" identifier="itemMasterState">
-                    <livewire:pages.handover-practical-result.create-item isSelectable="true" identifier="itemMasterState" {{-- this is the identifier to close the modal(table-employee modal) --}} />
+                    <livewire:pages.handover-practical-result.create-item />
                 </x-modals.modal>
             </div>
             <div class="flex items-center justify-between mb-6">
@@ -25,9 +25,8 @@
                                 name="items.{{ $index }}.praktikum"
                                 label="Pilih Hasil Praktikum"
                             >
-                                <option value="">-- pilih --</option>
-                                @foreach($availableItemsPerRow[$index] ?? [] as $availableItem)
-                                    <option value="{{ $availableItem->id }}">
+                                @foreach($availableItems as $availableItem)
+                                    <option value="{{ $availableItem->id }}" {{ collect($items)->firstWhere('praktikum', $availableItem->id)? "disabled" : '' }}>
                                         {{ $availableItem->item_name }}
                                     </option>
                                 @endforeach

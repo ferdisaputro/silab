@@ -37,6 +37,7 @@ class CreateItem extends Component
                 'specification' => $item['description'],
                 'unit_id' => $item['satuan'],
                 'item_type_id' => 3,
+                'is_active' => 0,
                 'user_id' => auth()->id(),
             ]);
         }
