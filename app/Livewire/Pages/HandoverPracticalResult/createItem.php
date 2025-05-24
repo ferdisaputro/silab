@@ -11,7 +11,7 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 
 
-class createItem extends Component
+class CreateItem extends Component
 {
     public $id;
     public $code;
