@@ -7,15 +7,17 @@
                 </x-text.page-title>
             </div>
 
-            <div wire:init="set('isStaff', 1)" x-data="{isStaff: true, isStaffSelected: true, isStudentSelected: false}">
+            <div>
                 <x-alerts.outline class="mb-5" color="purple" message="Informasi Peminjam" />
                 <div class="px-5 space-y-5">
                     <div class="text-center">
-                        <x-buttons.outline wire:click="set('isStaff', 1)" color="purple" x-show="!isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.outline>
-                        <x-buttons.fill color="purple" x-show="isStaffSelected" x-on:click="isStaff = true; isStaffSelected = true; isStudentSelected = false">Pegawai</x-buttons.fill>
-
-                        <x-buttons.outline wire:click="set('isStaff', 0)" color="blue" x-show="!isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.outline>
-                        <x-buttons.fill color="blue" x-show="isStudentSelected" x-on:click="isStaff = false ; isStaffSelected = false; isStudentSelected = true">Mahasiswa</x-buttons.fill>
+                        @if ($lbsUsagePermit->is_staff)
+                            <x-buttons.fill color="purple">Pegawai</x-buttons.fill>
+                            <x-buttons.outline color="blue">Mahasiswa</x-buttons.outline>
+                        @else
+                            <x-buttons.outline color="purple">Pegawai</x-buttons.outline>
+                            <x-buttons.fill color="blue">Mahasiswa</x-buttons.fill>
+                        @endif
                     </div>
 
                     <div>
