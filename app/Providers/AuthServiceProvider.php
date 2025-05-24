@@ -27,7 +27,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('isNotALabMember', function($user) {
-            return $user->labMembers->count() <= 0;
+            return $user->labMembers->where('is_active', 1)->count() <= 0;
+
         });
 
         Gate::define('hasPermissionTo', function($user, $permissions) {
