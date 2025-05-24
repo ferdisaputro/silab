@@ -1,7 +1,7 @@
 <x-container x-data="createHandOver">
     <div>
         <x-modals.modal max_width="max-w-xl" identifier="createPracticumResultState">
-            <livewire:pages.handover-practical-result.table-practicum-result :laboratoryId="$laboratoryId">
+            <livewire:pages.handover-practical-result.table-practicum-result :laboratoryId=$laboratoryId lazy>
         </x-modals.modal>
     </div>
     <form x-on:submit.prevent="submitHandler">
@@ -120,10 +120,9 @@
                                 wire:model.live.change='materialItems.{{ $index }}.material'
                                 name="materialItems.{{ $index }}.material"
                                 label="Pilih Bahan">
-                                    @foreach ($this->LabMaterials as $LabMaterial)
+                                    @foreach ($labMaterials as $LabMaterial)
                                         <option
-                                            value="{{ $LabMaterial->id }}"
-                                            {{ $LabMaterial->id == $materialItems[$index]['material']? "selected" : '' }}>
+                                            value="{{ $LabMaterial->id }}" {{ collect($materialItems)->firstWhere('material', $LabMaterial->id)? "disabled" : '' }}>
                                             {{ $LabMaterial->item->item_name }}
                                         </option>
                                     @endforeach
@@ -132,14 +131,14 @@
                             <div
                             wire:key='{{ $materialItems[$index]['material'] }}'
                             {{-- wire:init="ddData" --}}
-                            wire:init="set('materialItems.{{ $index }}.unit', '{{ $this->LabMaterials->find($materialItems[$index]['material']) ?
-                                            $this->LabMaterials->find($materialItems[$index]['material'])->item->unit_id : '' }}')"
+                            wire:init="set('materialItems.{{ $index }}.unit', '{{ $labMaterials->find($materialItems[$index]['material']) ?
+                                            $labMaterials->find($materialItems[$index]['material'])->item->unit_id : '' }}')"
                             >
                             <x-forms.input
                                 class="flex-1 min-w-24 md:max-w-60"
                                 {{-- wire:model="materialItems.{{ $index }}.satuan" --}}
-                                value="{{ $this->LabMaterials->find($materialItems[$index]['material']) ?
-                                            $this->LabMaterials->find($materialItems[$index]['material'])->item->unit->satuan : '' }}"
+                                value="{{ $labMaterials->find($materialItems[$index]['material']) ?
+                                            $labMaterials->find($materialItems[$index]['material'])->item->unit->satuan : '' }}"
                                 label="satuan"
                                 disabled="true"
                                 />
@@ -200,8 +199,8 @@
                                 wire:model='practicumResults.{{ $index }}.pracRes'
                                 name="practicumResults.{{ $index }}.pracRes"
                                 label="Pilih Barang">
-                                    @foreach ($this->LabPracticums as $LabPracticum)
-                                        <option value="{{ $LabPracticum->id }}">
+                                    @foreach ($labPracticums as $LabPracticum)
+                                        <option value="{{ $LabPracticum->id }}" {{ collect($practicumResults)->firstWhere('pracRes', $LabPracticum->id)? "disabled" : '' }}>
                                             {{ $LabPracticum->item->item_name?? "_" }}</option>
                                     @endforeach
                             </x-forms.select>

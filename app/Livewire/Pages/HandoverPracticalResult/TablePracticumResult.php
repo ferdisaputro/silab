@@ -13,9 +13,6 @@ class TablePracticumResult extends Component
     public $laboratoryId;
     public $code;
 
-    // Array untuk menyimpan opsi per baris
-    public $availableItemsPerRow = [];
-
     // Data form
     public $items = [
         ['praktikum' => '', 'jumlah' => '']
@@ -25,32 +22,26 @@ class TablePracticumResult extends Component
     {
         $this->laboratoryId = $laboratoryId;
         $this->code        = Str::random(8);
-        // Inisialisasi opsi untuk baris pertama
-        $this->availableItemsPerRow[0] = $this->getFilteredItems(0);
     }
 
     public function addBahanItem()
     {
         $index = count($this->items);
         $this->items[] = ['praktikum' => '', 'jumlah' => ''];
-        // Buat opsi baru untuk row ini
-        $this->availableItemsPerRow[$index] = $this->getFilteredItems($index);
     }
 
     public function removeBahanItem($index)
     {
         array_splice($this->items, $index, 1);
-        array_splice($this->availableItemsPerRow, $index, 1);
     }
 
     // Helper untuk memfilter opsi di baris ke-$index
-    protected function getFilteredItems(int $index)
+    protected function availableItems()
     {
         $allItems = Item::where('item_type_id', 3)->get();
 
         // ID yang sudah dipilih di baris lain
         $selectedIds = collect($this->items)
-            ->except($index)
             ->pluck('praktikum')
             ->filter()
             ->unique();
@@ -59,12 +50,7 @@ class TablePracticumResult extends Component
         $labItemIds = LabItem::where('laboratory_id', $this->laboratoryId)
             ->pluck('item_id');
 
-        return $allItems
-            ->filter(fn($i) =>
-                !$selectedIds->contains($i->id)
-                && !$labItemIds->contains($i->id)
-            )
-            ->values(); // reindex
+        return $allItems->values(); // reindex
     }
 
     public function create()
@@ -92,7 +78,6 @@ class TablePracticumResult extends Component
 
             // reset form
             $this->items = [['praktikum' => '', 'jumlah' => '']];
-            $this->availableItemsPerRow = [ $this->getFilteredItems(0) ];
             $this->code = Str::random(8);
 
             return response()->json(['message'=>'Berhasil','status'=>'success']);
@@ -103,6 +88,8 @@ class TablePracticumResult extends Component
 
     public function render()
     {
-        return view('livewire.pages.handover-practical-result.table-practicum-result');
+        return view('livewire.pages.handover-practical-result.table-practicum-result', [
+            'availableItems' => $this->availableItems()
+        ]);
     }
 }

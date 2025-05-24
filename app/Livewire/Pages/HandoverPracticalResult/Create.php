@@ -59,7 +59,7 @@ class Create extends Component
     public $selectedStudyProgram;
     #[Computed()]
     public function studyPrograms() {
-        $department = Laboratory::find($this->laboratoryId)->department;
+        $department = $this->laboratory->department;
         return $department ? $department->studyPrograms : collect(); // Jika department ada, ambil study programs, jika tidak, return koleksi kosong
     }
     #[Validate('required|exists:courses,id')]
@@ -77,23 +77,34 @@ class Create extends Component
     }
 
     #[Computed()]
-    public function LabMaterials(){
-        return Laboratory::find($this->laboratoryId ?? null)
-            ->labItems
-            ->load('item')
-            ->filter(function ($labItem) {
-                return $labItem->item->item_type_id == 2;
-            });
+    public function laboratory()
+    {
+        // Only eager load labItems with their item relation
+        return Laboratory::with('labItems.item')->find($this->laboratoryId ?? null);
     }
-    #[Computed()]
-    public function LabPracticums(){
-        return Laboratory::find($this->laboratoryId ?? null)
-            ->labItems
-            ->load('item')
-            ->filter(function ($labItem) {
-                return $labItem->item->item_type_id == 3;
-            });
+
+    public function labMaterials()
+    {
+        // Use loaded relation to avoid extra queries
+        if (!$this->laboratory) {
+            return collect();
+        }
+        return $this->laboratory->labItems
+            ->filter(fn($labItem) => $labItem->item && $labItem->item->item_type_id == 2)
+            ->values();
     }
+
+    public function labPracticums()
+    {
+        // Use loaded relation to avoid extra queries
+        if (!$this->laboratory) {
+            return collect();
+        }
+        return $this->laboratory->labItems
+            ->filter(fn($labItem) => $labItem->item && $labItem->item->item_type_id == 3)
+            ->values();
+    }
+
     #[computed()]
     public function units(){
         return Unit::all();
@@ -206,7 +217,7 @@ class Create extends Component
 
         } catch (Exception $th) {
             DB::rollback();
-            // dd($th->getMessage());
+            dd($th->getMessage());
             return response()->json([
                 'status' => 'error',
                 'message' => $th->getMessage()
@@ -253,8 +264,6 @@ class Create extends Component
     public function removePracticumResult($index) {
         unset($this->practicumResults[$index]);
     }
-    public $units;
-    public $labMaterials;
 
     public function mount($id){
         $decrypted = Crypt::decrypt($id);
@@ -265,7 +274,11 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.pages.handover-practical-result.create');
+        // dd($this->labPracticums(), $this->labMaterials());
+        return view('livewire.pages.handover-practical-result.create', [
+            'labPracticums' => $this->labPracticums(),
+            'labMaterials' => $this->labMaterials(),
+        ]);
 
     }
 }
