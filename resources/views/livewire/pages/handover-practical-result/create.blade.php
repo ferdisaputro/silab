@@ -64,15 +64,18 @@
                     </x-forms.select-advanced>
                     <x-forms.select-advanced
                         wire:key="{{ now() }}"
-                        model="selectedLecturer"
+                        model="selectedCourseInstructor"
                         class="w-full"
-                        name="selectedLecturer"
+                        name="selectedCourseInstructor"
                         label="Pilih Dosen">
-                            @foreach ($this->lectures as $lecture)
-                                <option value="{{ $lecture->id }}" {{ $lecture->id == $selectedLecturer? "selected" : "" }}>
-                                    {{ $lecture->user->name }}
-                                </option>
-                            @endforeach
+                            @if ($this->courseInstructor)
+                                {{-- @foreach ($this->lectures as $lecture) --}}
+                                    {{-- <option value="{{ $lecture->id }}" {{ $lecture->id == $selectedLecturer? "selected" : "" }}> --}}
+                                    <option value="{{ $this->courseInstructor->id }}" {{ $this->courseInstructor->id == $selectedCourseInstructor? "selected" : "" }}>
+                                        {{ $this->courseInstructor->staff->user->name }}
+                                    </option>
+                                {{-- @endforeach --}}
+                            @endif
                     </x-forms.select-advanced>
 
                     <div class="w-full md:col-span-2">

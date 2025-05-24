@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('practicum_event');
             $table->date('date');
 
-            $table->foreignId('course_instructor_id')->constrained()->cascadeOnDelete()->name('fk_course_instructors');
+            $table->foreignId('course_instructor_id')->nullable()->constrained()->cascadeOnDelete()->name('fk_course_instructors');
             $table->foreignId('academic_week_id')->constrained()->cascadeOnDelete()->name('fk_academic_weeks');
             $table->foreignId('laboratory_id')->constrained()->cascadeOnDelete()->name('fk_laboratories');
             $table->foreignId('lab_member_id')->constrained()->cascadeOnDelete()->name('fk_lab_members');

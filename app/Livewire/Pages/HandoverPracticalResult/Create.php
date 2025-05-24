@@ -70,10 +70,17 @@ class Create extends Component
                         ->where('study_program_id',$this->selectedStudyProgram)
                         ->get()->load('course')->pluck('course');
     }
-    public $selectedLecturer;
+
+    #[Validate('required:exists:course_instructors,id')]
+    public $selectedCourseInstructor;
     #[Computed()]
-    public function lectures(){
-        return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+    public function courseInstructor(){
+        // return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+        return SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ])?->load('courseInstructor.staff.user')->courseInstructor?? null;
     }
 
     #[Computed()]
@@ -123,16 +130,22 @@ class Create extends Component
     }
 
     public function create() {
+        if (!isset($this->getSemesterCourse()->courseInstructor->id)) {
+            return response()->json([
+                "status" => "error", 
+                "message" => "Matakuliah di semester, pada prodi, dan jurusan tersebut belum memiliki dosen pengampu."
+            ]);
+        }
         $this->validate();
         $data = [];
         $data['code'] = $this->code;
         $data['practicum_event'] = $this->practicumEvent;
         $data['date'] = Carbon::createFromFormat('d/m/Y',  $this->handOverDate)->toDateTimeString();
-        $data['course_instructor_id'] = $this->getSemesterCourse()->courseInstructor->id;
+        $data['course_instructor_id'] = $this->selectedCourseInstructor;
         $data['academic_week_id'] = $this->selectedAcademicWeek;
         $data['laboratory_id'] = $this->laboratoryId;
         $data['lab_member_id'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
-
+        
         $stockCardsLeftOver = collect($this->materialItems)->map(function($item) {
             return [
                 'qty' => $item['qty'],
@@ -229,6 +242,10 @@ class Create extends Component
         $this->redirectRoute('handover-practical-result', navigate: true);
     }
 
+    #[Validate([
+        'materialItems.*.qty' => 'required|min:0',
+        'materialItems.*.material' => 'required|min:0',
+    ])]
     public $materialItems = [
         [
             // 'id'
@@ -248,6 +265,10 @@ class Create extends Component
         unset($this->materialItems[$index]);
     }
 
+    #[Validate([
+        'practicumResults.*.pracRes' => 'required|min:0',
+        'practicumResults.*.qty' => 'required|min:0',
+    ])]
     public $practicumResults = [
         [
             'pracRes' => '',

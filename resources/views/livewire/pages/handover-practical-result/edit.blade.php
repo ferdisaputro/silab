@@ -7,7 +7,7 @@
     <form x-on:submit.prevent="submitHandler">
     <div class="p-5 space-y-6 bg-white shadow-lg rounded-xl">
         <x-text.page-title>
-            Ubah Serah Terima Hasil & Sisa Praktikum{{ $id }}
+            Ubah Serah Terima Hasil & Sisa Praktikum
         </x-text.page-title>
 
         <div class="space-y-6">
@@ -71,16 +71,24 @@
                 </x-forms.select-advanced>
                 <x-forms.select-advanced
                     wire:key="{{ now() }}"
-                    model="selectedLecturer"
+                    model="selectedCourseInstructor"
                     class="w-full"
-                    name="selectedLecturer"
+                    name="selectedCourseInstructor"
                     label="Pilih Dosen">
-                        @foreach ($this->lecturers as $lecture)
+                        {{-- @foreach ($this->lecturers as $lecture)
                             <option value="{{ $lecture }}"
-                            {{ $lecture->id == $selectedLecturer ? 'selected' : '' }}>
-                            {{ $lecture->user->name }}
-                        </option>
-                        @endforeach
+                                {{ $lecture->id == $selectedLecturer ? 'selected' : '' }}>
+                                {{ $lecture->user->name }}
+                            </option>
+                        @endforeach --}}
+                        @if ($this->courseInstructor)
+                            {{-- @foreach ($this->lectures as $lecture) --}}
+                                {{-- <option value="{{ $lecture->id }}" {{ $lecture->id == $selectedLecturer? "selected" : "" }}> --}}
+                                <option value="{{ $this->courseInstructor->id }}" {{ $this->courseInstructor->id == $selectedCourseInstructor? "selected" : "" }}>
+                                    {{ $this->courseInstructor->staff->user->name }}
+                                </option>
+                            {{-- @endforeach --}}
+                        @endif
                 </x-forms.select-advanced>
                 <div class="w-full md:col-span-2">
                     <div class="flex justify-between gap-6 m-auto md:max-w-2xl">
