@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -60,11 +61,17 @@ class Edit extends Component
                         ->where('study_program_id',$this->selectedStudyProgram)
                         ->get()->load('course')->pluck('course');
     }
-    public $selectedLecturer;
+    public $selectedCourseInstructor;
     #[Computed()]
-    public function lecturers(){
-        return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+    public function courseInstructor(){
+        // return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+        return SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ])?->load('courseInstructor.staff.user')->courseInstructor?? null;
     }
+
     #[Computed()]
     public function LabMaterials(){
         return Laboratory::find($this->laboratoryId ?? null)
@@ -92,7 +99,7 @@ class Edit extends Component
             $this->selectedAcademicYear = $handOver->courseInstructor->semesterCourse->semester->academic_year_id;
             $this->selectedSemester = $handOver->courseInstructor->semesterCourse->semester_id;
             $this->selectedCourse = $handOver->courseInstructor->semesterCourse->course_id;
-            // $this->selectedLecturer = $handOver->staff->user->id?? "-";
+            $this->selectedCourseInstructor = $handOver->courseInstructor->id;
             $this->selectedAcademicWeek = $handOver->academic_week_id;
             $this->borrowingDate = Carbon::parse($handOver->date)->format('d/m/Y');
             $this->practicum_handOver_leftOver_Result = $handOver;
@@ -251,6 +258,10 @@ class Edit extends Component
 
     public $deletepracticumList = [];
 
+    #[Validate([
+        'practicumResults.*.pracRes' => 'required|min:0',
+        'practicumResults.*.qty' => 'required|min:0',
+    ])]
     public $practicumResults = [
         [
             'pracRes' => '', // material
@@ -275,6 +286,10 @@ class Edit extends Component
         }
     }
     public $deletedMaterialItems = [];
+    #[Validate([
+        'materialItems.*.pracRes' => 'required|min:0',
+        'materialItems.*.qty' => 'required|min:0',
+    ])]
     public $materialItems = [
         [
             'material' => '', // material

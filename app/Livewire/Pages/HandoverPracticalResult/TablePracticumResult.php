@@ -57,7 +57,7 @@ class TablePracticumResult extends Component
     {
         $this->validate([
             'items.*.praktikum' => 'required|exists:items,id',
-            'items.*.jumlah'    => 'required|integer|min:1',
+            'items.*.jumlah'    => 'required|integer|min:0',
         ]);
 
         try {
