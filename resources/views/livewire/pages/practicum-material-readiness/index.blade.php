@@ -21,7 +21,7 @@
             <div>
                 <a href="{{ route('prac-mat-ready.create', ['id' => Crypt::encrypt($selectedLab)]) }}" wire:navigate>
                     <x-buttons.fill title="Tambah Kesiapan Bahan Praktikum" color="purple">
-                        Tambah Peminjaman</x-buttons.fill>
+                        Tambah Kesiapan</x-buttons.fill>
                 </a>
             </div>
         </div>
