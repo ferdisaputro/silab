@@ -3,7 +3,7 @@
         {{-- // $this->authorize('hasPermissionTo', 'inventaris-alat-list|inventaris-alat-create|inventaris-alat-edit|inventaris-alat-delete'); --}}
         @can('inventaris-alat-create')
             <x-modals.modal identifier="toolInventoryState" max_width="max-w-xl">
-                <livewire:pages.tool-inventory.create data="{{ $lab_id }}" wire:key="{{ now() }}" />
+                <livewire:pages.tool-inventory.create data="{{ $lab_id }}" wire:key="{{ $lab_id }}" />
             </x-modals.modal>
         @endcan
 

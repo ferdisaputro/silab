@@ -2,7 +2,7 @@
     {{-- @dd($this->laboratories) --}}
     <div>
         <x-modals.modal identifier="materialInventoryState" max_width="max-w-xl">
-            <livewire:pages.material-inventory.create data="{{ $lab_id }}" wire:key="{{ now() }}" />
+            <livewire:pages.material-inventory.create data="{{ $lab_id }}" wire:key="{{ $lab_id }}" />
         </x-modals.modal>
 
         <x-modals.modal identifier="editMaterialInventoryState" max_width="max-w-xl">
