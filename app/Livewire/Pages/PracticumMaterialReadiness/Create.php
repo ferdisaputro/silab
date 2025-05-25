@@ -40,8 +40,8 @@ class Create extends Component
     #[Validate('nullable|integer|exists:staff,id')] // BIGINT(20), nullable, foreign key
     public $labMemberIdBorrow;
 
-    #[Validate('exists:staff,id')]
-    public $selectedLecturer;
+    // #[Validate('exists:staff,id')]
+    // public $selectedLecturer;
 
 
     #[Validate('required|exists:academic_years,id')]
@@ -87,20 +87,33 @@ class Create extends Component
         return Laboratory::find(id: $this->laboratoryId?? null)->labItems->load('item');
     }
 
+    #[Validate('required:exists:course_instructors,id')]
+    public $selectedCourseInstructor;
+    #[Computed()]
+    public function courseInstructor(){
+        // return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+        return SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ])?->load('courseInstructor.staff.user')->courseInstructor?? null;
+    }
+
     public $semesterCourse_Id;
     public function semesterCourse(){
         return SemesterCourse::where('study_program_id',$this->selectedStudyProgram)
                                 ->where('semester_id',$this->selectedSemester)
                                 ->where('course_id',$this->selectedCourse)->first()->id;
     }
-        protected function getSemesterCourse(){
-            $semesterCourse = SemesterCourse::firstWhere([
-                'semester_id' => $this->selectedSemester,
-                'study_program_id' => $this->selectedStudyProgram,
-                'course_id' => $this->selectedCourse
-            ]);
-            return $semesterCourse;
-        }
+
+    protected function getSemesterCourse(){
+        $semesterCourse = SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ]);
+        return $semesterCourse;
+    }
 
     public function create() {
         $this->validate();
@@ -117,7 +130,7 @@ class Create extends Component
         $data['date'] = Carbon::createFromFormat('d/m/Y', time: $this->borrowingDate)->toDateTimeString();
         // dd($this->semesterCourse(), $data['course_instructor_id']);
         $data['semester_course_id'] = $this->getSemesterCourse()->id;
-        $data['staff_id'] = $this->selectedLecturer?? null;
+        $data['staff_id'] = Auth::user()->staff->id;
         $data['lab_member_id'] = Auth::user()->labMembers->firstWhere('laboratory_id', $this->laboratoryId)->id;
         $data['laboratory_id'] = $this->laboratoryId;
         $data['academic_week_id'] = $this->selectedAcademicWeek;
@@ -222,7 +235,7 @@ class Create extends Component
     {
         return view('livewire.pages.practicum-material-readiness.create',[
             'Recomendations' => PracticumReadiness::all(),
-            'lecturers' => Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user'), //dosen
+            // 'lecturers' => Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user'), //dosen
         ]);
     }
 }

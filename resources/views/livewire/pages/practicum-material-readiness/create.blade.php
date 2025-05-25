@@ -70,14 +70,23 @@
                         </x-forms.select-advanced>
 
                         <x-forms.select-advanced
-                            model="selectedLecturer"
+                            wire:key='{{ $selectedCourse }}'
+                            model="selectedCourseInstructor"
                             class="flex-1"
-                            name="selectedLecturer"
+                            name="selectedCourseInstructor"
                             label="Pilih Dosen">
-                            @foreach ($lecturers as $lecturer)
+                            {{-- @foreach ($lecturers as $lecturer)
                                 <option value="{{ $lecturer->id }}" {{ $lecturer->id == $selectedLecturer? "selected" : "" }}>
                                     {{ $lecturer->user->name }}</option>
-                            @endforeach
+                            @endforeach --}}
+                            @if ($this->courseInstructor)
+                                {{-- @foreach ($this->lectures as $lecture) --}}
+                                    {{-- <option value="{{ $lecture->id }}" {{ $lecture->id == $selectedLecturer? "selected" : "" }}> --}}
+                                    <option value="{{ $this->courseInstructor->id }}" {{ $this->courseInstructor->id == $selectedCourseInstructor? "selected" : "" }}>
+                                        {{ $this->courseInstructor->staff->user->name }}
+                                    </option>
+                                {{-- @endforeach --}}
+                            @endif
                         </x-forms.select-advanced>
                     </div>
                 </div>

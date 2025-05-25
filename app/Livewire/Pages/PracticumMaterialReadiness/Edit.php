@@ -60,11 +60,25 @@ class Edit extends Component
                         ->where('study_program_id',$this->selectedStudyProgram)
                         ->get()->load('course')->pluck('course');
     }
-    public $selectedLecturer;
+
+    // public $selectedLecturer;
+    // #[Computed()]
+    // public function lecturers(){
+    //     return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+    // }
+
+    #[Validate('required:exists:course_instructors,id')]
+    public $selectedCourseInstructor;
     #[Computed()]
-    public function lecturers(){
-        return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+    public function courseInstructor(){
+        // return Staff::where("status", 1)->where('staff_status_id', 1)->get()->load('user');
+        return SemesterCourse::firstWhere([
+            'semester_id' => $this->selectedSemester,
+            'study_program_id' => $this->selectedStudyProgram,
+            'course_id' => $this->selectedCourse
+        ])?->load('courseInstructor.staff.user')->courseInstructor?? null;
     }
+
     public $Laboratory_id;
     #[Computed()]
     public function LabItems(){
@@ -81,7 +95,7 @@ public function mount($id) {
         $this->selectedAcademicYear = $pracMat->semesterCourse->semester->academicYear->id;
         $this->selectedSemester = $pracMat->semesterCourse->semester_id;
         $this->selectedCourse = $pracMat->semesterCourse->course->id;
-        $this->selectedLecturer = $pracMat->staff->user->id?? "-";
+        $this->selectedCourseInstructor = $pracMat->course_instructor_id;
         $this->selectedAcademicWeek = $pracMat->academic_week_id;
         $this->borrowingDate = Carbon::parse($pracMat->date)->format('d/m/Y');
         $this->recomendations = $pracMat->recomendation;
@@ -114,93 +128,97 @@ public function mount($id) {
         return $semesterCourse;
     }
     public function edit()
-{
-    // dd( $this->getSemesterCourse()->id);
-
-    // dd($this->selectedItems);
-    $this->pracMatUpdate->recomendation = $this->recomendations;
-    $this->pracMatUpdate->date = Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->format('Y-m-d');
-    $this->pracMatUpdate->staff_id = $this->selectedLecturer?? null;
-    $this->pracMatUpdate->academic_week_id = $this->selectedAcademicWeek;
-    $this->pracMatUpdate->semester_course_id = $this->getSemesterCourse()->id;
-    $this->pracMatUpdate->course_instructor_id = $this->getSemesterCourse()->courseInstructor->id;
-    // dd($this->recomendations);
-    try {
-        DB::beginTransaction();
-        $this->pracMatUpdate->save();
-        // dd($this->deleteItemList);
-
-        if (count($this->deleteItemList) > 0) {
-            // creating the stockCards
-            $stockCardDatas = [];
-            foreach ($this->deleteItemList as $item) {
-                $stockCardDatas[] = [
-                    'qty' => $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item'])->qty,
-                    'stock' => $item['stock'],
-                    'is_stock_in' => 1,
-                    'description' => 'stock in from deleted item in labItem(canceled loan item)',
-                    'lab_item_id' => $item['item'],
-                    'lab_member_id' => Auth::user()->staff->id,
-                ];
-            }
-            $stockCards = StockCard::insert($stockCardDatas);
-
-
-            // updating the stock in labItem based on deleted LoanDetail
-            $deletedPracMacs = LabItem::whereIn('id', collect($stockCardDatas)->pluck('lab_item_id'))->get()->load('item');
-            foreach ($deletedPracMacs as $deletedPracMacsItem) {
-                $deletedPracMacsItem->update([
-                    'stock' => $deletedPracMacsItem->stock + collect($stockCardDatas)->firstWhere('lab_item_id', $deletedPracMacsItem->id)['qty']
-                ]);
-            }
-
-
-            // deleting the equipmentLoanDetails based on $deletedLoanItems
-            $qeLoanDetail = $this->pracMatUpdate->pracMacs->whereIn('lab_item_id', collect($this->deleteItemList)->pluck('item'))->each(function ($pracMatDetail) {
-                $pracMatDetail->stockCard->delete();
-                $pracMatDetail->delete();
-            });
+    {
+        if ($this->getSemesterCourse()->courseInstructor) {
+            $data['course_instructor_id'] = $this->getSemesterCourse()->courseInstructor->id;
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Matakuliah ini belum memiliki dosen pengampu.'
+            ]);
         }
+        $this->pracMatUpdate->recomendation = $this->recomendations;
+        $this->pracMatUpdate->date = Carbon::createFromFormat('d/m/Y', $this->borrowingDate)->format('Y-m-d');
+        $this->pracMatUpdate->staff_id = Auth::user()->staff->id;
+        $this->pracMatUpdate->academic_week_id = $this->selectedAcademicWeek;
+        $this->pracMatUpdate->semester_course_id = $this->getSemesterCourse()->id;
+        // dd($this->recomendations);
+        try {
+            DB::beginTransaction();
+            $this->pracMatUpdate->save();
+            // dd($this->deleteItemList);
 
-        foreach ($this->selectedItems as $item) {
-            $pracMacsDetail = $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item']);
+            if (count($this->deleteItemList) > 0) {
+                // creating the stockCards
+                $stockCardDatas = [];
+                foreach ($this->deleteItemList as $item) {
+                    $stockCardDatas[] = [
+                        'qty' => $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item'])->qty,
+                        'stock' => $item['stock'],
+                        'is_stock_in' => 1,
+                        'description' => 'stock in from deleted item in labItem(canceled loan item)',
+                        'lab_item_id' => $item['item'],
+                        'lab_member_id' => Auth::user()->staff->id,
+                    ];
+                }
+                $stockCards = StockCard::insert($stockCardDatas);
 
-            // if ($loanDetail && $loanDetail->stockCard) {
-            if ($pracMacsDetail) {
-                $pracMacsDetail->stockCard->qty = $item['qty'];
 
-                $pracMacsDetail->update([
-                    'qty' => $item['qty'],
-                    'description' => $item['description']
-                ]);
+                // updating the stock in labItem based on deleted LoanDetail
+                $deletedPracMacs = LabItem::whereIn('id', collect($stockCardDatas)->pluck('lab_item_id'))->get()->load('item');
+                foreach ($deletedPracMacs as $deletedPracMacsItem) {
+                    $deletedPracMacsItem->update([
+                        'stock' => $deletedPracMacsItem->stock + collect($stockCardDatas)->firstWhere('lab_item_id', $deletedPracMacsItem->id)['qty']
+                    ]);
+                }
 
-                $pracMacsDetail->labItem->update([
-                    'stock' => $pracMacsDetail->stockCard->stock - $item['qty']
-                ]);
-            } else {
-                $stockCard = StockCard::create([
-                    'qty' => $item['qty'],
-                    'stock' => $item['stock'],
-                    'is_stock_in' => 0,
-                    'description' => $item['description'],
-                    'lab_item_id' => $item['item'],
-                    'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->pracMatUpdate->laboratory_id)->id,
-                ]);
-                $createdPracMacsDetail = PracticumReadinessDetail::create([
-                    // 'code' => $this->code,
-                    'qty' => $item['qty'],
-                    'description' => $item['description'],
-                    'practicum_readiness_id' => $this->pracMatUpdate->id,
-                    'lab_item_id' => $item['item'],
-                    'stock_card_id' => $stockCard->id,
-                ]);
 
-                $createdPracMacsDetail->labItem->update([
-                    'stock' => $createdPracMacsDetail->labItem->stock - $createdPracMacsDetail->qty
-                ]);
+                // deleting the equipmentLoanDetails based on $deletedLoanItems
+                $qeLoanDetail = $this->pracMatUpdate->pracMacs->whereIn('lab_item_id', collect($this->deleteItemList)->pluck('item'))->each(function ($pracMatDetail) {
+                    $pracMatDetail->stockCard->delete();
+                    $pracMatDetail->delete();
+                });
             }
-        }
-        DB::commit();
+
+            foreach ($this->selectedItems as $item) {
+                $pracMacsDetail = $this->pracMatUpdate->pracMacs->firstWhere('lab_item_id', $item['item']);
+
+                // if ($loanDetail && $loanDetail->stockCard) {
+                if ($pracMacsDetail) {
+                    $pracMacsDetail->stockCard->qty = $item['qty'];
+
+                    $pracMacsDetail->update([
+                        'qty' => $item['qty'],
+                        'description' => $item['description']
+                    ]);
+
+                    $pracMacsDetail->labItem->update([
+                        'stock' => $pracMacsDetail->stockCard->stock - $item['qty']
+                    ]);
+                } else {
+                    $stockCard = StockCard::create([
+                        'qty' => $item['qty'],
+                        'stock' => $item['stock'],
+                        'is_stock_in' => 0,
+                        'description' => $item['description'],
+                        'lab_item_id' => $item['item'],
+                        'lab_member_id' => Auth::user()->labMembers->firstWhere('laboratory_id', $this->pracMatUpdate->laboratory_id)->id,
+                    ]);
+                    $createdPracMacsDetail = PracticumReadinessDetail::create([
+                        // 'code' => $this->code,
+                        'qty' => $item['qty'],
+                        'description' => $item['description'],
+                        'practicum_readiness_id' => $this->pracMatUpdate->id,
+                        'lab_item_id' => $item['item'],
+                        'stock_card_id' => $stockCard->id,
+                    ]);
+
+                    $createdPracMacsDetail->labItem->update([
+                        'stock' => $createdPracMacsDetail->labItem->stock - $createdPracMacsDetail->qty
+                    ]);
+                }
+            }
+            DB::commit();
             return response()->json([
                 'status' => "success",
                 'message' => "Laporan peminjaman alat praktikum berhasil diubah"
