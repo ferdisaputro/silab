@@ -26,10 +26,16 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
+    <div class="flex justify-center px-2 gap-3 py-3">
+        <img src="{{ asset('assets/images/logo.png') }}" title="SILAB" class="h-14">
+        <img src="{{ asset('assets/images/jti.png') }}" title="Jurusan Teknologi Informasi" class="h-14">
+        <img src="{{ asset('assets/images/polije.png') }}" title="Politeknik Negeri Jember" class="h-14">
+    </div>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="login">
+        
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
